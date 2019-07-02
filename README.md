@@ -19,8 +19,8 @@ The repository is structured as follows:
 Note: Each product includes its own yang validation script. The scripts can be run individually to validate the yang models for each product. The master validation script can be run to check yang models for all the products.
 
 cd FSS-API-Yang/product
+# Change the release/version to appropriately reflect on the releases to be tested.
 vi yang-compile.sh
-# chnage the release/version to appropriately
 bash ./yang-compile
 
 # OR 
