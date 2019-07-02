@@ -1,0 +1,847 @@
+module fujitsu-threshold-crossover-types {
+    namespace "urn:fujitsu:params:xml:ns:yang:notifications:threshold-crossover-types";
+    prefix threshold-crossover-types;
+
+    import fujitsu-notifications {
+        prefix notifications;
+    }
+
+    organization
+       "Fujitsu Ltd.";
+
+    contact
+       "Fujitsu Ltd.
+
+        Address: 2801 Telecom Parkway
+                 Richardson, Texas 75082
+
+        Tel: +1-800-USE-FTAC (1-800-873-3822)
+        Email: ftac@fnc.fujitsu.com
+        Web: www.fujitsu.com/us/services/telecom";
+
+    description
+       "This module contains supported alarm types.
+
+        Copyright (c) 2015 Fujitsu Ltd.
+        All rights reserved. ";
+    revision 2018-02-06 {
+        description
+        "Modified TCM TCA name from Tcm to TCM";
+    }
+    revision 2018-01-22 {
+        description
+        "Added OTU SDFECUB type for TCA";
+    }
+    revision 2018-01-19 {
+        description
+        "Added missed TCA for Ethernet";
+    }
+    revision 2017-09-28 {
+        description
+        "Added missed TCA";
+    }
+    revision 2017-09-06 {
+        description
+        "Adding TCM related TCA types";
+    }
+    revision 2017-05-10 {
+        description
+        "Add  tCAErroredSecondEthernet, tCASeverelyErroredSecondEthernet,
+              tCAUnavailableSecondEthernet and tCAInFramesErr.";
+    }
+
+    // -------------------------------------------------------------
+    // Port TCA 
+    // -------------------------------------------------------------
+    identity tCAOpticalReceivePowerTooLow {
+        base notifications:event-identity;
+        description "Optical Receive Power Too Low";
+    }
+
+    identity tCAOpticalReceivePowerTooHigh {
+        base notifications:event-identity;
+        description "Optical Receive Power Too High";
+    }
+
+    identity tCATotalOpticalReceivePowerTooLow {
+        base notifications:event-identity;
+        description "Total Optical Receive Power Too Low";
+    }
+
+    identity tCATotalOpticalReceivePowerTooHigh {
+        base notifications:event-identity;
+        description "Total Optical Receive Power Too High";
+    }
+
+    identity tCAOpticalTransmitPowerTooLow {
+        base notifications:event-identity;
+        description "Optical Transmit Power Too Low";
+    }
+    
+    identity tCAOpticalTransmitPowerTooHigh {
+        base notifications:event-identity;
+        description "Optical Transmit Power Too High";
+    }
+
+    identity tCALaserBiasCurrentTooHigh {
+        base notifications:event-identity;
+        description "Laser Bias Current Too High";
+    }
+
+    // -------------------------------------------------------------
+    // L0 specific Port TCA 
+    // -------------------------------------------------------------
+    identity tCASpanlossVariationTooLow {
+        base notifications:event-identity;
+        description "Span Loss Variation Too Low(PreAMP)";
+    }
+    
+    identity tCASpanlossVariationTooHigh {
+        base notifications:event-identity;
+        description "Span Loss Variation Too High(PreAMP)";
+    }
+    
+    identity tCAOpticalReceivePowerOscTooLow {
+        base notifications:event-identity;
+        description "Optical Receive Power Too Low (OSC)";
+    }
+    
+    identity tCAOpticalReceivePowerOscTooHigh {
+        base notifications:event-identity;
+        description "Optical Receive Power Too High (OSC)";
+    }
+    
+    identity tCAOpticalTransmitPowerOscTooLow {
+        base notifications:event-identity;
+        description "Optical Transmit Power Too Low (OSC)";
+    }
+    
+    identity tCAOpticalTransmitPowerOscTooHigh {
+        base notifications:event-identity;
+        description "Optical Transmit Power Too High (OSC)";
+    }
+    
+    // -------------------------------------------------------------
+    // Port Lane 1 TCA 
+    // -------------------------------------------------------------
+    identity tCAOpticalReceivePowerLane1TooLow {
+        base notifications:event-identity;
+        description "Optical Receive Power Lane1 Too Low";
+    }
+
+    identity tCAOpticalReceivePowerLane1TooHigh {
+        base notifications:event-identity;
+        description "Optical Receive Power Lane1 Too High";
+    }
+
+    identity tCAOpticalTransmitPowerLane1TooLow {
+        base notifications:event-identity;
+        description "Optical Transmit Power Lane1 Too Low";
+    }
+    
+    identity tCAOpticalTransmitPowerLane1TooHigh {
+        base notifications:event-identity;
+        description "Optical Transmit Power Lane1 Too High";
+    }
+
+    identity tCALaserBiasCurrentLane1TooHigh {
+        base notifications:event-identity;
+        description "Laser Bias Current Lane1 Too High";
+    }
+
+    // -------------------------------------------------------------
+    // Port Lane 2 TCA 
+    // -------------------------------------------------------------
+    identity tCAOpticalReceivePowerLane2TooLow {
+        base notifications:event-identity;
+        description "Optical Receive Power Lane2 Too Low";
+    }
+
+    identity tCAOpticalReceivePowerLane2TooHigh {
+        base notifications:event-identity;
+        description "Optical Receive Power Lane2 Too High";
+    }
+
+    identity tCAOpticalTransmitPowerLane2TooLow {
+        base notifications:event-identity;
+        description "Optical Transmit Power Lane2 Too Low";
+    }
+    
+    identity tCAOpticalTransmitPowerLane2TooHigh {
+        base notifications:event-identity;
+        description "Optical Transmit Power Lane2 Too High";
+    }
+
+    identity tCALaserBiasCurrentLane2TooHigh {
+        base notifications:event-identity;
+        description "Laser Bias Current Lane2 Too High";
+    }
+    
+    // -------------------------------------------------------------
+    // Port Lane 3 TCA 
+    // -------------------------------------------------------------
+    identity tCAOpticalReceivePowerLane3TooLow {
+        base notifications:event-identity;
+        description "Optical Receive Power Lane3 Too Low";
+    }
+
+    identity tCAOpticalReceivePowerLane3TooHigh {
+        base notifications:event-identity;
+        description "Optical Receive Power Lane3 Too High";
+    }
+
+    identity tCAOpticalTransmitPowerLane3TooLow {
+        base notifications:event-identity;
+        description "Optical Transmit Power Lane3 Too Low";
+    }
+    
+    identity tCAOpticalTransmitPowerLane3TooHigh {
+        base notifications:event-identity;
+        description "Optical Transmit Power Lane2 Too High";
+    }
+
+    identity tCALaserBiasCurrentLane3TooHigh {
+        base notifications:event-identity;
+        description "Laser Bias Current Lane3 Too High";
+    }
+    
+    // -------------------------------------------------------------
+    // Port Lane 4 TCA 
+    // -------------------------------------------------------------
+    identity tCAOpticalReceivePowerLane4TooLow {
+        base notifications:event-identity;
+        description "Optical Receive Power Lane4 Too Low";
+    }
+
+    identity tCAOpticalReceivePowerLane4TooHigh {
+        base notifications:event-identity;
+        description "Optical Receive Power Lane4 Too High";
+    }
+
+    identity tCAOpticalTransmitPowerLane4TooLow {
+        base notifications:event-identity;
+        description "Optical Transmit Power Lane4 Too Low";
+    }
+    
+    identity tCAOpticalTransmitPowerLane4TooHigh {
+        base notifications:event-identity;
+        description "Optical Transmit Power Lane4 Too High";
+    }
+
+    identity tCALaserBiasCurrentLane4TooHigh {
+        base notifications:event-identity;
+        description "Laser Bias Current Lane4 Too High";
+    }
+
+    // -------------------------------------------------------------
+    // Facility TCA 
+    // -------------------------------------------------------------    
+    identity tCAFECCorrectedCodewords {
+        base notifications:event-identity;
+        description "FEC Corrected Codewords Exceeded Threshold";
+    }
+
+    identity tCAFECUncorrectedCodewords {
+        base notifications:event-identity;
+        description "FEC Uncorrected Codewords Exceeded Threshold";
+    }
+
+    identity tCAFECCorrectedSymbols {
+        base notifications:event-identity;
+        description "FEC Corrected Sybols Exceeded Threshold";
+    }
+
+    identity tCACodingViolations {
+        base notifications:event-identity;
+        description "Coding Violations";
+    }    
+
+    identity tCAErroredSeconds {
+        base notifications:event-identity;
+        description "Errored Seconds";
+    }    
+
+    identity tCASeverelyErroredSeconds {
+        base notifications:event-identity;
+        description "Severely Errored Seconds";
+    }        
+
+    identity tCAFECUncorrectedBlocks {
+        base notifications:event-identity;
+        description "FEC Uncorrected Blocks";
+    }        
+
+    identity tCAFECCorrectedBits {
+        base notifications:event-identity;
+        description "FEC Corrected Bits";
+    }        
+
+    identity tCASDFECCorrectedBits {
+        base notifications:event-identity;
+        description "SD-FEC Corrected Bits";
+    }
+ 
+    identity tCASDFECUncorrectedBlocks {
+        base notifications:event-identity;
+        description "SD-FEC Uncorrected Blocks";
+    }        
+
+
+    identity tCABackgroundBlockErrors {
+        base notifications:event-identity;
+        description "Background Block Errors";
+    }        
+
+    identity tCADelayMeasurement {
+        base notifications:event-identity;
+        description "Delay Measurement";
+    }        
+
+    identity tCAUnavailableSeconds {
+        base notifications:event-identity;
+        description "Unavailable Seconds";
+    }        
+
+    identity tCAErroredBlocks {
+        base notifications:event-identity;
+        description "Errored Blocks";
+    }        
+    
+    identity tCACodingViolationSection {
+        base notifications:event-identity;
+        description "Coding Violation Section";
+    }    
+
+    identity tCAErroredSecondSection {
+        base notifications:event-identity;
+        description "Errored Seconds Section";
+    }    
+
+    identity tCASeverelyErroredSecondSection {
+        base notifications:event-identity;
+        description "Severely Errored Seconds Section";
+    }        
+    
+    identity tCACodingViolationLine {
+        base notifications:event-identity;
+        description "Coding Violations Line";
+    }    
+
+    identity tCAErroredSecondLine {
+        base notifications:event-identity;
+        description "Errored Seconds Line";
+    }    
+
+    identity tCASeverelyErroredSecondLine {
+        base notifications:event-identity;
+        description "Severely Errored Seconds Line";
+    }        
+
+    identity tCAUnavailableSecondLine {
+        base notifications:event-identity;
+        description "Unavailable Seconds Line";
+    }        
+    
+    identity tCAseverelyErroredFramingSecondSection {
+        base notifications:event-identity;
+        description "Severely Errored Frame Seconds Section";
+    }        
+
+    identity tCAErroredSecondEthernet {
+        base notifications:event-identity;
+        description "Errored Seconds Ethernet";
+    }
+
+    identity tCASeverelyErroredSecondEthernet {
+        base notifications:event-identity;
+        description "Severely Errored Seconds Ethernet";
+    }
+
+    identity tCAUnavailableSecondEthernet {
+        base notifications:event-identity;
+        description "Unavailable Seconds Ethernet";
+    }
+
+    identity tCAInFramesErr {
+        base notifications:event-identity;
+        description "In Frames Errored";
+    }
+
+    identity tCADelayMeasurementMin {
+        base notifications:event-identity;
+        description "Delay Measurement Low";
+    }
+
+    identity tCADelayMeasurementMax {
+        base notifications:event-identity;
+        description "Delay Measurement High";
+    }
+
+    identity tCADelayMeasurementTCM1-up {
+        base notifications:event-identity;
+        description "Delay Measurement TCM1-up";
+    }
+
+    identity tCADelayMeasurementMinTCM1-up {
+        base notifications:event-identity;
+        description "Delay Measurement Low TCM1-up";
+    }
+
+    identity tCADelayMeasurementMaxTCM1-up {
+        base notifications:event-identity;
+        description "Delay Measurement High TCM1-up";
+    }
+
+    identity tCADelayMeasurementTCM2-up {
+        base notifications:event-identity;
+        description "Delay Measurement TCM2-up";
+    }
+
+    identity tCADelayMeasurementMinTCM2-up {
+        base notifications:event-identity;
+        description "Delay Measurement Low TCM2-up";
+    }
+
+    identity tCADelayMeasurementMaxTCM2-up {
+        base notifications:event-identity;
+        description "Delay Measurement High TCM2-up";
+    }
+
+    identity tCADelayMeasurementTCM3-up {
+        base notifications:event-identity;
+        description "Delay Measurement TCM3-up";
+    }
+
+    identity tCADelayMeasurementMinTCM3-up {
+        base notifications:event-identity;
+        description "Delay Measurement Low TCM3-up";
+    }
+
+    identity tCADelayMeasurementMaxTCM3-up {
+        base notifications:event-identity;
+        description "Delay Measurement High TCM3-up";
+    }
+
+    identity tCADelayMeasurementTCM4-up {
+        base notifications:event-identity;
+        description "Delay Measurement TCM4-up";
+    }
+
+    identity tCADelayMeasurementMinTCM4-up {
+        base notifications:event-identity;
+        description "Delay Measurement Low TCM4-up";
+    }
+
+    identity tCADelayMeasurementMaxTCM4-up {
+        base notifications:event-identity;
+        description "Delay Measurement High TCM4-up";
+    }
+    identity tCADelayMeasurementTCM5-up {
+        base notifications:event-identity;
+        description "Delay Measurement TCM5-up";
+    }
+
+    identity tCADelayMeasurementMinTCM5-up {
+        base notifications:event-identity;
+        description "Delay Measurement Low TCM5-up";
+    }
+    identity tCADelayMeasurementMaxTCM5-up {
+        base notifications:event-identity;
+        description "Delay Measurement High TCM5-up";
+    }
+
+    identity tCADelayMeasurementTCM6-up {
+        base notifications:event-identity;
+        description "Delay Measurement TCM6-up";
+    }
+
+    identity tCADelayMeasurementMinTCM6-up {
+        base notifications:event-identity;
+        description "Delay Measurement Low TCM6-up";
+    }
+
+    identity tCADelayMeasurementMaxTCM6-up {
+        base notifications:event-identity;
+        description "Delay Measurement High TCM6-up";
+    }
+
+    identity tCADelayMeasurementTCM1-down {
+        base notifications:event-identity;
+        description "Delay Measurement TCM1-down";
+    }
+
+    identity tCADelayMeasurementMinTCM1-down {
+        base notifications:event-identity;
+        description "Delay Measurement Low TCM1-down";
+    }
+
+    identity tCADelayMeasurementMaxTCM1-down {
+        base notifications:event-identity;
+        description "Delay Measurement High TCM1-down";
+    }
+
+    identity tCADelayMeasurementTCM2-down {
+        base notifications:event-identity;
+        description "Delay Measurement TCM2-down";
+    }
+
+    identity tCADelayMeasurementMinTCM2-down {
+        base notifications:event-identity;
+        description "Delay Measurement Low TCM2-down";
+    }
+
+    identity tCADelayMeasurementMaxTCM2-down {
+        base notifications:event-identity;
+        description "Delay Measurement High TCM2-down";
+    }
+
+    identity tCADelayMeasurementTCM3-down {
+        base notifications:event-identity;
+        description "Delay Measurement TCM3-down";
+    }
+	
+    identity tCADelayMeasurementMinTCM3-down {
+        base notifications:event-identity;
+        description "Delay Measurement Low TCM3-down";
+    }
+	
+    identity tCADelayMeasurementMaxTCM3-down {
+        base notifications:event-identity;
+        description "Delay Measurement High TCM3-down";
+    }
+	
+    identity tCADelayMeasurementTCM4-down {
+        base notifications:event-identity;
+        description "Delay Measurement TCM4-down";
+    }
+	
+    identity tCADelayMeasurementMinTCM4-down {
+        base notifications:event-identity;
+        description "Delay Measurement Low TCM4-down";
+    }
+	
+    identity tCADelayMeasurementMaxTCM4-down {
+        base notifications:event-identity;
+        description "Delay Measurement High TCM4-down";
+    }
+	
+    identity tCADelayMeasurementTCM5-down {
+        base notifications:event-identity;
+        description "Delay Measurement TCM5-down";
+    }
+	
+    identity tCADelayMeasurementMinTCM5-down {
+        base notifications:event-identity;
+        description "Delay Measurement Low TCM5-down";
+    }
+	
+    identity tCADelayMeasurementMaxTCM5-down {
+        base notifications:event-identity;
+        description "Delay Measurement High TCM5-down";
+    }
+	
+    identity tCADelayMeasurementTCM6-down {
+        base notifications:event-identity;
+        description "Delay Measurement TCM6-down";
+    }
+	
+    identity tCADelayMeasurementMinTCM6-down {
+        base notifications:event-identity;
+        description "Delay Measurement Low TCM6-down";
+    }
+	
+    identity tCADelayMeasurementMaxTCM6-down {
+        base notifications:event-identity;
+        description "Delay Measurement High TCM6-down";
+    }
+	
+    identity tCABackgroundBlockErrorsTCM1-up {
+        base notifications:event-identity;
+        description "Background Block Errors TCM1-up";
+    } 
+	
+    identity tCABackgroundBlockErrorsTCM2-up {
+        base notifications:event-identity;
+        description "Background Block Errors TCM2-up";
+    } 
+	
+    identity tCABackgroundBlockErrorsTCM3-up {
+        base notifications:event-identity;
+        description "Background Block Errors TCM3-up";
+    } 
+	
+    identity tCABackgroundBlockErrorsTCM4-up {
+        base notifications:event-identity;
+        description "Background Block Errors TCM4-up";
+    } 
+	
+    identity tCABackgroundBlockErrorsTCM5-up {
+        base notifications:event-identity;
+        description "Background Block Errors TCM5-up";
+    } 
+	
+    identity tCABackgroundBlockErrorsTCM6-up {
+        base notifications:event-identity;
+        description "Background Block Errors TCM6-up";
+    }
+	
+    identity tCABackgroundBlockErrorsTCM1-down {
+        base notifications:event-identity;
+        description "Background Block Errors TCM1-down";
+    } 
+	
+    identity tCABackgroundBlockErrorsTCM2-down {
+        base notifications:event-identity;
+        description "Background Block Errors TCM2-down";
+    } 
+	
+    identity tCABackgroundBlockErrorsTCM3-down {
+        base notifications:event-identity;
+        description "Background Block Errors TCM3-down";
+    } 
+	
+    identity tCABackgroundBlockErrorsTCM4-down {
+        base notifications:event-identity;
+        description "Background Block Errors TCM4-down";
+    } 
+	
+    identity tCABackgroundBlockErrorsTCM5-down {
+        base notifications:event-identity;
+        description "Background Block Errors TCM5-down";
+    } 
+	
+    identity tCABackgroundBlockErrorsTCM6-down {
+        base notifications:event-identity;
+        description "Background Block Errors TCM6-down";
+    } 
+	
+    identity tCAErroredSecondsTCM1-up {
+        base notifications:event-identity;
+        description "Errored Seconds TCM1-up";
+    }
+	
+    identity tCAErroredSecondsTCM2-up {
+        base notifications:event-identity;
+        description "Errored Seconds TCM2-up";
+    }
+	
+    identity tCAErroredSecondsTCM3-up {
+        base notifications:event-identity;
+        description "Errored Seconds TCM3-up";
+    }
+	
+    identity tCAErroredSecondsTCM4-up {
+        base notifications:event-identity;
+        description "Errored Seconds TCM4-up";
+    }
+	
+    identity tCAErroredSecondsTCM5-up {
+         base notifications:event-identity;
+         description "Errored Seconds TCM5-up";
+    }
+ 	
+    identity tCAErroredSecondsTCM6-up {
+        base notifications:event-identity;
+        description "Errored Seconds TCM6-up";
+    }
+ 	
+    identity tCAErroredSecondsTCM1-down {
+        base notifications:event-identity;
+        description "Errored Seconds TCM1-down";
+    }
+ 	
+    identity tCAErroredSecondsTCM2-down {
+        base notifications:event-identity;
+        description "Errored Seconds TCM2-down";
+    }
+ 	
+    identity tCAErroredSecondsTCM3-down {
+       base notifications:event-identity;
+       description "Errored Seconds TCM3-down";
+    }
+ 	
+    identity tCAErroredSecondsTCM4-down {
+       base notifications:event-identity;
+       description "Errored Seconds TCM4-down";
+    }
+ 	
+    identity tCAErroredSecondsTCM5-down {
+       base notifications:event-identity;
+       description "Errored Seconds TCM5-down";
+    }
+ 	
+    identity tCAErroredSecondsTCM6-down  {
+       base notifications:event-identity;
+       description "Errored Seconds TCM6-down";
+    }
+ 	
+    identity tCASeverelyErroredSecondsTCM1-up {
+       base notifications:event-identity;
+       description "Severely Errored Seconds TCM1-up";
+    }  
+ 	
+    identity tCASeverelyErroredSecondsTCM2-up {
+       base notifications:event-identity;
+       description "Severely Errored Seconds TCM2-up";
+    } 
+ 	
+    identity tCASeverelyErroredSecondsTCM3-up {
+       base notifications:event-identity;
+       description "Severely Errored Seconds TCM3-up";
+    } 
+ 	
+    identity tCASeverelyErroredSecondsTCM4-up {
+       base notifications:event-identity;
+       description "Severely Errored Seconds TCM4-up";
+    } 
+ 	
+    identity tCASeverelyErroredSecondsTCM5-up {
+       base notifications:event-identity;
+       description "Severely Errored Seconds TCM5-up";
+    } 
+ 	
+    identity tCASeverelyErroredSecondsTCM6-up {
+       base notifications:event-identity;
+       description "Severely Errored Seconds TCM6-up";
+    } 
+ 	
+    identity tCASeverelyErroredSecondsTCM1-down {
+       base notifications:event-identity;
+       description "Severely Errored Seconds TCM1-down";
+    } 
+ 	
+    identity tCASeverelyErroredSecondsTCM2-down {
+       base notifications:event-identity;
+       description "Severely Errored Seconds TCM2-down";
+    } 
+ 	
+    identity tCASeverelyErroredSecondsTCM3-down {
+       base notifications:event-identity;
+       description "Severely Errored Seconds TCM3-down";
+    } 
+ 	
+    identity tCASeverelyErroredSecondsTCM4-down {
+       base notifications:event-identity;
+       description "Severely Errored Seconds TCM4-down";
+    } 
+ 	
+    identity tCASeverelyErroredSecondsTCM5-down {
+       base notifications:event-identity;
+       description "Severely Errored Seconds TCM5-down";
+    } 
+ 	
+    identity tCASeverelyErroredSecondsTCM6-down {
+       base notifications:event-identity;
+       description "Severely Errored Seconds TCM6-down";
+    } 
+ 	
+    identity tCAUnavailableSecondsTCM1-up {
+       base notifications:event-identity;
+       description "Unavailable Seconds TCM1-up";
+    }   
+ 	
+    identity tCAUnavailableSecondsTCM2-up {
+       base notifications:event-identity;
+       description "Unavailable Seconds TCM2-up";
+    }   
+ 	
+    identity tCAUnavailableSecondsTCM3-up {
+       base notifications:event-identity;
+       description "Unavailable Seconds TCM3-up";
+    }   
+ 	
+    identity tCAUnavailableSecondsTCM4-up {
+       base notifications:event-identity;
+       description "Unavailable Seconds TCM4-up";
+    }   
+ 	
+    identity tCAUnavailableSecondsTCM5-up {
+       base notifications:event-identity;
+       description "Unavailable Seconds TCM5-up";
+    }   
+ 	
+    identity tCAUnavailableSecondsTCM6-up {
+       base notifications:event-identity;
+       description "Unavailable Seconds TCM6-up";
+    }   
+ 	
+    identity tCAUnavailableSecondsTCM1-down {
+       base notifications:event-identity;
+       description "Unavailable Seconds TCM1-down";
+    }   
+ 	
+    identity tCAUnavailableSecondsTCM2-down {
+       base notifications:event-identity;
+       description "Unavailable Seconds TCM2-down";
+    }   
+ 	
+    identity tCAUnavailableSecondsTCM3-down {
+       base notifications:event-identity;
+       description "Unavailable Seconds TCM3-down";
+    }   
+ 	
+    identity tCAUnavailableSecondsTCM4-down {
+       base notifications:event-identity;
+       description "Unavailable Seconds TCM4-down";
+    }   
+ 	
+    identity tCAUnavailableSecondsTCM5-down {
+       base notifications:event-identity;
+       description "Unavailable Seconds TCM5-down";
+    }
+ 	
+    identity tCAUnavailableSecondsTCM6-down {
+       base notifications:event-identity;
+       description "Unavailable Seconds TCM6-down";
+    }   
+    identity tCAErroredSecondsWAN {
+        base notifications:event-identity;
+        description "Errored Seconds WAN";
+    }    
+
+    identity tCASeverelyErroredSecondsWAN {
+        base notifications:event-identity;
+        description "Severely Errored Seconds WAN";
+    }        
+
+    identity tCAUnavailableSecondsWAN {
+        base notifications:event-identity;
+        description "Unavailable Seconds WAN";
+    }        
+
+    identity tCAErroredFramesWAN {
+        base notifications:event-identity;
+        description "GFP errors";
+    }        
+
+    identity tCAProtocolErroredSecond {
+        base notifications:event-identity;
+        description "Protocol Error Seconds";
+    }        
+
+    identity tCAErroredFrames {
+        base notifications:event-identity;
+        description "Errored Frames";
+    }        
+
+    identity tCADiscards {
+        base notifications:event-identity;
+        description "Discards";
+    }        
+
+    identity tCAFrameCheckSumErrors {
+        base notifications:event-identity;
+        description "Frame Check Sum Errors ";
+    }        
+
+    identity tCAOversizeFrames {
+        base notifications:event-identity;
+        description "Oversize Frames";
+    }        
+
+    identity tCAPauseFrames {
+        base notifications:event-identity;
+        description "Pause Frames";
+    }        
+
+ } 

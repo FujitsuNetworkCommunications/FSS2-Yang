@@ -1,0 +1,283 @@
+module fujitsu-radius-client {
+  namespace "urn:fujitsu:params:xml:ns:yang:typedef:radius-client";
+  prefix radius-client;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import fujitsu-user-security {
+    prefix secu;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+
+  organization
+       "Fujitsu Ltd.";
+
+  contact
+       "Fujitsu Ltd.
+
+        Address: 2801 Telecom Parkway
+                 Richardson, Texas 75082
+
+        Tel: +1-800-USE-FTAC (1-800-873-3822)
+        Email: ftac@fnc.fujitsu.com
+        Web: www.fujitsu.com/us/services/telecom";
+
+  description
+       "This module contains definitions for the management of RADIUS
+        client provisioning.
+        Copyright (c) 2016 Fujitsu Ltd.
+        All rights reserved. ";
+
+  revision 2016-10-27 {
+    description
+    "Remove unsupported RADIUS chap identity.";
+  }
+
+  revision 2016-06-30 {
+    description
+    "Initial revision.";
+  }
+
+  feature radius {
+    description
+      "Indicates that the device can be configured as a RADIUS
+       client.";
+    reference "RFC 2865: Remote Authentication Dial In User Service (RADIUS)";
+  }
+
+  identity authentication-method {
+    description
+      "Base identity for user authentication methods.";
+  }
+
+  identity radius {
+    base authentication-method;
+    description
+      "Indicates user authentication using RADIUS.";
+    reference
+      "RFC 2865: Remote Authentication Dial In User Service (RADIUS)
+       RFC 5607: Remote Authentication Dial-In User Service (RADIUS)
+                 Authorization for Network Access Server (NAS)
+                 Management";
+  }
+
+  identity local-users {
+    base authentication-method;
+    description
+      "Indicates password-based authentication of locally
+       configured users.";
+  }
+
+  identity radius-authentication-type {
+    description
+      "Base identity for RADIUS authentication types.";
+  }
+
+  identity radius-pap {
+    base radius-authentication-type;
+    description
+      "The device requests Password Authentication Protocol (PAP)
+       authentication from the RADIUS server.";
+    reference "RFC 2865: Remote Authentication Dial In User Service (RADIUS)";
+  }
+
+  augment "/secu:security" {
+    container radius {
+      if-feature radius;
+      description
+        "Configuration of the RADIUS client.";
+      container authentication {
+        list auth-server {
+          max-elements 5;
+          key "auth-server-name";
+          description
+            "List of RADIUS servers used by the device.
+             
+             When the RADIUS client is invoked by a calling
+             application, it sends the query to the first server in
+             this list.  If no response has been received within
+             'timeout' seconds, the client continues with the next
+             server in the list.  If no response is received from any
+             server, the client continues with the first server again.
+             When the client has traversed the list 'attempts' times
+             without receiving any response, it gives up and returns an
+             error to the calling application.";
+          leaf auth-server-name {
+            type string {
+              length "1..64";
+            }
+            description
+              "An arbitrary name for the RADIUS server.";
+          }
+          choice transport {
+            mandatory true;
+            description
+              "The transport-protocol-specific parameters for this
+               server.";
+            case udp {
+              container udp {
+                description
+                  "Contains UDP-specific configuration parameters
+                   for RADIUS.";
+                leaf auth-address {
+                  type inet:ip-address;
+                  mandatory true;
+                  description
+                    "The address of the RADIUS server.";
+                }
+                leaf auth-port {
+                  type uint16 {
+                      range "1..65535";
+                  }
+                  default "1812";
+                  description
+                    "The port number of the RADIUS server.";
+                }
+                leaf auth-shared-secret {
+                  type string;
+                  mandatory true;
+                  description
+                    "The shared secret, which is known to both the
+                     RADIUS client and server. This shouldn't be in clear text";
+                  reference
+                    "RFC 2865: Remote Authentication Dial In User
+                               Service (RADIUS)";
+                }
+                leaf auth-timeout {
+                  type uint8 {
+                    range "1..30";
+                  }
+                  units "seconds";
+                  default "5";
+                  description
+                    "The number of seconds the device will wait for a
+                     response from each RADIUS server before trying with a
+                     different server.";
+                }
+              }
+            }
+          }
+          leaf authentication-type {
+            type identityref {
+              base radius-authentication-type;
+            }
+            default "radius-pap";
+            description
+              "The authentication type requested from the RADIUS
+               server.";
+          }
+        }
+        leaf auth-server-attempts {
+          type uint8 {
+            range "1..5";
+          }
+          default "2";
+          description
+            "The number of times the device will send a query to
+             all of its RADIUS servers before giving up.";
+        }
+        leaf-list auth-server-priority {
+          ordered-by user;
+          description
+            "The order of servers the device will attempt authentication.";
+          type leafref {
+            path "/secu:security/radius-client:radius/radius-client:authentication/radius-client:auth-server/radius-client:auth-server-name";
+          }
+        }
+      }
+      container accounting {
+        list acct-server {
+          max-elements 5;
+          key "acct-server-name";
+          description
+            "List of RADIUS servers used by the device.
+             
+             When the RADIUS client is invoked by a calling
+             application, it sends the query to the first server in
+             this list.  If no response has been received within
+             'timeout' seconds, the client continues with the next
+             server in the list.  If no response is received from any
+             server, the client continues with the first server again.
+             When the client has traversed the list 'attempts' times
+             without receiving any response, it gives up and returns an
+             error to the calling application.";
+          leaf acct-server-name {
+            type string  {
+              length "1..64";
+            }
+            description
+              "An arbitrary name for the RADIUS server.";
+          }
+          choice transport {
+            mandatory true;
+            description
+              "The transport-protocol-specific parameters for this
+               server.";
+            case udp {
+              container udp {
+                description
+                  "Contains UDP-specific configuration parameters
+                   for RADIUS.";
+                leaf acct-address {
+                  type inet:ip-address;
+                  mandatory true;
+                  description
+                    "The address of the RADIUS server.";
+                }
+                leaf acct-port {
+                  type uint16 {
+                      range "1..65535";
+                  }
+                  default "1813";
+                  description
+                    "The port number of the RADIUS server.";
+                }
+                leaf acct-shared-secret {
+                  type string;
+                  mandatory true;
+                  description
+                    "The shared secret, which is known to both the
+                     RADIUS client and server. This shouldn't be in clear text";
+                  reference
+                    "RFC 2865: Remote Authentication Dial In User
+                               Service (RADIUS)";
+                }
+                leaf acct-timeout {
+                  type uint8 {
+                    range "1..30";
+                  }
+                  units "seconds";
+                  default "5";
+                  description
+                    "The number of seconds the device will wait for a
+                     response from each RADIUS server before trying with a
+                     different server.";
+                }
+              }
+            }
+          }
+        }
+        leaf acct-server-attempts {
+          type uint8 {
+            range "1..5";
+          }
+          default "2";
+          description
+            "The number of times the device will send a query to
+             all of its RADIUS servers before giving up.";
+        }
+        leaf-list acct-server-priority {
+          ordered-by user;
+          description
+            "The order of servers the device will attempt to send accounting information.";
+          type leafref {
+            path "/secu:security/radius-client:radius/radius-client:accounting/radius-client:acct-server/radius-client:acct-server-name";
+          }
+        }
+      }
+    }
+  }
+}

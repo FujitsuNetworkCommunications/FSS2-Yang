@@ -1,0 +1,107 @@
+module fujitsu-ipv4-unicast-routing-ext {
+  namespace "urn:fujitsu:params:xml:ns:yang:ietf-ipv4-unicast-routing-ext";
+  prefix fujitsu-v4ur;
+
+  import ietf-routing {
+    prefix rt;
+  }
+
+  import ietf-ipv4-unicast-routing {
+    prefix v4ur;
+  } 
+
+  import ietf-interfaces {
+    prefix if;
+  }
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+
+  contact
+    "Fujitsu Ltd.
+
+    Address: 2801 Telecom Parkway
+    Richardson, Texas 75082
+
+    Tel: +1-800-USE-FTAC (1-800-873-3822)
+    Email: ftac@fnc.fujitsu.com
+    Web: www.fujitsu.com/us/services/telecom";
+
+  description
+    "This file contains the extensions 
+    for the ietf ipv4 unicast routing yang model.
+
+      Copyright (c) 2016 Fujitsu Ltd.
+        All rights reserved. ";
+
+  revision 2018-01-22 {
+      description "Changed filename, module name, and prefix";
+  }
+
+  revision 2017-10-30 {
+    description
+     "Removed the AID check for onlink-next-hop-intf";
+  }
+
+  revision 2017-04-05 {
+    description
+      "Added support for SC-E1/2";
+  }
+
+  revision 2017-03-06 {
+    description
+      "OSC interface specific validations are made generic to support E-SC-E2 interface";
+  }
+
+  revision 2017-02-21 {
+      description
+      "Support to have next hop address as leaf-list";
+  }
+
+  augment "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/rt:static-routes/v4ur:ipv4/v4ur:route/v4ur:next-hop/v4ur:next-hop-options" {
+  //  description
+  //    "Add onlink static route case.";
+    case onlink-static-route {
+     leaf onlink-outgoing-intf {
+        mandatory true;
+        type leafref {
+          path "/rt:routing/rt:routing-instance/rt:interfaces/"
+             + "rt:interface";
+        }
+        description
+          "Outgoing interface for onlink static route (must be set along with onlink-next-hop-addr.)";
+      }
+      leaf onlink-next-hop-addr {
+        mandatory true;
+        type inet:ipv4-address;
+        description
+          "Next-hop address for onlink static route (must be set along with onlink-outgoing-intf.)";
+      } 
+    }
+  }
+
+  augment "/rt:routing-state/rt:routing-instance/rt:ribs/rt:rib/rt:routes/"
+    + "rt:route/rt:next-hop/rt:next-hop-options/rt:simple-next-hop" {
+    when "../../../rt:address-family = 'v4ur:ipv4-unicast'" {
+      description
+        "This augment is valid only for IPv4 unicast.";
+    }
+    leaf-list next-hop-address {
+    type inet:ipv4-address;
+    description
+      "List of IPv4 next-hops.";
+    } 
+  }
+}

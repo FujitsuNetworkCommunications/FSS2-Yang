@@ -1,0 +1,84 @@
+module fujitsu-ssh-host-key {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:typedef:ssh-host-key";
+  prefix hkey;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  organization
+       "Fujitsu Ltd.";
+
+  contact
+       "Fujitsu Ltd.
+
+        Address: 2801 Telecom Parkway
+                 Richardson, Texas 75082
+
+        Tel: +1-800-USE-FTAC (1-800-873-3822)
+        Email: ftac@fnc.fujitsu.com
+        Web: www.fujitsu.com/us/services/telecom";
+
+  description
+       "This module is used to define the RPC call to create a SSH Host Key,
+        provide a notification of when the creation is complete, and support
+        retrieval of the Host key fingerprint. 
+        Copyright (c) 2015 Fujitsu Ltd.
+        All rights reserved. ";
+
+  revision 2015-10-14;
+
+  rpc generate-ssh-host-key {
+      tailf:info "Generate and replace ssh host key.";
+      tailf:exec "/usr/bin/fnc-generate-ssh-host-key.pl";
+
+      /* Only DSA 1024 supported by tailf/confd internal SSH server and no seed */
+      
+      output {
+        leaf begin-generation {
+          tailf:cli-no-keyword;
+          type string;
+          description "Returned immediately to indicate host key
+            generation has begun.";
+          /* If generation successfully begins the string should be 
+             "Beginning generation of 1024 bit DSA SSH host key."; otherwise return 
+             error info indicating reason for failing to begin key generation. */
+        }
+      }
+  }
+
+  rpc show-ssh-host-key {
+    tailf:info "Show ssh host key status and fingerprint.";
+    tailf:exec "/usr/bin/fnc-show-ssh-host-key.pl" {
+    tailf:uid "user";
+   }
+
+    output {
+      leaf status { 
+        type string;
+        description "Status of host key. For example: 
+         'Host Key Generation is in progress' or 
+         'Host Key Generation Complete' and include a date-time string."; 
+      } 
+      leaf fingerprint { 
+        type string; 
+        description "Fingerprint of Host key (once generated). 
+         Should be blank while generation is in progress."; 
+      } 
+    }
+  }
+  
+   
+  notification ssh-host-key-generation-complete {
+    leaf status {
+      type string;
+    }
+    leaf fingerprint {
+       type string;
+    }
+    description "SSH Host Key generation completed.";     
+  }
+  
+}
+ 

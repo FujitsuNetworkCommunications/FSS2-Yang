@@ -1,0 +1,200 @@
+module fujitsu-notifications {
+    namespace "urn:fujitsu:params:xml:ns:yang:notifications";
+    prefix fujitsu-notifications;
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+
+    organization
+       "Fujitsu Ltd.";
+
+    contact
+       "Fujitsu Ltd.
+
+        Address: 2801 Telecom Parkway
+                 Richardson, Texas 75082
+
+        Tel: +1-800-USE-FTAC (1-800-873-3822)
+        Email: ftac@fnc.fujitsu.com
+        Web: www.fujitsu.com/us/services/telecom";
+
+    description
+       "This module contains a collection of YANG definitions for
+        additional notifications. 
+
+        Copyright (c) 2015 Fujitsu Ltd.
+        All rights reserved. ";
+
+    revision 2015-11-20 {
+        description
+        "Initial revision.";
+    }
+  
+  //
+  // Identities
+  //
+
+  identity event-identity {
+    description
+      "Base identity for event types.  A unique identification of the
+       event, not including the resource.  Different resources can
+       share event types.  
+
+       A string-based qualifier can be used in addition to the
+       identity in order to have different alarm types based on
+       information not known at design-time.
+
+       This identity is abstract and shall not be used for events.";
+  }
+  
+  //
+  // Types
+  //
+
+  typedef event-type-id {
+    type identityref {
+      base event-identity;
+    }
+    description
+      "Identifies an event type.";
+  }
+
+
+  typedef event-type-qualifier {
+    type string;
+    description
+      "If an event type can not be fully specified at design-time by
+       event-type-id, this string qualifier is used in addition to
+       fully define a unique event type.";
+  }
+
+  typedef resource {
+    type union {
+      type instance-identifier {
+        require-instance false;
+      }
+      type yang:object-identifier;
+      type string;
+    }
+    description
+       "If the resource reporting the event is modelled in YANG, 
+       this type will be an instance-identifier.  If the resource 
+       is an SNMP object, the type will be an object-identifier.  
+       If the resource is anything else, this type will be a string.";
+ 
+  }
+
+  typedef event-text {
+    type string {
+      length "1..1024";
+    }
+    description
+      "The string used to inform operators about the event.  This
+       MUST contain enough information for an operator to be able
+       to understand the event.  If this string contains structure, 
+       this format should be clearly documented for programs to be 
+       able to parse that information.";
+  }
+
+  //
+  // Groupings
+  //
+  
+  grouping common-event-parameters {
+    description
+      "Common parameters for an event.";
+
+    leaf resource {
+      type resource;
+      mandatory true;
+      description
+        "The resource reporting the event.";
+    }
+
+    leaf event-type-id {
+      type event-type-id;
+      mandatory true;
+      description
+        "This leaf and the leaf 'event-type-qualifier' together
+         provides a unique identification of the event type.";
+    }
+
+    leaf event-type-qualifier {
+      type event-type-qualifier;
+      description
+        "This leaf is used when the 'event-type-id' leaf cannot
+         uniquely identify the event type. 
+         Event's location and direction are included in this qualifier. 
+         Threshold crossover events would also include time-period";
+    }
+
+    leaf event-time {
+      type yang:date-and-time;
+      mandatory true;
+      description
+        "The time the event occurred.  The value represents the time 
+        the real event occurred in the resource and not when it was 
+        notified.";
+    }
+
+    leaf event-text {
+      type event-text;
+      mandatory true;
+      description
+        "A user friendly text describing the reason for event.";
+    }
+
+  }
+  
+  //
+  // Notifications
+  //
+
+  notification event-notification {
+    description
+      "This notification is used to report an event.";
+    uses common-event-parameters;
+
+    leaf circuit-id {
+        type string {
+          length "0..45";
+        }
+        description
+         "Circuit identifier of the resource, if available.";
+    }   
+    
+  }
+
+  /*
+  notification netconf-status-change {
+    description
+      "The notification summarizes the oper status changes that
+       have been detected for a resource";
+       
+    leaf resource {
+      type resource;
+      mandatory true;
+      description
+        "The resource reporting the status changes.";
+    }
+       
+    list change {
+      description
+        "A change record SHOULD be present for each distinct attribute";
+
+      leaf attribute {
+        type resource;
+        description
+          "Attribute node associated with the configuration change.";
+      }
+
+      leaf value {
+        type string;
+        description
+          "Value of attribute in string format";
+      }
+    }  
+  }
+  */
+}

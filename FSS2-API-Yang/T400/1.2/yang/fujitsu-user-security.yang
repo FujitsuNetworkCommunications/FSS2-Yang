@@ -1,0 +1,446 @@
+module fujitsu-user-security {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:usersecurity";
+  prefix secu;
+
+  import fujitsu-user-security-typedefs {
+    prefix usersecu-type;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+  import tailf-aaa {
+    prefix taa;
+  }
+
+  organization
+       "Fujitsu Ltd.";
+
+  contact
+       "Fujitsu Ltd.
+
+        Address: 2801 Telecom Parkway
+                 Richardson, Texas 75082
+
+        Tel: +1-800-USE-FTAC (1-800-873-3822)
+        Email: ftac@fnc.fujitsu.com
+        Web: www.fujitsu.com/us/services/telecom";
+
+  description
+       "This module contains definitions for managment of security feature 
+        defaults used for user account provisioning as well as system wide
+        security feature settings.
+        Copyright (c) 2015 Fujitsu Ltd.
+        All rights reserved. ";
+ 
+  revision 2017-12-22 {
+    description
+      "Crypt password type modified";
+  }
+
+  revision 2017-11-06 {
+    description
+      "Modifies the descriptions for level-2 and level-3 Users";
+  }
+ 
+  revision 2017-10-13 {
+    description
+      "Added missing help strings for Systemwide Security elements";
+  }
+  revision 2017-09-27 {
+    description
+      "deprecated all unused read-write elements from security yang
+       and removed all invisible and read-only unused elements";
+  }
+  revision 2017-07-05 {
+    description
+      "Security Yang performance improvement";
+  }
+  revision 2017-06-08 {
+    description
+      "Added description for Authentication order";
+  }
+  revision 2017-06-06 {
+    description 
+      "Moved authentication-order precondition from data model";
+  }
+  revision 2017-05-26 {
+    description 
+      "Added support for configuring Accounting Order";
+  }
+  revision 2017-05-05 {
+    description
+    "updated must statement and min-elements under authentication-order 
+     to support tacacs or radius only cases";
+  }
+  revision 2017-03-29 {
+    description 
+    "cli preformat support removed for pre-login-banner and post-login-banner";
+  }
+  revision 2017-03-20 {
+    description 
+    "Validation check for authentication order";
+  }
+  revision 2016-11-21 {
+    description
+     "Updated for configurable banner support";
+  }
+
+  revision 2016-11-04 {
+      description
+          "Modified the type to password-type for each leaf of rpc change-password";
+  }
+
+  revision 2015-09-30;
+
+  container security {
+    description
+      "Security related Configurations";
+    container defaults {
+      status deprecated;
+      leaf uage {
+        status deprecated;
+        type usersecu-type:uage-type;
+        mandatory true;
+      }
+      leaf page {
+        status deprecated;
+        type usersecu-type:page-type;
+        mandatory true;
+      }
+      leaf minit {
+        status deprecated;
+        type usersecu-type:minit-type;
+        mandatory true;
+      }
+      leaf reauth {
+        status deprecated;
+        type usersecu-type:reauth-type;
+        mandatory true;
+      }
+      leaf idle-timeout {
+        status deprecated;
+        /* 
+         type and range determined by that in tailf-aaa user sessions.
+         Need to make this a leafref to cause system default in the confd cli 
+           to be updated when this value is set.
+         Or possibly remove this leaf if the confd cli default idle-timeout
+           is "hard coded".
+      */
+        type uint64 {
+          range "0 .. 8192";
+        }
+        mandatory true;
+      }
+    } // defaults
+
+    container systemwide {
+      leaf uage {
+        description "Systemwide user account aging";
+        type usersecu-type:uage-type;
+        default 'OFF';
+      }
+      leaf umin {
+        type usersecu-type:umin-type;
+         description
+           "Minimum Username length";
+      }
+      leaf pmin {
+        type usersecu-type:pmin-type;
+        description
+           "Minimum Password length";
+      }
+      leaf pcontent {
+        type usersecu-type:pcontent-type;
+        description "Determines the allowed password content - BASIC or ENHANCED";
+      } 
+      leaf prot {
+        status deprecated;
+        type usersecu-type:prot-type;
+        description 
+          "Password Rotation";
+      }
+      leaf smt {
+        status deprecated;
+        type usersecu-type:smt-type;
+        description
+          "Provides permission to have multiple sessions";
+      }
+      leaf dural {
+        type usersecu-type:dural-type;
+        description
+          "Duration of account lockout after maximum number of unsuccessful user login attempts";
+      }	
+      leaf maxinv {
+        type usersecu-type:maxinv-type;
+        description
+          "Maximum number of unsuccessful user login attempts before account gets locked out";
+      } 
+      leaf pre-login-banner {
+        type string {
+          length "0..1600";
+        }
+        default "Welcome to the FUJITSU 1FINITY\nCopyright Fujitsu Network Communications";
+        description
+          "Pre-login banner that is to be displayed before user enters the login
+           details";
+      }
+      leaf post-login-banner {
+        type string {
+          length "0..1600";
+        }
+        default
+          "NOTICE: THIS IS A PRIVATE COMPUTER SYSTEM. UNAUTHORIZED ACCESS OR USE MAY LEAD TO PROSECUTION.";
+        description
+          "Post-login banner that is to be displayed after successful login";
+      }
+      leaf lastlogin {
+        status deprecated;
+        type usersecu-type:lastlogin-type;
+        description
+          "Timestamp of the last login and number of login failures since last successful login";
+      }
+      leaf warn {
+        status deprecated;
+        type usersecu-type:warn-type;
+        description
+          "Set warning message";
+
+      }
+      leaf debug {
+        status deprecated;
+        type usersecu-type:yORn-type;
+        description
+          "Enable Debugging level Message";
+
+      }
+      leaf-list authentication-order {
+        description
+            "AAA authentication order defines the destination hierarchy for authentication and authorization";
+        max-elements 3;
+        min-elements 1;
+        type usersecu-type:authentication-type;
+        ordered-by user;
+      }
+      leaf-list accounting-order {
+        description
+            "AAA accounting order defines the destination hierarchy for accounting audit logging";
+        max-elements 2;
+        type usersecu-type:accounting-type;
+        ordered-by user;
+      }
+    } //systemwide
+
+  } // security
+
+  list usergrp {
+    description
+      "User group related configurations";
+    key group;
+  
+    leaf group {
+      type usersecu-type:group-type;
+    }
+    leaf gid {
+      type int32;
+    }
+  } //usergrp
+
+  list usersec {
+    status deprecated;
+    description
+      "User security related configurations";
+    key username;
+
+    leaf username {
+      status deprecated;
+      must "/secu:users/secu:user[secu:username=current()]/secu:username = current()" {
+        error-message "Entered username must already be provisioned in users.";
+        tailf:dependency '.';
+        tailf:dependency '/secu:users/secu:user/secu:username';
+        tailf:override-auto-dependencies;
+      }
+      type usersecu-type:username-type;
+    }
+    leaf uage {
+      status deprecated;
+      tailf:cli-show-with-default;
+      type usersecu-type:uage-type;
+      tailf:default-ref '/secu:security/secu:defaults/secu:uage';
+    }
+    leaf page {
+      status deprecated;
+      tailf:cli-show-with-default;
+      type usersecu-type:page-type;
+      tailf:default-ref '/secu:security/secu:defaults/secu:page';
+    }
+    leaf pidout {
+      status deprecated;
+      when "../page != 'OFF'";
+      config false;
+      type int32;
+    }
+    leaf minit {
+      status deprecated;
+      tailf:cli-show-with-default;
+      type usersecu-type:minit-type;
+      tailf:default-ref '/secu:security/secu:defaults/secu:minit';
+    }
+    leaf reauth {
+      status deprecated;
+      tailf:cli-show-with-default;
+      type usersecu-type:reauth-type;
+      tailf:default-ref '/secu:security/secu:defaults/secu:reauth';
+    }
+
+    /*
+      Requires software instantiate user in taa user container in cli 
+       this would be  
+           > set user <username>
+       when a user account is created in the secu users container 
+       by the user via   >set users user <username>
+       This is referred to as the symlink support feature.
+    */
+    
+    leaf idle-timeout {
+      status deprecated;
+      type int32; 
+      tailf:link "/taa:user[taa:name=current()/../username]/taa:session/taa:idle-timeout";
+    }
+
+  } // usersec
+
+
+  container users { 
+    description
+      "Users related configurations";
+
+    must "boolean(/secu:users/secu:user[(secu:group='level-4') and (secu:adminState='allow')] ) or (/secu:users/secu:user[(secu:group='level-6') and (secu:adminState='allow')])" {
+        error-message "Atleast one Level-4 or Level-6 user with allow admin state must be present";
+        tailf:dependency '.';
+        tailf:dependency './user/group';
+        tailf:dependency './user/adminState';
+        tailf:override-auto-dependencies;
+    }
+
+    list user {
+      // Support max 100 user accounts
+      max-elements 100;
+      key username;
+
+      leaf username {
+        // Check if strlen(username) >= ../../security/systemwide/umin
+    	type usersecu-type:username-type;
+    	mandatory true;
+      }
+      leaf crypt-password {
+        tailf:suppress-echo true;
+        tailf:info "encrypted password.
+                    crypt-password and password should not co-exist unless password is *";
+        type usersecu-type:crypt-password-type;
+      }
+
+      leaf password {
+        tailf:suppress-echo true;
+        tailf:info "clear text password.
+                    crypt-password and password should not co-exist unless password is *";
+         
+        // Assume char content of password checked externally by PAM 
+        // based on ../../security/systemwide/pcontent.
+        // Check if strlen(password) >= ../../security/systemwide/pmin
+    	type usersecu-type:password-type;
+    	// Once entry processed, SW backfills this value with "*".
+      }
+      leaf group {
+        must "/secu:usergrp[secu:group=current()]/secu:group = current()" {
+          error-message "entered group must be level-1, level-2..., or level-6";
+          tailf:dependency '.';
+          tailf:dependency '/secu:usergrp/secu:group';
+          tailf:override-auto-dependencies;
+        }
+        type usersecu-type:group-type;
+        tailf:info "Group defines authorization levels that control command and data access privileges.
+                    Entered group must be level-1, level-2, ... level-6.
+                    level-1 Read-only access privileges
+                    level-2 Request alarms,PMs along with level-1 privileges 
+                    level-3 Equipment and interfaces provisioning along with level-2 privileges
+                    level-4 Super-user with full access to all system, provisioning, and security functions
+                    level-5 All privileges except security
+                    level-6 Security privileges only.";
+        mandatory true;
+      }
+      leaf adminState {
+        tailf:info "admin State of the user - allow/inhibit";
+        tailf:cli-show-with-default;
+        type usersecu-type:adminState-type;
+        default allow;
+      }
+
+      container session {
+        tailf:info "User specific session parameters";
+        // TODO: this when statement will be removed once UAGE feature support is added
+        when "/secu:security/secu:systemwide/secu:uage != 'OFF'";
+
+        leaf uage {
+          when "../../group != 'level-4' and ../../group != 'level-6' and ../../group != 'level-8'";
+          tailf:info "User account aging";
+          tailf:cli-show-with-default;
+          type usersecu-type:uage-type;
+          tailf:default-ref '/secu:security/secu:systemwide/secu:uage';
+        }
+        leaf uidout {
+          when "../uage != 'OFF'";
+          tailf:info "Remaining days to expire the User account";
+          config false;
+          type int32;
+        }
+      } //session
+
+    } // user
+  } // users
+
+  rpc change-password {
+    description 
+      "RPC to change the logged in user's password";
+    input {
+      leaf currentPassword {
+        type usersecu-type:password-type;
+        description
+          "provide the current password";
+        mandatory true;
+      }
+      leaf newPassword {
+        type usersecu-type:password-type;
+        description
+          "provide a new password";
+        mandatory true;
+      }
+      leaf newPasswordConfirm {
+        type usersecu-type:password-type;
+        description
+          "re-enter the new password ";
+        mandatory true;
+      }
+    }
+    output {
+      leaf status {
+        type enumeration {
+          enum "Successful" {
+            value 1;
+          }
+          enum "Failed" {
+            value 2;
+          }
+        }
+        mandatory true;
+        description
+          "Successful or Failed";
+      }
+      leaf status-message {
+        type string;
+        description
+          "Gives a more detailed reason for success / failure";
+      }
+    }
+  } //change-password rpc
+}

@@ -1,0 +1,91 @@
+   module fujitsu-gcc {
+
+     namespace "urn:fujitsu:params:xml:ns:yang:fgcc";
+     prefix fujitsuGcc;
+
+    organization
+       "Fujitsu Ltd.";
+
+    contact
+       "Fujitsu Ltd.
+
+        Address: 2801 Telecom Parkway
+                 Richardson, Texas 75082
+
+        Tel: +1-800-USE-FTAC (1-800-873-3822)
+        Email: ftac@fnc.fujitsu.com
+        Web: www.fujitsu.com/us/services/telecom";
+
+     description
+       "This module contains the GCC (GCC0/GCC1/GCC2/GCC12) model
+
+        Copyright (c) 2015 Fujitsu Network Communications, Inc.
+        All rights reserved. ";
+
+     revision 2015-09-14 {
+       description
+         "Initial revision.";
+       reference
+         "None.";
+     }
+
+     typedef GccType {
+       type enumeration {
+         enum gcc0 {
+           value "0";
+           description "gcc0";
+         }
+         enum gcc1 {
+           value "1";
+           description "gcc1";
+         }
+         enum gcc2 {
+           value "2";
+           description "gcc2";
+         }
+         enum gcc12 {
+           value "3";
+           description "gcc12";
+         }
+       }
+       description "GCC Types GCC0, GCC1, GCC2, GCC12";
+     } // gcc-type
+
+     typedef protocolType {
+       type enumeration {
+         enum IP {
+           value "0";
+           description "IP";
+         }
+         enum OSI {
+           value "1";
+           description "OSI";
+         }
+       }
+       description "Protocol configured/running over xDCC";
+     } // protocolType
+
+     grouping gcc-group{
+
+           leaf gccType {
+               type GccType;
+               description "gcc type ";
+ 
+           }
+
+           leaf gccEnabled {
+             type boolean;
+             description "true: means GCC enabled
+                          false: means GCC disabled";
+           }
+
+           leaf protocol {
+             type protocolType;
+             default 'IP';
+             description "Protocol running over GCC: IP or OSI";
+           }
+
+
+    } // group gcc-group
+
+}

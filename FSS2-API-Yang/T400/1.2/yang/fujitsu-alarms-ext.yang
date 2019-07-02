@@ -1,0 +1,284 @@
+module fujitsu-alarms-ext {
+  namespace "urn:fujitsu:params:xml:ns:yang:alarms-ext";
+  prefix alarms-ext;
+
+  import ietf-alarms {
+    prefix al;
+  }
+
+  organization "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains a collection of YANG definitions for
+     alarm management. It is an extension of the ietf-alarms.yang
+     module.
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2017-04-21 {
+    description
+        "Added alarm-severity-code not-applicable type";
+    reference
+        "None.";
+  }
+
+  revision 2017-04-11 {
+    description
+        "Added alarm-severity-status";
+    reference
+        "None.";
+  }
+  revision 2015-05-14 {
+    description
+      "Initial revision.";
+  }
+
+  typedef alarm-severity-code {
+    type enumeration {
+      enum "minor" {
+        value 3;
+      }
+      enum "major" {
+        value 5;
+      }
+      enum "critical" {
+        value 6;
+      }
+      enum "warning" {
+        value 4;
+      }
+      enum "not-applicable" {
+        value 0;
+      }
+    }
+    description
+      "The alarm assignment severity level.";
+    reference "ITU Recommendation M.3100";
+  }
+
+  grouping alarm-severity-assignment {
+    leaf entity {
+      type string;
+      description
+        "The alarming entity.";
+    }
+    leaf alarm-type-id {
+      type al:alarm-type-id;
+      description
+        "This leaf and the leaves 'alarm-direction' and 'alarm-location'
+         together provides a unique identification of the alarm type.";
+    }
+    leaf alarm-direction {
+      type string;
+      description
+        "This leaf is used when the 'alarm-type-id' leaf cannot
+         uniquely identify the alarm type.  Normally, this is not
+         the case, and this leaf is the empty string.";
+    }
+    leaf alarm-location {
+      type string;
+      description
+        "This leaf is used when the 'alarm-type-id' leaf cannot
+         uniquely identify the alarm type. location can be either
+         near-end or far-end";
+    }
+    leaf severity-assigned-when-sa {
+      type alarm-severity-code;
+      description
+        "The alarm severity for service-affecting";
+    }
+    leaf notification-enabled-when-sa {
+      type boolean;
+      description
+        "indicated whether the service affecting warning alarm is
+         associated with an alarm-notification. Not reported warnings
+         shall map to FALSE; reported warnings shall map to TRUE";
+      default true;
+    }
+    leaf severity-assigned-when-nsa {
+      type alarm-severity-code;
+      description
+        "The alarm severity for non-service-affecting";
+    }
+    leaf notification-enabled-when-nsa {
+      type boolean;
+      description
+        "indicated whether the non-service affecting warning alarm is
+         associated with an alarm-notification. Not reported warnings
+         shall map to FALSE; reported warnings shall map to TRUE";
+      default true;
+    }
+  }
+
+    // adding SA/NSA flag to alarm list
+  augment "/al:alarms/al:alarm-list/al:alarm" {
+      leaf last-is-service-affecting {
+          type boolean;
+          description
+              "indicated whether the alarm is service-affecting
+               or non-service-affecting";
+      }
+
+      leaf notification-enabled {
+          type boolean;
+          description
+              "indicated whether the warning alarm is associated with
+               an alarm-notification. Not reported warnings shall
+               shall map to FALSE; reported warnings shall map to TRUE";
+      }
+
+      leaf circuit-id {
+          type string {
+              length "0..45";
+          }
+          description
+              "circuit identifier of the resource";
+      }
+  }
+
+  augment "/al:alarms" {
+    list alarm-severity-assignment {
+      key "entity alarm-type-id alarm-direction alarm-location";
+      uses alarm-severity-assignment;
+      description
+        "alarm severity assignments per entity,
+         'alarm-type-id', 'alarm-direction' and 'alarm-location'";
+    }
+
+    list alarm-severity-status {
+      key "entity alarm-type-id alarm-direction alarm-location";
+      config false;
+      description "Table listing the alarm-severity-status for each resource";
+      leaf entity {
+        type string;
+        description
+          "The resource/entity-id where an alarm is reported.";
+      }
+      leaf alarm-type-id {
+        type al:alarm-type-id;
+        description
+          "This leaf and the leaf 'alarm-type-qualifier' together
+           provides a unique identification of the alarm type.";
+      }
+      leaf alarm-direction {
+        type string;
+        description
+          "This leaf is used when the 'alarm-type-id' leaf cannot
+           uniquely identify the alarm type.  Normally, this is not
+           the case, and this leaf is the empty string.";
+      }
+      leaf alarm-location {
+        type string;
+        description
+          "This leaf is used when the 'alarm-type-id' leaf cannot
+           uniquely identify the alarm type. location can be either
+           near-end or far-end";
+      }
+      leaf severity-assigned-when-sa {
+        type alarm-severity-code;
+        description
+          "The alarm severity for service-affecting";
+      }
+      leaf notification-enabled-when-sa {
+        type boolean;
+        description
+          "indicated whether the service affecting warning alarm is
+           associated with an alarm-notification. Not reported warnings
+           shall map to FALSE; reported warnings shall map to TRUE";
+        default true;
+      }
+      leaf severity-assigned-when-nsa {
+        type alarm-severity-code;
+        description
+          "The alarm severity for non-service-affecting";
+      }
+      leaf notification-enabled-when-nsa {
+        type boolean;
+        description
+          "indicated whether the non-service affecting warning alarm is
+           associated with an alarm-notification. Not reported warnings
+           shall map to FALSE; reported warnings shall map to TRUE";
+        default true;
+      }
+    }
+
+    list severity-defaults {
+      key "entity alarm-type-id alarm-direction alarm-location";
+      config false;
+      description "Table listing the default values for alarm-severities for each entity";
+      leaf entity {
+        type string;
+        description
+          "The alarming entity.";
+      }
+      leaf alarm-type-id {
+        type al:alarm-type-id;
+        description
+          "This leaf and the leaf 'alarm-type-qualifier' together
+           provides a unique identification of the alarm type.";
+      }
+      leaf alarm-direction {
+        type string;
+        description
+          "This leaf is used when the 'alarm-type-id' leaf cannot
+           uniquely identify the alarm type.  Normally, this is not
+           the case, and this leaf is the empty string.";
+      }
+      leaf alarm-location {
+        type string;
+        description
+          "This leaf is used when the 'alarm-type-id' leaf cannot
+           uniquely identify the alarm type. location can be either
+           near-end or far-end";
+      }
+      leaf default-severity-when-sa {
+        type alarm-severity-code;
+        description
+        "The default alarm severity. Presence of this indicates the alarm is service affecting";
+      }
+      leaf notification-enabled-when-sa {
+        type boolean;
+        description
+          "indicated whether the warning alarm is associated with
+           an alarm-notification. Not reported warnings shall
+           shall map to FALSE; reported warnings shall map to TRUE";
+      }
+      leaf default-severity-when-nsa {
+        type alarm-severity-code;
+        description
+        "The default alarm severity. Presence of this indicates the alarm is non-service affecting ";
+      }
+      leaf notification-enabled-when-nsa {
+        type boolean;
+        description
+          "indicated whether the warning alarm is associated with
+           an alarm-notification. Not reported warnings shall
+           shall map to FALSE; reported warnings shall map to TRUE";
+      }
+    }
+  }
+  augment "/al:alarm-notification" {
+    leaf is-service-affecting {
+      type boolean;
+      description
+        "indicated whether the alarm is service-affecting
+         or non-service-affecting";
+    }
+    leaf circuit-id {
+      type string {
+        length "0..45";
+      }
+      description
+        "circuit identifier of the resource";
+    }
+  }
+}

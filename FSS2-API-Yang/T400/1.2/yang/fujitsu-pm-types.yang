@@ -1,0 +1,982 @@
+module fujitsu-pm-types {
+    namespace "urn:fujitsu:params:xml:ns:yang:perfmon:pm-types";
+    prefix pm-types;
+
+    import fujitsu-performance-monitoring-typedefs {
+        prefix pmtypedefs;
+    }
+
+    organization
+       "Fujitsu Ltd.";
+
+    contact
+       "Fujitsu Ltd.
+
+        Address: 2801 Telecom Parkway
+                 Richardson, Texas 75082
+
+        Tel: +1-800-USE-FTAC (1-800-873-3822)
+        Email: ftac@fnc.fujitsu.com
+        Web: www.fujitsu.com/us/services/telecom";
+
+    description
+       "This module contains supported Performance Monitoring types.
+
+        Copyright (c) 2015 Fujitsu Ltd.
+        All rights reserved. ";
+    
+    revision 2018-03-27 {
+        description
+        "Added new Montype opticalPowerTransmitDra for L-Band RAMAN";
+    }
+    revision 2017-11-23 {
+        description
+        "Added new Montype for OLEAF";
+    }
+    revision 2017-11-10 {
+        description
+        "Added new OLEAF Supported Montypes"; 
+    }
+    revision 2017-09-06 {
+        description
+        "Add TCM Supported Montypes";
+    }
+    revision 2017-07-19 {
+        description
+        "Added new OTN protection PMs:
+         protectionSwitchCount and protectionSwitchDuration";
+    }
+    revision 2017-04-21 {
+        description
+        "Added new OSC L2 PMs:
+         inFrames, inFramesErr, outFrames, erroredSecondEthernet,
+         severelyErroredSecondEthernet and unavailableSecondEthernet";
+    }
+    revision 2017-04-19{
+        description
+        "Data Encryption Montypes retained:
+         FramesEncrypted, FramesDecrypted,
+         FramesDroppedForDecryptionError and EncryptionErroredSeconds";
+    }
+    revision 2017-04-06 {
+        description
+        "Adding new Data Encryption Montypes";
+    }
+    revision 2017-03-09 {
+        description
+        "updating pmtypedef for Data Encryption Montypes";
+    }
+    revision 2017-03-06 {
+        description
+        "Adding Data Encryption Montypes";
+    }
+
+    revision 2016-10-09 {
+        description
+        "New PM type(FECB) added for T210.";
+    }
+
+    revision 2016-08-30 {
+        description
+        "New PM types added for L-Series R3.1.";
+    }
+
+    revision 2015-05-12 {
+        description
+        "Initial revision.";
+    }
+
+    identity temperature {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity temperatureMin {
+        base temperature;
+    }
+    identity temperatureMax {
+        base temperature;
+    }
+    identity temperatureAvg {
+        base temperature;
+    }
+
+    identity shelfCurrentMax {
+        base pmtypedefs:performance-monitor-identity;
+    }
+
+    identity opticalPowerReceive {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerReceiveMin {
+        base opticalPowerReceive;
+    }
+    identity opticalPowerReceiveMax {
+        base opticalPowerReceive;
+    }
+    identity opticalPowerReceiveAvg {
+        base opticalPowerReceive;
+    }
+    identity totalOpticalPowerReceive {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity totalOpticalPowerReceiveMin {
+        base totalOpticalPowerReceive;
+    }
+    identity totalOpticalPowerReceiveMax {
+        base totalOpticalPowerReceive;
+    }
+    identity opticalPowerTransmit {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerTransmitMin {
+        base opticalPowerTransmit;
+    }
+    identity opticalPowerTransmitMax {
+        base opticalPowerTransmit;
+    }
+    identity opticalPowerTransmitAvg {
+        base opticalPowerTransmit;
+    }
+    identity laserBiasCurrent {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerReceiveLane1 {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerReceiveLane1Min {
+        base opticalPowerReceiveLane1;
+    }
+    identity opticalPowerReceiveLane1Max {
+        base opticalPowerReceiveLane1;
+    }
+    identity opticalPowerTransmitLane1 {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerTransmitLane1Min {
+        base opticalPowerTransmitLane1;
+    }
+    identity opticalPowerTransmitLane1Max {
+        base opticalPowerTransmitLane1;
+    }
+    identity laserBiasCurrentLane1 {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerReceiveLane2 {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerReceiveLane2Min {
+        base opticalPowerReceiveLane2;
+    }
+    identity opticalPowerReceiveLane2Max {
+        base opticalPowerReceiveLane2;
+    }
+    identity opticalPowerTransmitLane2 {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerTransmitLane2Min {
+        base opticalPowerTransmitLane2;
+    }
+    identity opticalPowerTransmitLane2Max {
+        base opticalPowerTransmitLane2;
+    }
+    identity laserBiasCurrentLane2 {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerReceiveLane3 {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerReceiveLane3Min {
+        base opticalPowerReceiveLane3;
+    }
+    identity opticalPowerReceiveLane3Max {
+        base opticalPowerReceiveLane3;
+    }
+    identity opticalPowerTransmitLane3 {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerTransmitLane3Min {
+        base opticalPowerTransmitLane3;
+    }
+    identity opticalPowerTransmitLane3Max {
+        base opticalPowerTransmitLane3;
+    }
+    identity laserBiasCurrentLane3 {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerReceiveLane4 {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerReceiveLane4Min {
+        base opticalPowerReceiveLane4;
+    }
+    identity opticalPowerReceiveLane4Max {
+        base opticalPowerReceiveLane4;
+    }
+    identity opticalPowerTransmitLane4 {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerTransmitLane4Min {
+        base opticalPowerTransmitLane4;
+    }
+    identity opticalPowerTransmitLane4Max {
+        base opticalPowerTransmitLane4;
+    }
+    identity laserBiasCurrentLane4 {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity chromaticDispersion {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity chromaticDispersionMin {
+        base chromaticDispersion;
+    }
+    identity chromaticDispersionMax {
+        base chromaticDispersion;
+    }
+
+    identity opticalSignalNoiseRatio {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalSignalNoiseRatioMin {
+        base opticalSignalNoiseRatio;
+    }
+    identity opticalSignalNoiseRatioMax {
+        base opticalSignalNoiseRatio;
+    }
+
+    identity polarizationDependentLoss {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity polarizationDependentLossMin {
+        base polarizationDependentLoss;
+    }
+    identity polarizationDependentLossMax {
+        base polarizationDependentLoss;
+    }
+    identity polarizationModeDispersion {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity polarizationModeDispersionMin {
+        base polarizationModeDispersion;
+    }
+    identity polarizationModeDispersionMax {
+        base polarizationModeDispersion;
+    }
+
+    identity sD-FECuncorrectedBlocks {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity sD-FECcorrectedBlocks {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity sD-FECcorrectedBits {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity preFECbitErrorRate {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity erroredBlocks {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity fECcorrectedBits {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity fECuncorrectedBlocks {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity fECuncorrectedCodewords {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity fECcorrectedCodewords {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity fECcorrectedSymbols {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity preFecBitErrorRate {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity fECcorrectedBlocks {
+        base pmtypedefs:performance-monitor-identity;
+    }
+
+
+    //ETH PMs
+    identity ifUcastPackets {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifBroadcastPackets {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifMulticastPackets {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifPauseFrames {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifDiscards {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifUnknownProtos {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifOctets {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifErroredFrames {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity localFaultSeconds {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity remoteFaultSeconds {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity inFrames {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity inFramesErr {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity outFrames {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity erroredSecondEthernet {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity severelyErroredSecondEthernet {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity unavailableSecondEthernet {
+        base pmtypedefs:performance-monitor-identity;
+    }
+
+    //LOAM related 
+    identity ifInUnsupportedLOAMDrop {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifInLOAMPDU {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifOutLOAMPDU {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifInLoopbackPDU {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifOutLoopbackPDU {
+        base pmtypedefs:performance-monitor-identity;
+    }
+
+    //OTN related
+    identity codingViolation {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity erroredSecond {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity severelyErroredSecond {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity unavailableSecond {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity backgroundBlockErrors {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity backgroundBlockErrorRatio {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity severelyErroredSecondRatio {
+        base pmtypedefs:performance-monitor-identity;
+    }
+
+    identity delayMeasurement {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity delayMeasurementMin {
+        base delayMeasurement;
+    }
+    identity delayMeasurementMax {
+        base delayMeasurement;
+    }
+
+    // OTN Protection
+    identity protectionSwitchCount {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity protectionSwitchDuration {
+        base pmtypedefs:performance-monitor-identity;
+    }
+
+
+    //OCN related
+    identity codingViolationSection {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity erroredSecondSection {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity severelyErroredSecondSection {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity codingViolationLine {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity erroredSecondLine {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity severelyErroredSecondLine {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity unavailableSecondLine {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity severelyErroredFrameSecondSection {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity failureCountLine {
+        base pmtypedefs:performance-monitor-identity;
+    }
+ 
+    //ROADM
+    identity opticalPowerReceiveOts {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerReceiveOtsMin {
+        base opticalPowerReceiveOts;
+    }
+    identity opticalPowerReceiveOtsMax {
+        base opticalPowerReceiveOts;
+    }
+    identity opticalPowerReceiveOtsAvg {
+        base opticalPowerReceiveOts;
+    }
+    identity opticalPowerTransmitOts {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerTransmitOtsMin {
+        base opticalPowerTransmitOts;
+    }
+    identity opticalPowerTransmitOtsMax {
+        base opticalPowerTransmitOts;
+    }
+    identity opticalPowerTransmitOtsAvg {
+        base opticalPowerTransmitOts;
+    }
+
+    identity opticalPowerReceiveOms {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerReceiveOmsMin {
+        base opticalPowerReceiveOms;
+    }
+    identity opticalPowerReceiveOmsMax {
+        base opticalPowerReceiveOms;
+    }
+    identity opticalPowerReceiveOmsAvg {
+        base opticalPowerReceiveOms;
+    }
+    identity opticalPowerTransmitOms {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerTransmitOmsMin {
+        base opticalPowerTransmitOms;
+    }
+    identity opticalPowerTransmitOmsMax {
+        base opticalPowerTransmitOms;
+    }
+    identity opticalPowerTransmitOmsAvg {
+        base opticalPowerTransmitOms;
+    }
+
+    identity opticalPowerTransmitDra {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerTransmitDraMin {
+        base opticalPowerTransmitDra;
+    }
+    identity opticalPowerTransmitDraMax {
+        base opticalPowerTransmitDra;
+    }
+    identity opticalPowerTransmitDraAvg {
+        base opticalPowerTransmitDra;
+    }
+
+    identity opticalPowerReceiveOsc {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerReceiveOscMin {
+        base opticalPowerReceiveOsc;
+    }
+    identity opticalPowerReceiveOscMax {
+        base opticalPowerReceiveOsc;
+    }
+    identity opticalPowerReceiveOscAvg {
+        base opticalPowerReceiveOsc;
+    }
+    identity opticalPowerTransmitOsc {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity opticalPowerTransmitOscMin {
+        base opticalPowerTransmitOsc;
+    }
+    identity opticalPowerTransmitOscMax {
+        base opticalPowerTransmitOsc;
+    }
+    identity opticalPowerTransmitOscAvg {
+        base opticalPowerTransmitOsc;
+    }
+
+    identity spanLoss {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity spanLossMin {
+        base spanLoss;
+    }
+    identity spanLossMax {
+        base spanLoss;
+    }
+    identity spanLossAvg {
+        base spanLoss;
+    }
+    
+    identity spanLossVariation {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity spanLossVariationMin {
+        base spanLossVariation;
+    }
+    identity spanLossVariationMax {
+        base spanLossVariation;
+    }
+    identity spanLossVariationAvg {
+        base spanLossVariation;
+    }
+
+    identity reflectionPower {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity reflectionPowerMin {
+        base reflectionPower;
+    }
+    identity reflectionPowerMax {
+        base reflectionPower;
+    }
+    identity reflectionPowerAvg {
+        base reflectionPower;
+    }
+
+    //OLEAF
+    identity wCmfFrames {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity wGoodFrames {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity wErroredFrames {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity wProtocolErroredSecond {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity wErroredSecond {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity wSeverelyErroredSecond {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity wUnavailableSecond {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity partialRateDiscard {
+        base pmtypedefs:performance-monitor-identity;
+    }
+
+    //10GE
+    identity ifGoodOctets {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifFrameCheckSumErrors{
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifGoodFrames {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifJumboFrames {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifOversizedFrames {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifUndersizedFrames {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifFragments {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifJabber {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifDropEvents {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifPackets {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifFramesOfSize64 {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifFramesOfSize65To127 {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifFramesOfSize128To255 {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifFramesOfSize256To511 {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifFramesOfSize512To1023 {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity ifFramesOfSize1024To1518 {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity FramesEncrypted {
+        base pmtypedefs:performance-monitor-identity;
+    }  
+    identity FramesDecrypted {
+        base pmtypedefs:performance-monitor-identity;
+    }  
+    identity FramesDroppedForDecryptionError {
+        base pmtypedefs:performance-monitor-identity;
+    }  
+    identity EncryptionErroredSeconds {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    //TCM Montypes
+    identity erroredSecondTCM1-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity erroredSecondTCM2-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity erroredSecondTCM3-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity erroredSecondTCM4-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity erroredSecondTCM5-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity erroredSecondTCM6-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity erroredSecondTCM1-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity erroredSecondTCM2-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity erroredSecondTCM3-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity erroredSecondTCM4-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity erroredSecondTCM5-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity erroredSecondTCM6-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondTCM1-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondTCM2-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondTCM3-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondTCM4-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondTCM5-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondTCM6-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondTCM1-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondTCM2-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondTCM3-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondTCM4-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondTCM5-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondTCM6-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity unavailableSecondTCM1-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity unavailableSecondTCM2-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity unavailableSecondTCM3-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity unavailableSecondTCM4-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity unavailableSecondTCM5-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity unavailableSecondTCM6-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity unavailableSecondTCM1-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity unavailableSecondTCM2-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity unavailableSecondTCM3-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity unavailableSecondTCM4-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity unavailableSecondTCM5-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity unavailableSecondTCM6-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity backgroundBlockErrorsTCM1-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorsTCM2-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorsTCM3-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorsTCM4-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorsTCM5-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorsTCM6-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorsTCM1-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorsTCM2-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorsTCM3-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorsTCM4-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorsTCM5-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorsTCM6-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorRatioTCM1-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorRatioTCM2-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorRatioTCM3-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorRatioTCM4-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorRatioTCM5-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorRatioTCM6-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorRatioTCM1-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorRatioTCM2-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorRatioTCM3-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorRatioTCM4-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorRatioTCM5-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity backgroundBlockErrorRatioTCM6-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondRatioTCM1-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity severelyErroredSecondRatioTCM2-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondRatioTCM3-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondRatioTCM4-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondRatioTCM5-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondRatioTCM6-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondRatioTCM1-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondRatioTCM2-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondRatioTCM3-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondRatioTCM4-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondRatioTCM5-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity severelyErroredSecondRatioTCM6-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+    identity delayMeasurementTCM1-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity delayMeasurementTCM2-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity delayMeasurementTCM3-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity delayMeasurementTCM4-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity delayMeasurementTCM5-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity delayMeasurementTCM6-up {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity delayMeasurementTCM1-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity delayMeasurementTCM2-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity delayMeasurementTCM3-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity delayMeasurementTCM4-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity delayMeasurementTCM5-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	identity delayMeasurementTCM6-down {
+        base pmtypedefs:performance-monitor-identity;
+    }
+	
+    identity delayMeasurementMinTCM1-up {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMinTCM2-up {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMinTCM3-up {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMinTCM4-up {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMinTCM5-up {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMinTCM6-up {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMinTCM1-down {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMinTCM2-down {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMinTCM3-down {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMinTCM4-down {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMinTCM5-down {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMinTCM6-down {
+        base delayMeasurement;
+    }
+    identity delayMeasurementMaxTCM1-up {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMaxTCM2-up {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMaxTCM3-up {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMaxTCM4-up {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMaxTCM5-up {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMaxTCM6-up {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMaxTCM1-down {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMaxTCM2-down {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMaxTCM3-down {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMaxTCM4-down {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMaxTCM5-down {
+        base delayMeasurement;
+    }
+	identity delayMeasurementMaxTCM6-down {
+        base delayMeasurement;
+    }
+}

@@ -1,0 +1,344 @@
+module fujitsu-lldp {
+  yang-version 1;
+  namespace "urn:fujitsu:Params:xml:ns:yang:fujitsu-lldp";
+  prefix lldp;
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  import ietf-interfaces {
+    prefix if;
+  }
+
+  import iana-afn-safi {
+    prefix ianaaf;
+  }
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import fujitsu-protocols {
+    prefix fjproto;
+  }
+
+  organization
+    "Fujitsu Network Communications, Inc.";
+
+  contact
+    "Fujitsu Network Communications, Inc.
+
+    Address: 2801 Telecom Parkway
+    Richardson, Texas 75082
+
+    Tel: +1-800-USE-FTAC (1-800-873-3822)
+    Email: ftac@fnc.fujitsu.com
+    Web: www.fujitsu.com/us/services/telecom";
+
+  description
+    "This module contains configurable and retrievable for LLDP.
+
+    Copyright (c) 2016 Fujitsu Ltd.
+    All rights reserved. ";
+
+  revision 2017-06-01{
+    description
+      "Added support for Remote Port description";
+  }
+
+  revision 2017-04-05{
+    description
+      "Added support for SC-E1/2";
+  }
+
+  revision 2017-03-20{
+    description
+      "OSC interface specific validations are made generic to support E-SC-E2 interface";
+  }
+
+  revision 2016-11-03{
+    description
+      "Updated MUST condition for ifname";
+  }
+
+  revision 2016-07-22{
+    description
+      "Initial revision.";
+    reference
+      "Confd user guide";
+  }
+
+  identity fujitsuLldp {
+    base fjproto:protocol-type;
+    description
+        "Protocol type for LLDP operations ";
+  }
+
+  augment "/fjproto:protocols/fjproto:protocol" {
+
+    container lldp-instance {
+  
+      when "(../fjproto:type='lldp:fujitsuLldp')"
+      + " and (../fjproto:name='lldp')"; 
+ 
+      description
+        "LLDP configurable and retrievable";
+
+      container global-config {
+        description
+          "LLDP global configurations";
+
+        leaf adminStatus {
+          type enumeration {
+            enum "disable" {
+              value 0; 
+              description "Disable LLDP feature per NE";
+            }
+            enum "enable" {
+               value 1; 
+              description "Enable LLDP feature per NE";
+            }
+          }
+          description
+            "Enable/Disable LLDP feature per NE";
+          default "enable";
+        }
+
+        leaf msgTxInterval {
+          type uint16 {
+            range "5..32768";
+          }
+          description
+            "LLDP frame Retransmit Interval in seconds";
+          default 30;
+        }
+
+        leaf msgTxHoldMultiplier {
+          type uint8 {
+            range "2..10";
+          }
+          description
+            "TTL value for the TLVs transmitter over wire in seconds";
+          default 4;
+        }
+
+        leaf notificationInterval {
+          tailf:hidden full;
+          type uint16 {
+            range "5..3600";
+          }
+          description
+            "notification interval in seconds";
+          default 5;
+        }
+
+      }
+
+      list port {
+        description
+          "LLDP port configurations";
+
+        key "ifName";
+        
+        leaf ifName {
+          type leafref {
+            path "/if:interfaces/if:interface/if:name";
+          }
+           
+          must "(re-match(., 'eth-.*(SC-E.*)') = 'true') or " +
+               "(re-match(., 'eth-.*(C([1-4]))') = 'true') or " +
+               "(re-match(., 'eth-.*(C([1-9]|[1][0-9]|[2][0-5])/[1-4])') = 'true')" {
+                error-message "Specificed LLDP interface is not a valid OSC or GE interface";
+          }
+         
+          description
+            "Ethernet interface name where LLDP runs";
+        }
+        
+        leaf if-alias {
+          tailf:hidden full;
+          type string;
+          description
+            "Alternate Port Id which will be multicast in LLDP pdu if configured";
+        }
+
+        leaf adminStatus {
+          type enumeration {
+            enum "disable" {
+              value 0;  
+              description "Disable Transmit and Receive LLDP frames on specific interface";
+            }
+            enum "txandrx" {
+              value 1;  
+              description "Enable Transmit and Receive LLDP frames on specific interface";
+            }
+/*
+            enum "txonly" {
+              value 2;  
+              description "Enable only Transmit LLDP frames on specific interface";
+            }
+            enum "rxonly" {
+              value 3;  
+              description "Enable only Receive LLDP frames on specific interface";
+            }
+*/
+
+          }
+          description
+            "LLDP enable per port basis";
+          default "txandrx";
+        }
+
+        leaf notificationEnable {
+          tailf:hidden full;
+          type boolean;
+          description
+            "Flag to control notification when remote info changes";
+          default false;
+        }
+
+        list neighbour {
+        
+          description
+            "LLDP Oper data - Neighbour List information";
+          key remoteSysName;
+          config false;
+          tailf:callpoint "lldp-oper-nbr-list";
+
+          leaf remoteSysName {
+            type string;
+            description
+              "remote neighbour system name";
+          }
+
+          list remoteMgmtAddress {
+
+              tailf:callpoint "lldp-oper-nbr-list";
+
+                    leaf AddressSubType {
+                        type ianaaf:address-family;
+                        description
+                            "remote neighbour Management Address Subtype Enumeration";
+                    }
+
+                    leaf Address {
+                        type inet:ip-address;
+                        description
+                            "remote neighbour management address";
+                    }
+          } 
+
+          leaf remotePortIdSubType {
+              type enumeration {
+                  enum "other" {
+                      value 0;
+                      description "reserved";
+                  }
+                  enum "ifalias" {
+                      value 1;
+                      description "Interface Alias (IfAlias - IETF RFC 2863) ";
+                  }
+                  enum "portcomponent" {
+                      value 2;
+                      description "Port component (EntPhysicalAlias IETF RFC 4133)";
+                  }
+                  enum "macaddress" {
+                      value 3;
+                      description "MAC address (IEEE Std 802) ";
+                  }
+                  enum "networkaddress" {
+                      value 4;
+                      description "Network Address";
+                  }
+                  enum "ifname" {
+                      value 5;
+                      description "Interface Name (ifName - IETF RFC 2863)";
+                  }
+                  enum "agentcircuitid" {
+                      value 6;
+                      description "Agent Circuit Id (IETF RFC 3046)";
+                  }
+                  enum "local" {
+                      value 7;
+                      description "Locally assigned";
+                  }
+                  enum "NotSupported" {
+                      value 8;
+                      description "Not Supported";
+                  }
+              }
+              description
+                  "remote neighbour Port ID Subtype Enumeration";
+          }
+
+          leaf remotePortId {
+              type string;
+              description
+                  "remote neighbour port Id";
+          }
+
+          leaf remotePortDescription {
+              type string;
+              description
+                  "remote neighbour port Description";
+          }
+
+          leaf remoteChassisIdSubType {
+              type enumeration {
+                  enum "reserved" {
+                      value 0;
+                      description "reserved";
+                  }
+                  enum "chassiscomponent" {
+                      value 1;
+                      description "Chassis component (EntPhysicalAlias IETF RFC 4133)";
+                  }
+                  enum "ifalias" {
+                      value 2;
+                      description "Interface Alias (IfAlias - IETF RFC 2863) ";
+                  }
+                  enum "portcomponent" {
+                      value 3;
+                      description "Port component (EntPhysicalAlias IETF RFC 4133)";
+                  }
+                  enum "macaddress" {
+                      value 4;
+                      description "MAC address (IEEE Std 802) ";
+                  }
+                  enum "networkaddress" {
+                      value 5;
+                      description "Network Address";
+                  }
+                  enum "ifname" {
+                      value 6;
+                      description "Interface Name (ifName - IETF RFC 2863)";
+                  }
+                  enum "local" {
+                      value 7;
+                      description "Locally assigned";
+                  }
+                  enum "NotSupported" {
+                      value 8;
+                      description "Not Supported";
+                  }
+              }
+              description
+                  "Chassis ID Subtype Enumeration";
+          }
+
+          leaf remoteChassisId {
+              type string;
+              description
+                  "remote neighbour Chassis Id";
+          }
+        }
+      }
+    }
+  }
+}
+

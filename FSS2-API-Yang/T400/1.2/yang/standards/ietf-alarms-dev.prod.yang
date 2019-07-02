@@ -1,0 +1,16 @@
+module ietf-alarms-dev.prod {
+    namespace "urn:fujitsu:params:xml:ns:yang:ietf-alarms-dev.prod";
+    prefix alarm.prod;
+    
+    import ietf-alarms {
+        prefix alarms;
+    } 
+
+    revision 2016-12-08 {
+        description
+          "hidded max-alarm-history and notify-status-changes leaf";
+    }
+	deviation "/alarms:alarms/alarms:control" {
+        deviate not-supported;
+    }
+}

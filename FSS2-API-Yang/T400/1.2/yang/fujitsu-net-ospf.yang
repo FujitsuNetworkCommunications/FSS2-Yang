@@ -1,0 +1,77 @@
+module fujitsu-net-ospf {
+  namespace "urn:fujitsu:params:xml:ns:yang:ospf:net:extn";
+  prefix fujitsu-net-ospf;
+  import ietf-routing {
+    prefix rt;
+  }
+  import ietf-yang-types {
+    prefix yang;
+  }
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import ietf-ospf {
+      prefix ospf;
+      revision-date 2015-03-09;
+  }
+  organization "Fujitsu Network Communications, Inc.";
+  contact  
+   "        Fujitsu Network Communications, Inc.
+
+            Address: 2801 Telecom Parkway
+                     Richardson, Texas 75082
+
+            Tel: +1-800-USE-FTAC (1-800-873-3822)
+            Email: ftac@fnc.fujitsu.com
+            Web: www.fujitsu.com/us/services/telecom
+
+    ";
+  description
+   "       This module contains YANG definitions
+            for the Domains of UXP.
+
+            Copyright (c) 2015 Fujitsu Network Communications, inc.
+            All rights reserved.";
+
+  revision 2018-01-22 {
+      description "Changed filename, module name, and prefix";
+  }
+
+  revision 2015-11-04;
+  feature ospf-redistribute {
+      status current;
+      description "This features when turned on enables user to manually specify the networks to be advertised via OSPF.";
+  }
+  grouping ipv4networks {
+    status current;
+    description "This Grouping includes the network address & its subnet mask";
+    list network {
+      key "network mask";
+      ordered-by user;
+      status current;
+      description "Enable OSPF Routing on this network";
+      leaf network {
+        type inet:ipv4-address;
+        status current;
+        description "Enable OSPF Routing on the network address";
+      }
+      leaf mask {
+        type yang:dotted-quad;
+        status current;
+        description "Network mask";
+      }
+      leaf-list area {
+        when "../mask";
+        type yang:dotted-quad;
+        description "Area ID in dotted quad format. Example: x.x.x.x";
+      }
+    }
+  }
+
+  augment "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance" {
+    if-feature ospf-redistribute;
+    uses ipv4networks {
+      when "ospf:af='rt:ipv4'"; 
+    }
+  }
+}

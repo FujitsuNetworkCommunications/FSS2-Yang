@@ -1,0 +1,15 @@
+module fujitsu-file-transfer-dev.prod {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:ftp-dev.prod";
+  prefix ftxr-dev;
+
+  import fujitsu-file-transfer {
+    prefix ft;
+  }
+
+  deviation /ft:abort-file-transfer {
+    deviate not-supported;
+  }
+}
+
+

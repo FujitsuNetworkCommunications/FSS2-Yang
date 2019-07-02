@@ -1,0 +1,167 @@
+module ietf-syslog-dev {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:ietf-syslog-dev";
+  prefix syslog-dev;
+
+  import ietf-syslog {
+    prefix slg;
+  }
+
+  organization
+      "Fujitsu Ltd.";
+
+  contact
+       "Fujitsu Ltd.
+
+        Address: 2801 Telecom Parkway
+                 Richardson, Texas 75082
+
+        Tel: +1-800-USE-FTAC (1-800-873-3822)
+        Email: ftac@fnc.fujitsu.com
+        Web: www.fujitsu.com/us/services/telecom";
+
+  description
+       "This module is used to remove unsupported features, containers, leafs from ietf-syslog.
+        Copyright (c) 2015 Fujitsu Ltd.
+        All rights reserved. ";
+
+  revision 2017-10-16 {
+    description
+      "Compare operator support";
+  }
+
+  revision 2016-11-02 {
+    description
+     "Updated remote syslog server name length as 1 to 255 characters.";
+  }
+
+  revision 2016-10-28 {
+    description
+     "Updated local syslog file name length to 255 and removed pattern file:.";
+  }
+
+  revision 2016-09-27 {
+    description
+     "Updated deviations for local syslog file name with max length as 256.
+      Updated log-selector configuration for remote syslog and local syslog
+      as optional configuration.";
+  }
+
+  revision 2016-09-13 {
+    description
+     "Updated deviations for enabling the syslog file configurations.";
+  }
+
+  revision 2016-07-22 {
+    description
+     "Updated deviations for enabling the facility and severity configurations
+      for remote syslog server.";
+  }
+
+  revision 2016-01-06 {
+    description
+     "Initial revision. Added deviations for all except syslog remote configurations.";
+  }
+
+  deviation /slg:syslog/slg:actions/slg:console {
+    deviate not-supported;
+  }
+  deviation /slg:syslog/slg:actions/slg:buffer {
+    deviate not-supported;
+  }
+  deviation /slg:syslog/slg:actions/slg:file/slg:log-file {
+    deviate add {
+      max-elements 4;
+    }
+  }
+  deviation /slg:syslog/slg:actions/slg:file/slg:log-file/slg:name {
+    deviate replace{
+       type string {
+         length "1..255";
+       }
+    }
+  }
+  deviation /slg:syslog/slg:actions/slg:file/slg:log-file/slg:log-selector/slg:selector-facility {
+    deviate delete{
+    mandatory true;
+    }
+  }
+  deviation /slg:syslog/slg:actions/slg:file/slg:log-file/slg:log-selector/slg:selector-facility/slg:no-log-facility{
+    deviate not-supported;
+  }
+  deviation /slg:syslog/slg:actions/slg:file/slg:log-file/slg:log-selector/slg:selector-facility/slg:log-facility/slg:log-facility/slg:compare-op{
+    deviate replace {
+      default equals;
+    }
+  }
+  deviation /slg:syslog/slg:actions/slg:file/slg:log-file/slg:log-selector/slg:pattern-match{
+    deviate not-supported;
+  }
+  deviation /slg:syslog/slg:actions/slg:file/slg:log-file/slg:structured-data{
+    deviate not-supported;
+  }
+  deviation /slg:syslog/slg:actions/slg:file/slg:log-file/slg:file-archive{
+    deviate not-supported;
+  }
+  deviation /slg:syslog/slg:actions/slg:remote/slg:destination {
+    deviate add {
+      max-elements 4;
+    }
+  }
+  deviation /slg:syslog/slg:actions/slg:remote/slg:destination/slg:name {
+    deviate replace {
+       type string {
+         length "1..255";
+       }
+    }
+  }
+  deviation /slg:syslog/slg:actions/slg:remote/slg:destination/slg:transport/slg:udp/slg:udp/slg:port {
+    deviate replace {
+      type uint16 {
+      range "1..65535";
+      }
+    }
+  }
+  deviation /slg:syslog/slg:actions/slg:remote/slg:destination/slg:transport/slg:tcp/slg:tcp/slg:port {
+    deviate replace {
+      type uint16 {
+      range "1..65535";
+      }
+    }
+  }
+  deviation /slg:syslog/slg:actions/slg:remote/slg:destination/slg:transport/slg:tls {
+    deviate not-supported;
+  }
+  deviation /slg:syslog/slg:actions/slg:remote/slg:destination/slg:log-selector/slg:selector-facility/slg:no-log-facility{
+    deviate not-supported;
+  }
+  deviation /slg:syslog/slg:actions/slg:remote/slg:destination/slg:log-selector/slg:selector-facility {
+    deviate delete{
+    mandatory true;
+    }
+  }
+  deviation /slg:syslog/slg:actions/slg:remote/slg:destination/slg:log-selector/slg:selector-facility/slg:log-facility/slg:log-facility/slg:compare-op{
+    deviate replace {
+      default equals;
+    }
+  }
+  deviation /slg:syslog/slg:actions/slg:remote/slg:destination/slg:log-selector/slg:pattern-match{
+    deviate not-supported;
+  }
+  deviation /slg:syslog/slg:actions/slg:remote/slg:destination/slg:destination-facility {
+    deviate not-supported;
+  }
+  deviation /slg:syslog/slg:actions/slg:remote/slg:destination/slg:source-interface {
+    deviate not-supported;
+  }
+  deviation /slg:syslog/slg:actions/slg:remote/slg:destination/slg:structured-data{
+    deviate not-supported;
+  }
+  deviation /slg:syslog/slg:actions/slg:remote/slg:destination/slg:syslog-sign {
+    deviate not-supported;
+  }
+  deviation /slg:syslog/slg:actions/slg:session {
+    deviate not-supported;
+  }
+
+}

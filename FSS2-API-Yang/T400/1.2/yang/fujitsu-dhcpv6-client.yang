@@ -1,0 +1,184 @@
+module fujitsu-dhcpv6-client {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:dhcpv6-client-ext";
+  prefix fujitsu-dhcpv6;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import dhcpv6-client {
+    prefix dhcpv6;
+  }
+  import ietf-interfaces {
+    prefix if;
+  }
+  import ietf-ip {
+    prefix ip;
+  }
+
+  import tailf-common {
+    prefix tailf;
+  }
+  import fujitsu-system {
+    prefix sys;
+  }
+  import ietf-yang-types {
+    prefix yang;
+    revision-date "2013-07-15";
+  }
+
+  organization
+    "Fujitsu Ltd.";
+
+  contact
+    "Fujitsu Ltd.
+
+    Address: 2801 Telecom Parkway
+    Richardson, Texas 75082
+
+    Tel: +1-800-USE-FTAC (1-800-873-3822)
+    Email: ftac@fnc.fujitsu.com
+    Web: www.fujitsu.com/us/services/telecom";
+
+  description
+    "This module is used to add dhcp client status in base yang.
+    Copyright (c) 2016 Fujitsu Ltd.
+    All rights reserved. ";
+
+  revision 2018-01-22 {
+      description "Changed filename, module name, and prefix";
+  }
+
+  revision 2018-01-08 {
+    description
+      "String pattern defined for dhcpv6 client-intf name.";
+  }
+
+  revision 2017-08-09 {
+    description
+      "duid attribute removal.";
+  }
+  revision 2017-07-07 {
+    description
+      "Yang optimization changes.";
+  }
+
+  revision 2016-04-05;
+
+  augment "/dhcpv6:clientv6" {
+    container dhcpv6ClientStatus {
+      list client-if {
+        key "if-name";
+        config "false";
+        tailf:callpoint "dhcpv6-client-if";
+        leaf if-name {
+          type string;
+          mandatory true;
+          description "interface name";
+        }
+        container identity-associations {
+          config "false";
+          description "IA is a construct through
+          which a server and a client can identify,
+                group, and manage a set of related IPv6
+                  addresses. The key of the list is a
+                  4-byte number IAID defined in [RFC3315].";
+          list identity-association {
+            key iaid;
+            description "IA";
+            tailf:callpoint "dhcpv6-id-association";
+            leaf iaid {
+              type uint32;
+              mandatory true;
+              description "IAID";
+            }
+            leaf ia-type {
+              type string;
+              mandatory true;
+              description "IA type";
+            }
+            leaf-list ipv6-addr {
+              type inet:ipv6-address;
+              description "ipv6 address";
+            }
+            leaf t1-time {
+              type yang:timeticks;
+              mandatory true;
+              description "t1 time";
+            }
+            leaf t2-time {
+              type yang:timeticks;
+              mandatory true;
+              description "t2 time";
+            }
+            leaf preferred-lifetime {
+              type yang:timeticks;
+              mandatory true;
+              description "preferred lifetime";
+            }
+            leaf valid-lifetime {
+              type yang:timeticks;
+              mandatory true;
+              description "valid lifetime";
+            }
+          } 
+        }
+      }
+    }
+  }
+
+
+  augment "/dhcpv6:clientv6" {
+    list client-if {
+      key if-name;
+      description "A client may have several
+        interfaces, it is more reasonable to
+        configure and manage parameters on
+        the interface-level. The list defines
+        specific client interfaces and their
+        data. Different interfaces are distinguished
+        by the key which is a configurable string
+        value.";
+      leaf if-name {
+        type string {
+          pattern "ip-(1|200)/0/0/(LCN1|LCN2|LCN)";
+        }
+        mandatory true;
+        description "interface name";
+        must "(((re-match(., 'ip-.*(LCN2)') = 'true') and (/sys:system/sys:neMgmtMode = 'Router')) or (re-match(., 'ip-.*(LCN|LCN1)') = 'true'))" {
+              tailf:dependency ".";
+              tailf:dependency "/sys:system/sys:neMgmtMode";
+              tailf:override-auto-dependencies;
+               error-message "TYPE not supported (or) LCN2 is only allowed in Router mode.";
+        }
+      }
+      leaf enable {
+        type boolean;
+        mandatory true;
+        description "whether the interface is enabled";
+        must "(((current() = 'false') and " + 
+        " (((count (/if:interfaces/if:interface[if:name=current()/../if-name]/ip:ipv6/ip:address) > 0) and " +
+        " (/if:interfaces/if:interface[if:name=current()/../if-name]/ip:ipv6/ip:enabled = 'true'))))" +
+          "or (current() = 'true'))" {
+            tailf:dependency ".";
+            tailf:dependency "/if:interfaces/if:interface/ip:ipv6/ip:address";
+            tailf:dependency "/if:interfaces/if:interface/ip:ipv6/ip:enabled";
+            tailf:override-auto-dependencies;
+            error-message "No Static IPV6 address assigned/Enabled for this interface";
+          }
+      }
+      leaf rapid-commit {
+        type boolean;
+        mandatory true;
+        description "'1' indicates a client can
+          initiate a Solicit-Reply message exchange
+          by adding a Rapid Commit option in Solicit
+          message. '0' means the client is not allowed
+          to add a Rapid Commit option to request
+          addresses in a two-message exchange
+          pattern.";
+      }
+    }
+  }
+}
+

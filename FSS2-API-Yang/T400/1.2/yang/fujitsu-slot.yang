@@ -1,0 +1,125 @@
+module fujitsu-slot {
+  namespace "urn:fujitsu:params:xml:ns:yang:equipment:slot";
+  prefix slot;
+
+  import fujitsu-subslot {
+    prefix subslot;
+  }
+  
+  import fujitsu-physical-inventory {
+    prefix physical-inventory;
+  }
+
+  import fujitsu-entity-states {
+    prefix entity-states;
+  }
+
+  import fujitsu-performance-monitoring-typedefs { 
+    prefix pmtypedefs; 
+  }
+
+
+  organization
+       "Fujitsu Ltd.";
+
+  contact
+       "Fujitsu Ltd.
+
+        Address: 2801 Telecom Parkway
+                 Richardson, Texas 75082
+
+        Tel: +1-800-USE-FTAC (1-800-873-3822)
+        Email: ftac@fnc.fujitsu.com
+        Web: www.fujitsu.com/us/services/telecom";
+
+  description
+       "This module contains definitions for Slot Equipment.
+
+        Copyright (c) 2015 Fujitsu Ltd.
+        All rights reserved. ";
+
+  revision 2018-04-03 {
+       description
+          "OPS-2800 Added new leaf named description under slot grouping 
+           which stores some information of slot";
+  }
+
+  revision 2017-07-10 {
+       description
+         "Tailf dependencies added for yang-performance.";
+  }
+  revision 2015-04-10 {
+       description
+         "Initial revision.";
+  }
+
+    
+  typedef SlotType {
+    type string;
+    description "A identifier that identifier what kind of cards
+                 can be plugged into this slot.";
+  }  
+  
+  grouping Slot {
+    description
+      "This grouping defines parameters for a slot";
+
+    leaf slotID {
+      type string; 
+      description
+        "A unique slot ID";
+    }
+
+    leaf description {
+        type string {
+            length "min..1024";
+        }
+
+        description
+            "slot information";
+    }
+
+    uses entity-states:oper-status {
+        refine oper-status {
+            config false;
+        }
+    }
+
+    uses entity-states:admin-status {
+        refine admin-status {
+            mandatory false;
+            default down;
+        }
+    }
+       
+    leaf cardType {
+        type string; 
+        mandatory true;
+        description
+          "the card type as defined in 'cardData'";      
+    }
+
+    leaf cardMode {
+        type string; 
+        description
+          "the card mode as defined in 'cardData'";                  
+    }
+
+    container pi {
+        uses physical-inventory:PhysicalInventory;
+        config false;
+        description
+          "Physical inventory information of the slot";
+    }
+
+    // PM Info
+    uses pmtypedefs:pm-info;
+
+    list subslot {
+        description
+          "A list of subslots per slot identified by the 'subslotNumber'";       
+        key "subslotID";
+        uses subslot:subslot;
+    }    
+  }
+}

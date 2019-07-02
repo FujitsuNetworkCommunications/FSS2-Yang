@@ -1,0 +1,143 @@
+module fujitsu-ospf {
+  namespace "urn:fujitsu:params:xml:ns:yang:ospf:extn";
+  prefix fospf;
+  import ietf-routing {
+    prefix rt;
+  }
+  import ietf-yang-types {
+    prefix yang;
+  }
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import ietf-ospf {
+      prefix ospf;
+      revision-date 2015-03-09;
+  }
+  import tailf-common {
+    prefix tailf;
+  }  
+  organization "Fujitsu Network Communications, Inc.";
+  contact  
+   "        Fujitsu Network Communications, Inc.
+
+            Address: 2801 Telecom Parkway
+                     Richardson, Texas 75082
+
+            Tel: +1-800-USE-FTAC (1-800-873-3822)
+            Email: ftac@fnc.fujitsu.com
+            Web: www.fujitsu.com/us/services/telecom
+
+    ";
+  description
+   "       This module contains YANG definitions
+            for the Domains of UAP.
+
+            Copyright (c) 2015 Fujitsu Network Communications, inc.
+            All rights reserved.";
+
+  revision 2015-11-04;
+ typedef uint24 {
+     type uint32 {
+              range "0 .. 16777215";
+             }
+              description
+                 "24-bit unsigned integer.";
+             }
+           
+
+  feature ospf-redistribute {
+      status current;
+      description "This features when turned on enables user to manually specify the networks to be advertised via OSPF.";
+  }
+
+  grouping ospf-redistribute {
+    container redistribute {
+      description "Enables redistribution of routes of a particular type.";
+      container interface {
+            description "Enables redistribution of routes on interfaces.";
+            leaf cost {
+               type uint24;
+               description "Cost of redistributing the interface routes.";              
+            }
+            container LCN {
+               description "Controls publishing/withdrawal of LCN interface routes.";
+               leaf enable {
+                 type boolean;
+                 default true;
+              }
+            }
+            container LMP {
+               description "Controls publishing/withdrawal of LMP interface routes.";
+               leaf enable {
+                  type boolean;
+                   default true;
+               }
+            }
+      }  
+      container static {
+        description "Enables redistribution of all static routes";
+        presence "Enable redistribution of all static routes";
+        leaf cost {
+          type uint24;
+        }
+      }
+    }
+  }
+ 
+  augment "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance" {
+    if-feature ospf-redistribute;
+    uses ospf-redistribute;
+  }
+  
+  grouping ospf-statistics {
+    leaf hello-in {
+      type uint32;
+      description "Hello in packets count";
+    }
+    leaf hello-out {
+      type uint32;
+      description "Hello out packets count";
+    }
+    leaf db-desc-in {
+      type uint32;
+      description "DB descriptor in packets count";
+    }
+    leaf db-desc-out {
+      type uint32;
+      description "DB descriptor out packets count";
+    }
+    leaf ls-req-in {
+      type uint32;
+      description "LS request in in packets count";
+    }
+    leaf ls-req-out {
+      type uint32;
+      description "LS request out packets count";
+    }
+    leaf ls-upd-in {
+      type uint32;
+      description "LS update in packets count";
+    }
+    leaf ls-upd-out {
+      type uint32;
+      description "LS update out packets count";
+    }
+    leaf ls-ack-in {
+      type uint32;
+      description "LS ack in packets count";
+    }
+    leaf ls-ack-out {
+      type uint32;
+      description "LS ack out packets count";
+    }
+    leaf discarded {
+      type uint32;
+      description "Discarded packets count";
+    }
+  }
+
+  augment "/rt:routing-state/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface" {
+    uses ospf-statistics;
+  }
+}

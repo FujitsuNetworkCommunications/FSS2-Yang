@@ -1,0 +1,195 @@
+//
+// This is T200-specific customization for fujitsu-otn-oducn-interfaces.yang
+//
+
+module fujitsu-otn-oducn-interfaces-dev.prod {
+    namespace "urn:fujitsu:params:xml:ns:yang:interface:oducn-deviation";
+    prefix oducn-deviation;
+
+    import ietf-interfaces {
+        prefix if;
+    }
+
+    import fujitsu-otn-oducn-interfaces {
+        prefix oducn;
+    }
+
+    revision 2016-09-13 {
+        description
+        "Added default value for circuit-id";
+    }
+
+    revision 2016-10-07 {
+        description
+        "Added default value for exp-payload-type";
+    }
+
+    // config false nodes
+    deviation "/if:interfaces/if:interface/oducn:oducn/oducn:rate" {
+        deviate replace {
+          config false;
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/oducn:oducn/oducn:direction" {
+        deviate replace {
+          config false;
+        }
+    }
+
+    // T200 supports testPattern PRBS31 only
+    deviation "/if:interfaces/if:interface/oducn:oducn/oducn:testPattern" {
+       deviate replace {
+           type enumeration {
+               enum "PRBS31" {
+                   value "1";
+                   description "PRBS31 with standard mapping per G.709";
+               }
+           }
+       }
+       deviate add {
+         default "PRBS31";
+       }
+    }
+
+    // T200 supports testsignal-type fac only, 
+    // default is fac, don't need to deviate
+    deviation "/if:interfaces/if:interface/oducn:oducn/oducn:testsignal-type" {
+       deviate replace {
+           type enumeration {
+               enum "fac" {
+                   value "0";
+                   description "test signal in the facility direction";
+               }
+           }
+       }
+    }
+
+    // Allow NA within opu payload type string pattern, as well as 2 hex characters
+    deviation "/if:interfaces/if:interface/oducn:oducn/oducn:opu/oducn:payload-type" {
+        deviate replace {
+            type string {
+                length 2;
+                pattern "[0-9a-fA-F]*|NA";
+            }
+        }
+    }
+
+    // Allow NA within opu expected payload type string pattern, as well as 2 hex characters
+    deviation "/if:interfaces/if:interface/oducn:oducn/oducn:opu/oducn:exp-payload-type" {
+        deviate replace {
+            type string {
+                length 2;
+                pattern "[0-9a-fA-F]*|NA";
+            }
+        }
+    }
+
+    // Only allow ais-pt of ais, and make it default
+    deviation "/if:interfaces/if:interface/oducn:oducn/oducn:ais-pt" {
+        deviate replace {
+            type enumeration {
+                enum ais {
+                    value "0";
+                }
+            }
+        }
+        deviate add {
+            default ais;
+        }
+    }
+
+
+    // not-supported nodes
+    // need confirmation with Fred-san if we can simply remove this.
+    deviation "/if:interfaces/if:interface/if:enabled" {
+        deviate not-supported; 
+    }
+    // need confirmation with Fred-san if we can simply remove this.
+    deviation "/if:interfaces/if:interface/if:link-up-down-trap-enable" {
+        deviate not-supported; 
+    }
+
+    // list-gcc not needed for T200.
+    deviation "/if:interfaces/if:interface/oducn:oducn/oducn:list-gcc" {
+        deviate not-supported; 
+    }
+
+    // Do not support ansi, just itu
+    deviation "/if:interfaces/if:interface/oducn:oducn/oducn:standard/oducn:ansi" {
+        deviate not-supported;
+    }
+    deviation "/if:interfaces/if:interface/oducn:oducn/oducn:vstimer" {
+        deviate not-supported;
+    }
+    deviation "/if:interfaces/if:interface/oducn:oducn/oducn:actual-vstimer" {
+        deviate not-supported;
+    }
+    deviation "/if:interfaces/if:interface/oducn:oducn/oducn:proactive-DM" {
+        deviate not-supported;
+    }
+    deviation "/if:interfaces/if:interface/oducn:oducn/oducn:tcm" {
+        deviate not-supported;
+    }
+
+    // Adjust range of degthr
+    deviation "/if:interfaces/if:interface/oducn:oducn/oducn:degthr" {
+        deviate replace {
+            type int16 {
+                range "-5..2";
+            }
+        }
+    }
+    deviation "/if:interfaces/if:interface/oducn:oducn/oducn:standard/oducn:itu/oducn:tti-itu/oducn:tim-det-mode" {
+      deviate replace {
+            type enumeration {
+                enum off {
+                  value "0";
+                  description "TIM detection off";  
+                }
+                enum sapi-only {
+                  value "1";
+                  description "TIM detection sapi only";
+                }
+                enum dapi-only {
+                  value "2";
+                  description "TIM detection dapi only";
+               }
+               enum sapi-and-dapi {
+                 value "4";
+                 description "TIM detection sapi and dapi";
+               }
+            }
+        }
+    }
+    // op-spec not needed for T200.
+    deviation "/if:interfaces/if:interface/oducn:oducn/oducn:standard/oducn:itu/oducn:tti-itu/oducn:exp-tti/oducn:op-spec" {
+        deviate not-supported; 
+    }
+
+    // Add default as terminated and annotation will check for shelf mode
+    deviation "/if:interfaces/if:interface/oducn:oducn/oducn:monitoring-mode" {
+        deviate add {
+            default terminated;
+        }
+    }
+    //Add default as 22 and annotation will check for shelf mode
+    deviation "/if:interfaces/if:interface/oducn:oducn/oducn:opu/oducn:payload-type" {
+        deviate add {
+            default "22";
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/oducn:oducn/oducn:opu/oducn:exp-payload-type" {
+        deviate add {
+            default "22";
+        }
+    }
+
+    //setting default value of circuit-id
+    deviation "/if:interfaces/if:interface/oducn:oducn/oducn:circuit-id" {
+        deviate add {
+            default "";
+        }
+    }
+}

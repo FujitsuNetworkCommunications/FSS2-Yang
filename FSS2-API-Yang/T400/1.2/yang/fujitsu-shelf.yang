@@ -1,0 +1,180 @@
+module fujitsu-shelf {
+  namespace "urn:fujitsu:params:xml:ns:yang:equipment:shelf";
+  prefix shelf;
+
+  import fujitsu-physical-inventory {
+    prefix physical-inventory;
+  }
+
+  import fujitsu-slot {
+    prefix slot;
+  }
+
+  import fujitsu-entity-states {
+    prefix entity-states;
+  }
+
+  import fujitsu-performance-monitoring-typedefs { 
+    prefix pmtypedefs; 
+  }
+
+  
+  organization
+       "Fujitsu Ltd.";
+
+  contact
+       "Fujitsu Ltd.
+
+        Address: 2801 Telecom Parkway
+                 Richardson, Texas 75082
+
+        Tel: +1-800-USE-FTAC (1-800-873-3822)
+        Email: ftac@fnc.fujitsu.com
+        Web: www.fujitsu.com/us/services/telecom";
+
+  description
+       "This module contains definitions for the Shelf.
+
+        Copyright (c) 2015 Fujitsu Ltd.
+        All rights reserved. ";
+
+  revision 2018-04-03 {
+       description
+          "OPS-2800 Added new leaf named description under shelf grouping 
+           which stores some information of shelf";
+  }
+
+  revision 2017-07-10 {
+       description
+         "Tailf dependencies added for yang-performance.";
+  }
+  revision 2015-04-10 {
+       description
+         "Initial revision.";
+  }
+
+  grouping Shelf {
+    description
+      "This grouping defines parameters for a shelf";
+
+    leaf shelfId {
+      type string;
+      description
+        "A unique identifier for the shelf.";
+    }
+
+    leaf description {
+        type string {
+            length "min..1024";
+        }
+
+        description
+            "shelf information";
+    }
+
+    uses entity-states:oper-status {
+        refine oper-status {
+            config false;
+        }
+    }
+
+    uses entity-states:admin-status {
+        refine admin-status {
+            mandatory false;
+            default down;
+        }
+    }
+  
+    leaf type {
+      type string; 
+      mandatory true;
+      description
+        "The shelf type as defined in 'shelfData'.";
+    }
+    
+    leaf shelf-mode {
+      type string;
+      mandatory true;
+      description
+        "Shelf Mode: NORMAL Or REGEN";
+    } //shelf-mode
+
+    leaf shelf-role {
+      type string; 
+      mandatory true;
+      description
+        "Shelf Role: MAIN Or TRIB";
+    }
+
+    container supportingRack {
+      description
+        "information about the rack/bay where the shelf is mounted.
+         'rackId' and 'shelfLocation' are attributes that allow
+         a netmork management system to associate the shelf with a
+         physical location";
+
+      leaf rackId {
+        type string;
+        description "descriptive name to associate the shelf to a rack";
+      }
+
+      leaf shelfLocation {
+        type string;
+        description "location of the shelf within a rack";
+      }
+    }     
+   
+    container pi {
+      uses physical-inventory:PhysicalInventory;
+      config false;
+      description
+        "Physical inventory information of the shelf";
+    }
+
+    leaf fuse {
+      type uint8 {
+       range "15..45";
+       }
+      default "25";
+      units A;
+    }
+
+    leaf supply-current {
+      type decimal64 {
+        fraction-digits 1;
+        range "0..max";
+      }
+      units A;
+      config false;
+    }
+
+    leaf supply-voltage {
+      type decimal64 {
+        fraction-digits 1;
+        range "0..max";
+      }
+      units V;
+      config false;
+    }
+
+    leaf currentDrawFeed {
+      type decimal64 {
+        fraction-digits 1;
+        range "0..max";
+      }
+      units A;
+      config false;
+    }
+   
+
+    // PM Info
+    uses pmtypedefs:pm-info;
+
+    list slot {
+      description
+        "A list of slots per shelf identified by the 'slotID'";
+      key "slotID";
+      uses slot:Slot;
+    }
+  }
+}

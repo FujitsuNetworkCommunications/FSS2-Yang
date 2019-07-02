@@ -1,0 +1,384 @@
+module fujitsu-user-security-typedefs {
+	yang-version 1;
+	namespace "urn:fujitsu:params:xml:ns:yang:typedef:usersecurity";
+	prefix usersecu-type;
+
+  organization
+       "Fujitsu Ltd.";
+
+  contact
+       "Fujitsu Ltd.
+
+        Address: 2801 Telecom Parkway
+                 Richardson, Texas 75082
+
+        Tel: +1-800-USE-FTAC (1-800-873-3822)
+        Email: ftac@fnc.fujitsu.com
+        Web: www.fujitsu.com/us/services/telecom";
+
+  description
+       "This module is used to provide typedef definitions for fujitsu user
+        security modules. 
+        Copyright (c) 2015 Fujitsu Ltd.
+        All rights reserved. ";
+
+  revision 2018-12-07 {
+    description
+    "Enhanced help string description for BASIC pcontent-type";
+  }
+
+  revision 2018-09-07 {
+    description
+    "Added default values to umin-type, pmin-type, & pcontent-type typedefs";
+  }
+
+  revision 2017-12-22 {
+    description
+    "crypt-password-type created";
+  }
+  revision 2017-11-06 {
+    description
+    "Added new group type for Encryption supported users and corrected typo errors";
+  }
+  revision 2017-08-01 {
+    description
+    "TACACSPLUS accounting-order support";
+  }
+  revision 2017-07-20 {
+    description
+    "Update description and error message for username to match the behavior for password";
+  }
+  revision 2017-06-19 {
+    description 
+      "RADIUS enum value updated in accounting order";
+  }
+  revision 2017-06-16 {
+    description 
+      "Removed DISABLED from typedefs accounting order";
+  }
+  revision 2017-05-26 {
+    description 
+      "Added typedefs accounting order";
+  }
+  revision 2017-04-24 {
+    description
+    "Fix list of supported special characters in typedef for ADVANCED pcontent";
+  }
+  revision 2016-11-04 {
+    description
+    "Included a pattern in yang with list of supported special characters for password feild";
+  }
+
+  revision 2015-09-30;
+
+        // defaults are now setup via xml initialization files
+
+	typedef yORn-type {
+	  type enumeration {
+	    enum y {
+	      value 1;
+	    }
+	    enum n {
+	      value 0;
+	    }
+	  }
+	}
+	typedef adminState-type {
+	  type enumeration {
+	    enum allow {
+	      value 1;
+	    }
+	    enum inhibit {
+	      value 0;
+	    }
+	  }
+    default allow;
+	}
+    typedef username-type {
+      type string {
+         length "3..32";
+         pattern "[a-z][a-z0-9_-]*" {
+         error-message "Username does not meet the requirements.";
+      }
+       // expect systemwide/umin to be enforced later.
+     }
+     description "A username must begin with a lowercase letter. The remainder of the string
+                  may contain lowercase letters, numbers 0 through 9, underscores, or dashes.";
+     }
+
+	typedef group-type {
+	  type string;
+	  description 
+            "level-1, level-2..., or level-6";
+	}
+           
+        typedef encryption-group-type {
+          type string;
+          description
+            "level-1, level-2... level-6 or level-8";
+        }        
+
+	typedef umin-type {
+	  type uint16 {
+	    range "3..10";
+          }
+	  description "Minimum number of characters in username";
+	  default 3;
+	}
+	typedef uage-type {
+		type union {
+		  type uint16 {
+		    range "1..90";
+		  }
+		  type enumeration {
+		    enum OFF {
+		      value 0;
+		    }
+		  }
+		}
+		units Days;
+		// default OFF;
+	  description
+	     "User account aging. 
+	      A user account that has been \"aged out\" is simply disabled (not deleted).
+	      Uage does not apply to Level 4 and 6 users.";
+  }
+  typedef password-type {
+    // Expect linux PAM to enforce allowed password chars
+    // based on systemwide/pcontent and systemwide/pmin
+    // SW expected to push resulting hash into appropriate /etc file
+    // Could user type ianach:crypt-hash;
+    // But instead use a string so that SW can check password contents
+    // are consistent with pcontent and pmin using cracklib.so
+    // Once password contents are OK then SW will write hashed password here.
+    // Constraints on string-length to support entering already hashed passwords
+    type string {
+      length "min..128";
+      pattern "[a-zA-Z0-9!@$%\^&*()\[\]_\-~{}.+]*" {
+        error-message "Password content does-not meet the requirements";
+      }
+    }
+    description
+      "BASIC pcontent-type Password must contain at least one alphabetic and
+       one non-alphabetic character:
+          a) Allowed Alphabetic characters includes
+             lower case alphabetic(a-z) and upper alphabetic (A-Z)
+          b) Allowed Non alphabetic includes
+             Numeric (0-9) and special characters !@$%^&*()-_[]~{}.+
+          Password must not contain Username.
+
+       ENHANCED pcontent-type Password must contain at least 2 characters from
+       each of the following groups:
+          a) Lower case alphabetic (a-z)
+          b) Upper case alphabetic (A-Z)
+          c) Numeric 0-9
+          d) Special characters Allowed !@$%^&*()[]_-~{}.+
+          Password must not contain Username.";
+  }
+  typedef crypt-password-type {
+    type string {
+      pattern '$5$(rounds=\d+$)?[a-zA-Z0-9./]{1,16}$[a-zA-Z0-9./]{43}';
+    } description
+      "<SHA-256 digest string>";
+  }
+  typedef pmin-type {
+    type uint16 {
+      range "6..20";
+    }
+    default 6;
+    description
+      "Minimum password length";
+  }
+  typedef pcontent-type {
+    type enumeration {
+      enum BASIC {
+        value 1;
+        description
+          "Password must contain at least one alphabetic and 
+           one non-alphabetic character:
+           a) Allowed Alphabetic characters includes 
+              lower case alphabetic(a-z) and upper alphabetic (A-Z)
+           b) Allowed Non alphabetic includes
+              Numeric (0-9) and special characters !@$%^&*()-_[]~{}.+
+           Password must not contain Username.";
+      }
+      enum ENHANCED {
+        value 2;
+        description
+          "Password must contain at least 2 characters from
+           each of the following groups:
+           a) Lower case alphabetic (a-z)
+           b) Upper case alphabetic (A-Z)
+           c) Numeric 0-9
+           d) Special characters !@$%^&*()[]_-~{}.+
+           Password must not contain Username.";
+      }
+    }
+    description "Determines the allowed password content";
+    default "BASIC";
+  }
+	typedef page-type {
+	  type union {
+	    type uint16 {
+	      range "25..90";
+	    }
+	    type enumeration {
+	      enum OFF {
+	        value 0;
+	      }
+	    }
+	  }
+	  units Days;
+	  // default OFF;
+	  description
+	    "Password Aging.
+	     A password that has been \"aged out\" results in requiring that the 
+	     user change his or her password on the next login.";
+	}
+	typedef prot-type {
+	  type union {
+	    type uint16 {
+	      range "1..20";
+	    }
+	    type enumeration {
+	      enum OFF {
+	        value 0;
+	      }
+	    }
+	  }
+	  units Days;
+	  // default OFF;
+	  description
+	    "Password Rotation.
+	     Specifies the number of password (hashes) to save in \"circular\" history file.
+	     If the hash of a new password matches a entry in this history file, 
+	     the new password is denied.";
+  }
+	typedef minit-type {
+	  type union {
+	    type uint16 {
+	      range "1..15";
+	    }
+	    type enumeration {
+	      enum OFF {
+	        value 0;
+	      }
+	    }
+	  }
+	  units Days;
+	  // default OFF;
+	  description
+	    "The minimum time interval that must expire before a user
+	     is allowed to change his or her password.";
+	}
+	typedef reauth-type {
+		type yORn-type;
+		// default n;
+		description
+		  "If y, upon the first login into a newly create user account, the 
+		   user is required to enter a new password.";
+	}
+	typedef smt-type {
+	  type yORn-type;
+		// default y;
+		description
+		   "If y, then users are permitted to have multiple sessions.";
+	}
+	typedef dural-type {
+	  type uint16 {
+	    range "1..90";
+	  }
+	  units Minutes;
+	  // default 1;
+	  description
+	    "Upon exceeding the number sequential login failure specified by MAXINV 
+	     then the user is inhibited from the number of mintues specified by dural.";
+	}
+	typedef maxinv-type {
+	  type union {
+	    type uint16 {
+	      range "1..5";
+	    }
+	    type enumeration {
+	      enum OFF {
+	        value 0;
+	      }
+	    }
+	  }
+	  // default OFF;
+	  description
+	    "Determines the number of sequential unsucessful logins that must before a user is
+	     inhibited from loggin for the duration of dural.";
+	}
+	typedef banner-type {
+	  type enumeration {
+	    enum NONE {
+	      value 0;
+	    }
+	    enum DEFAULT {
+	      value 1;
+	    }
+	    enum CUSTOM {
+	      value 2;
+	    }
+	  }
+	  // default NONE;
+	  description
+	    "Controls the pre-login banner displayed.  
+	     When banner=CUSTOM, the displayed banner is determined by bannerstr.
+	     When banner=DEFAULT or NONE, the bannerstr is set to \" \" (the
+	     previous bannerstr setting is not retained).";
+	}
+	typedef bannerstr-type {
+	  type string {
+	  	length "1..1600";
+	  }
+	  // default " ";
+	  description
+	    "The pre-login banner string displayed when banner=CUSTOM.
+	     When banner set to DEFAULT or NONE, bannerstr is set to \" \".";
+	}
+	typedef lastlogin-type {
+	  type yORn-type;
+	  // default y;
+	  description
+	    "If y, the date time of the last successful login and the
+	     number of login failures since the last successful login are
+	     displayed after the user successfully logs in.";
+	}
+	typedef warn-type {
+	  type string {
+	  	length "1..1600";
+	  }
+       }
+       typedef authentication-type {
+	  type enumeration {
+	    enum LOCAL {
+	      value 0;
+	    }
+	    enum RADIUS {
+	      value 1;
+	    }
+	    enum TACACSPLUS {
+	      value 2;
+	    }
+	  }
+       }
+       typedef accounting-type {
+         type enumeration {
+           enum RADIUS {
+             value 1;
+           }
+           enum TACACSPLUS {
+             value 2;
+           }
+         }
+       }
+       typedef accounting-event-type {
+         type enumeration {
+           enum START-STOP {
+             value 0;
+           }
+         }
+       }
+}	 

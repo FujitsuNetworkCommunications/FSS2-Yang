@@ -1,0 +1,425 @@
+module fujitsu-nat {
+
+    yang-version 1;
+
+    namespace "urn:fujitsu:params:xml:ns:yang:nat";
+    prefix nat;
+
+    import ietf-inet-types {
+      prefix "inet";
+    }
+
+    import fujitsu-protocols {
+      prefix fjproto;
+    }
+
+    organization
+       "Fujitsu Ltd.";
+
+    contact
+       "Fujitsu Ltd.
+
+        Address: 2801 Telecom Parkway
+                 Richardson, Texas 75082
+
+        Tel: +1-800-USE-FTAC (1-800-873-3822)
+        Email: ftac@fnc.fujitsu.com
+        Web: www.fujitsu.com/us/services/telecom";
+
+    description
+       "This module contains YANG definitions 
+        for NAT64 protocols.
+
+        Copyright (c) 2015 Fujitsu Ltd.
+        All rights reserved. ";
+
+    revision 2016-04-01 {
+        description
+        "Initial revision.";
+    }
+
+    identity fujitsuNat {
+      base fjproto:protocol-type;
+      description
+         "Protocol type for NAT operations ";
+    }
+
+
+    grouping nat64-attributes{
+        leaf enable {
+          type boolean;
+          description
+            "Is NAT64 enabled";
+        }
+		
+        leaf public-ipv6-address-subnet {
+            type inet:ipv6-prefix;
+             must "contains(current(), '/32') or contains(current(), '/40') or " +
+                  "contains(current(), '/48') or contains(current(), '/56') or " +
+                  "contains(current(), '/64') or contains(current(), '/96')" {
+                        error-message "Unsupported IPV6 prefix configured for ipv6";
+             }
+            description
+             "Corresponds to the public IPv6 subnet
+              of the packet";
+          }		
+        leaf private-ipv4-address-subnet {
+            type inet:ipv4-prefix;
+            must "not(contains(current(), '/32'))" {
+                      error-message "Unsupported IPV4 prefix configured for ipv4";
+              }
+            description
+             "Corresponds to the dynamically assigned
+              private IPv4 subnet by NAT";
+          }
+
+        list static-snat-mapping-table {
+            key "src-ipv6-address";
+            description
+            "Static NAT mapping Entries";
+            max-elements 500;
+			
+            leaf src-ipv6-address {
+            type inet:ipv6-address;
+            description
+            "IPv6 address corresponding to static IPv4 address of 
+            SNAT mapping table";
+            }
+
+            leaf src-ipv4-address {
+            type inet:ipv4-address;
+            description
+            "IPv4 address corresponding to static IPv6 address of 
+            SNAT mapping table";
+            } 
+		
+        }		  
+		  
+     }//end of grouping nat64-attributes
+
+    grouping nat44-attributes{
+        leaf enable {
+          type boolean;
+          description
+            "Is NAT44 enabled";
+        }
+		
+        leaf public-ipv4-address-subnet {
+            type inet:ipv4-prefix;
+            must "not(contains(current(), '/32'))" {
+                      error-message "Unsupported IPV4 prefix configured for ipv4";
+              }
+            description
+             "Corresponds to the public IPv4 subnet
+              of the packet";
+          }		
+        leaf private-ipv4-address-subnet {
+            type inet:ipv4-prefix;
+            must "not(contains(current(), '/32'))" {
+                      error-message "Unsupported IPV4 prefix configured for ipv4";
+              }
+            description
+             "Corresponds to the dynamically assigned
+              private IPv4 subnet by NAT";
+          }
+        leaf private-ipv4-address-subnet-enable {
+            type boolean;
+            description
+             "Enable/Disable the dynamic assignment of the 
+              private IPv4 subnet by NAT";
+          }
+        
+        list management_interface_list {
+            key "management_interfaces";
+
+            leaf management_interfaces {
+              type string{
+                pattern "ip-(1|200)/0/0/LCN[1-2]";
+              }
+              description
+               "list of management interfaces from where
+                packets are sourced. supports ip-1/0/0/LCN1 and LCN2";
+            }
+        }
+
+
+        list static-snat-mapping-table {
+            key "public-src-ipv4-address";
+            description 
+            "Static NAT entries for NAT44";
+            max-elements 500;
+            
+            leaf public-src-ipv4-address {
+               type inet:ipv4-address;
+               description
+               "public IPv4 address corresponding to  
+               private IPv4 address in SNAT mapping table";
+            } 
+			
+            leaf private-src-ipv4-address {
+               type inet:ipv4-address;
+               description
+               "private IPv4 address corresponding to  
+                public IPv4 address in SNAT mapping table";
+            } 			
+        }
+
+        list static-dnat-mapping-table {
+            key "public-dst-ipv4-address";
+            
+            description
+            "Dynamic NAT entries for NAT44";
+            max-elements 500;
+            
+            leaf public-dst-ipv4-address {
+               type inet:ipv4-address;
+               description
+               "public IPv4 address corresponding to  
+               private IPv4 address in DNAT mapping table";
+            } 
+			
+            leaf private-dst-ipv4-address {
+               type inet:ipv4-address;
+               description
+               "private IPv4 address corresponding to  
+                public IPv4 address in DNAT mapping table";
+            } 			
+        }		
+
+    }//end of grouping nat44-attributes		
+
+    grouping nat44-napt-attributes{
+        leaf enable {
+          type boolean;
+          description
+            "Is NAT44 NAPT enabled";
+        }
+		
+        leaf public-ipv4-address-subnet {
+            type inet:ipv4-prefix;
+            must "not(contains(current(), '/32'))" {
+                      error-message "Unsupported IPV4 prefix configured for ipv4";
+              }
+            description
+             "Corresponds to the public IPv4 subnet
+              of the packet";
+          }		
+        leaf private-ipv4-address-subnet {
+            type inet:ipv4-prefix;
+            must "not(contains(current(), '/32'))" {
+                      error-message "Unsupported IPV4 prefix configured for ipv4";
+              }
+            description
+             "Corresponds to the dynamically assigned
+              private IPv4 subnet by NAT";
+          }
+
+        leaf private-ipv4-address-subnet-enable {
+            type boolean;
+            description
+             "Enable/Disable the dynamic assignment of the 
+              private IPv4 subnet by NAT";
+          }
+
+        list management_interface_list {
+            key "management_interfaces";
+
+            leaf management_interfaces {
+              type string{
+                pattern "ip-(1|200)/0/0/LCN[1-2]";
+              }
+              description
+               "list of management interfaces from where
+                packets are sourced. supports ip-1/0/0/LCN1 and LCN2";
+            }
+        }
+
+        list static-snat-mapping-table {
+            key "public-src-ipv4-address";
+            description 
+            "Static NAT entries for NAT44-PT";
+            max-elements 500;
+  
+            leaf public-src-ipv4-address {
+               type inet:ipv4-address;
+               description
+               "public IPv4 address corresponding to  
+               private IPv4 address in SNAT mapping table";
+            } 
+			
+            leaf private-src-ipv4-address {
+               type inet:ipv4-address;
+               description
+               "private IPv4 address corresponding to  
+                public IPv4 address in SNAT mapping table";
+            } 			
+        }
+
+        list static-dnat-mapping-table {
+            key "public-dst-ipv4-address public-dst-port-number";
+            description
+            "Dynamic NAT entries for NAT44-PT";
+            max-elements 500;
+            
+            leaf public-dst-ipv4-address {
+               type inet:ipv4-address;
+               description
+               "public IPv4 address corresponding to  
+               private IPv4 address in DNAT mapping table";
+            } 
+
+            leaf public-dst-port-number {
+               type inet:port-number;
+               description
+               "public port number corresponding to  
+                private port number in DNAT mapping table";
+            } 
+			
+            leaf private-dst-ipv4-address {
+               type inet:ipv4-address;
+               description
+               "private IPv4 address corresponding to  
+                public IPv4 address in DNAT mapping table";
+            }
+
+            leaf private-dst-port-number {
+               type inet:port-number;
+               description
+               "private port number corresponding to  
+                public port number in DNAT mapping table";
+            }  			
+        }		
+
+    }//end of grouping nat44-napt-attributes		
+
+   augment "/fjproto:protocols/fjproto:protocol" {
+
+    container nat-config {
+        when "../fjproto:type='nat:fujitsuNat'";
+        description
+         "NAT configuration, Allowed protocol names:
+          nat44 for nat44
+          nat64 for nat64
+          nat44-napt for nat44-napt";
+
+      container nat64 {
+        when "../../fjproto:name='nat64'";
+        uses nat64-attributes;	  
+        description
+          "The container for NAT64 protocol, Contains list of
+           attributes required to provision NAT64";
+       }
+
+       container nat44 {
+          when "../../fjproto:name='nat44'";
+          uses nat44-attributes;	  
+          description
+          "The container for NAT44 protocol, Contains list of
+           attributes required to provision NAT44";
+        }	
+	
+       container nat44-napt {
+          when "../../fjproto:name='nat44-napt'";
+          uses nat44-napt-attributes;	  
+          description
+          "The container for NAT44 NAPT protocol, Contains list of
+           attributes required to provision NAT44 NAPT";
+        }
+      }
+ 
+  /*
+  * NAT State
+  */
+
+    container nat-state {
+        config false;
+      
+        description
+         "nat-state";
+
+       container nat64 {
+         description
+          "NAT 64 stats";
+
+         list dynamic-mapping-learnt-entries {
+            key "src-ipv6-address";
+			
+            leaf src-ipv6-address {
+             type inet:ipv6-address;
+             description
+             "IPv6 address corresponding to static IPv4 address of 
+             SNAT mapping table";
+            }
+
+            leaf src-ipv4-address {
+             type inet:ipv4-address;
+             description
+             "IPv4 address corresponding to static IPv6 address of 
+             SNAT mapping table";
+            } 
+          }
+       }
+       container nat44 {
+         description
+         "NAT44 stats";
+
+          list dynamic-mapping-learnt-entries {
+            key "public-dst-ipv4-address";
+            
+            leaf public-dst-ipv4-address {
+               type inet:ipv4-address;
+               description
+               "public IPv4 address corresponding to  
+               private IPv4 address in DNAT mapping table";
+            } 
+			
+            leaf private-dst-ipv4-address {
+               type inet:ipv4-address;
+               description
+               "private IPv4 address corresponding to  
+                public IPv4 address in DNAT mapping table";
+            } 			
+          }		
+       } 
+
+       container nat44-napt {
+        description
+        "NAT44-NAPT stats";
+
+          list dynamic-mapping-learnt-entries {
+            key "public-dst-ipv4-address public-dst-port-number";
+            
+            leaf public-dst-ipv4-address {
+               type inet:ipv4-address;
+               description
+               "public IPv4 address corresponding to  
+               private IPv4 address in DNAT mapping table";
+            } 
+
+            leaf public-dst-port-number {
+               type inet:port-number;
+               description
+               "public port number corresponding to  
+                private port number in DNAT mapping table";
+            } 
+			
+            leaf private-dst-ipv4-address {
+               type inet:ipv4-address;
+               description
+               "private IPv4 address corresponding to  
+                public IPv4 address in DNAT mapping table";
+            }
+
+            leaf private-dst-port-number {
+               type inet:port-number;
+               description
+               "private port number corresponding to  
+                public port number in DNAT mapping table";
+           }  			
+        }		
+      }
+    }
+  }
+}
+ 	
+

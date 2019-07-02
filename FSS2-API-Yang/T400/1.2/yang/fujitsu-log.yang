@@ -1,0 +1,375 @@
+module fujitsu-log {
+  namespace "urn:fujitsu:params:xml:ns:yang:fujitsu-log";
+  prefix fujitsu-log;
+
+  import fujitsu-equipment {
+    prefix eqpt;
+  }
+  
+  organization
+       "Fujitsu Ltd.";
+
+  contact
+       "Fujitsu Ltd.
+
+        Address: 2801 Telecom Parkway
+                 Richardson, Texas 75082
+
+        Tel: +1-800-USE-FTAC (1-800-873-3822)
+        Email: ftac@fnc.fujitsu.com
+        Web: www.fujitsu.com/us/services/telecom";
+
+  description
+       "This module is used to define the RPC calls to 
+          1) collect debug logs into a single file on the RAM disk
+          2) display the local syslog security log contents
+          3) clear the local syslog
+          4) generate HW/FW version log.
+          5) trigger on-deman micro blade logging.
+        Copyright (c) 2015 Fujitsu Ltd.
+        All rights reserved. ";
+
+  revision 2018-09-24 {
+     description
+       "create-tech-info: shelf-id and slot-id don't use leafref to handle
+        DBCOR case";
+  }
+
+  revision 2018-05-23 {
+     description
+       "create-tech-info: shelf-id is mandatory and slot-id is option";
+  }
+
+  revision 2018-04-06 {
+     description
+       "Fix various misspellings";
+  }
+
+  revision 2017-08-30 {
+     description
+     "This revision updates the error-message for RPC call:
+      - show-log";
+  }
+
+  revision 2017-08-23 {
+     description
+       "tailf keyword refactoring and log range increased";
+  }
+
+  revision 2017-07-25 {
+    description
+     "This revision adds the new logType(CLLOG) in trigger-tech-info"; 
+  }
+
+  revision 2017-05-30 {
+    description
+     "This revision adds the following RPC call:
+      - show-log";
+  }
+
+  revision 2017-02-24 {
+    description
+     "This revision modifies the logType struct for the following RPC call:
+      - trigger-tech-info";
+  }
+
+  revision 2017-02-06 {
+    description
+     "This revision adds the following RPC call:
+      - trigger-tech-info";
+  }
+
+  revision 2017-01-13 {
+    description
+     "This revision adds the following RPC call:
+      - generate-hw-version-log";
+  }
+
+  revision 2015-10-13;
+
+  grouping eqpt-id {
+    leaf shelf-id {
+      type string;
+      mandatory true;
+      description
+        "shelf ID";
+    }
+    leaf slot-id {
+      type string;
+      description
+        "slot ID";
+    }
+  }
+
+    rpc create-tech-info {
+    description 
+      "Collects all LOG data for debugging and places it in a location accessible via ftp/sftp.";
+      input {
+        uses eqpt-id;
+    }
+    output {
+      leaf status {
+        type string {
+          length "4..255";
+        }
+      }
+    }
+  }
+
+   rpc syslog-get {
+     description
+       "Contents of syslog are displayed.";
+
+    input {
+      leaf read-from-linenumber {
+       type int32;
+       description "Start Line number of syslog to be read from";
+       mandatory true;
+     }
+      leaf num-of-lines {
+       type int32 {
+       range "1..5000";
+       }
+       mandatory true;
+       description "Number of lines to be read - Range 5000 lines";
+     }
+
+   }
+    output {
+      leaf-list status {
+        type string {
+          length "1..max";
+        }
+        description
+          "All of syslog are displayed.
+           (It is likely to become a multi-line. )";
+      }
+      leaf total-num-of-lines {
+          type string;
+          description
+           "Total Number of lines in syslog";
+      }
+    }
+  }
+
+
+  rpc clear-syslog {
+    description 
+      "Syslog is cleared. ";
+    output {
+      leaf status {
+        type string {
+          length "1..max";
+        }
+        description 
+          "response of command";
+      }
+    }
+  }
+   rpc security-log-get {
+    description
+      "Contents of security logs are displayed.";
+    input {
+      leaf read-from-linenumber {
+       type int32;
+       mandatory true;
+     }
+      leaf num-of-lines {
+       type int32 {
+       range "1..5000";
+       }
+       mandatory true;
+       description "Number of lines to be read - Range 5000 lines";
+     }
+
+   }
+
+    output {
+      leaf-list status {
+        type string {
+          length "1..max";
+        }
+        description
+          "All of security-log are displayed.
+           (It is likely to become a multi-line. )";
+      }
+    }
+  }
+
+  typedef date-time {
+    type string {
+      pattern '\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2})?';
+    }
+    description 'Date with optional local time. YYYY-MM-DD[THH:MM:SS]';
+  }
+
+  rpc swerr-log-get {
+    description 
+      "Display swerr log content.";
+
+    input {
+      leaf shelf-id {
+        type leafref {
+          path "/eqpt:eqpt/eqpt:shelf/eqpt:shelfId";
+        }
+        description "shelf ID";
+      }
+
+      leaf slot {
+        type uint32; 
+        description "Display swerrs from specified slot. Default: 0";
+        default 0;
+      }
+     
+      choice filter {
+        case time {
+          leaf from {
+            type date-time; 
+            description "Display swerrs from timestamp(YYYY-MM-DD[THH:MM:SS])";
+          }
+
+          leaf to {
+            type date-time;
+            description "Display swerrs till timestamp(YYYY-MM-DD[THH:MM:SS])";
+          }
+
+          leaf count {
+            type uint32 {
+              range "1..max";
+            }
+            description "Display up to specified number of swerrs";
+          }
+        }
+        
+        case number-first {
+          leaf first {
+            type uint32;
+            description "Display up to first specified number of swerrs";
+          }
+        }
+        case number-last {
+          leaf last {
+            type uint32;
+            description "Display up to last specified number of swerrs";
+          }
+        }
+      }
+    }
+         
+    output {
+      leaf-list status {
+         type string;
+      }
+    }
+  }
+
+    rpc generate-hw-version-log {
+    description 
+      "Generate HW/FW version log.";
+
+      input {
+        leaf shelf-id {
+          type leafref {
+            path "/eqpt:eqpt/eqpt:shelf/eqpt:shelfId";
+        }
+        description "shelf ID";
+      }
+    }
+
+    output {
+      leaf status {
+        type string {
+          length "4..255";
+        }
+      }
+    }
+  }
+
+  typedef logType {
+     type enumeration {
+       enum MBLOG {
+         value "0";
+         description "MB Log";
+       }
+       enum FWLOG {
+         value "1";
+         description "FW Log";
+       }
+       enum PBCNTLOG {
+         value "2";
+         description "PBCNT Log";
+       }
+       enum CLLOG {
+         value "3";
+         description "CL Log";
+       }
+     }
+  } // logType
+
+  rpc trigger-tech-info {
+    description 
+      "Triggers generation of ON-Demand Log data";
+    input {
+      uses eqpt-id;
+      leaf trigger {
+        type logType; // Allowed values are MBLOG for now.
+        mandatory true;
+        description "Log Type";
+      }
+    }
+    output {
+      leaf status {
+        type string {
+          length "4..255";
+        }
+      }
+    }
+  } // trigger-tech-info
+  rpc show-log {
+  description
+    "Display contents of the LOG file from the specified shelf.";
+    input {
+      leaf shelf-id {
+        type leafref {
+             path "/eqpt:eqpt/eqpt:shelf/eqpt:shelfId";
+        }
+      description "shelf ID";
+      }
+      leaf log-file {
+        type string {
+        length "1..255";
+        pattern '([a-zA-Z0-9_./\-]*)' {
+        error-message "The log-file name can be with or without complete file path.
+                       if file path is given, log-file file path must be /var/log/.
+                       Allowed characters are only alphabets, digits,
+                       minus, forward slash, underscore and dot";
+        }
+      }
+      description "log file to be displayed from /var/log directory ";
+      mandatory true;
+      }
+    }
+    output {
+      leaf status {
+        type enumeration {
+          enum "Successful" {
+            value 1;
+          }
+          enum "Failed" {
+            value 2;
+          }
+        }
+        mandatory true;
+        description
+          "Successful or Failed";
+      }
+      leaf-list status-message {
+        type string {
+          length "1..max";
+        }
+        description
+          "Gives a more detailed reason for success / failure";
+      } // status-message
+    } // output
+  } // show-log
+}
