@@ -12,7 +12,7 @@
 
 set -xe
 product="T100"
-product_dir="FSS2-API-Yang/T100"
+product_dir="FSS2-API-Yang/${product}"
 # append product version to versions
 versions="2.4 2.4.2"
 
