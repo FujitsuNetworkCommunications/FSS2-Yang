@@ -1,0 +1,318 @@
+module fujitsu-otn-otu-interfaces {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:interface:otu";
+  prefix otu;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+  import fujitsu-entity-states {
+    prefix entity-states;
+  }
+  import fujitsu-entity-maintenance-loopback {
+    prefix fujitsu-loopback;
+  }
+  import fujitsu-gcc {
+    prefix fujitsuGcc;
+  }
+  import fujitsu-otn {
+    prefix otn;
+  }
+  import fujitsu-performance-monitoring-typedefs {
+    prefix pmtypedefs;
+  }
+  import fujitsu-ains-keywords {
+    prefix ains;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains YANG definitions 
+     for the OTU Interfaces of an Optical White Box (OWB).
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2018-01-09 {
+    description
+      " Added more fec types";
+  }
+  revision 2017-05-02 {
+    description
+      " Added AINS for otu container";
+  }
+  revision 2017-01-23 {
+    description
+      "Description changed for degthr.";
+  }
+  revision 2016-06-01 {
+    description
+      "Added more fec values. Added differential-decode, auto-rx, auto-tx, otu-notif";
+  }
+  revision 2015-05-12 {
+    description
+      "Initial revision.";
+  }
+
+  identity otu-rate-identity {
+    description
+      "A unique rate identification of the OTU.";
+  }
+
+  identity OTU4 {
+    base otu-rate-identity;
+    description
+      "Identity for an OTU4";
+  }
+
+  identity OTU3 {
+    base otu-rate-identity;
+    description
+      "Identity for an OTU3";
+  }
+
+  identity OTU2 {
+    base otu-rate-identity;
+    description
+      "Identity for an OTU2";
+  }
+
+  identity OTU2e {
+    base otu-rate-identity;
+    description
+      "Identity for an OTU2e";
+  }
+
+  identity OTU1 {
+    base otu-rate-identity;
+    description
+      "Identity for an OTU1";
+  }
+
+  identity OTU0 {
+    base otu-rate-identity;
+    description
+      "Identity for an OTU0";
+  }
+
+  identity OTUflex {
+    base otu-rate-identity;
+    description
+      "Identity for an OTUflex";
+  }
+
+  grouping block-base-ber-threshold {
+    leaf degthr {
+      type int16 {
+        range "-9..2";
+      }
+      default "0";
+      description
+        "DEGTHR:Degraded defect one-second Errored Block Count threshold
+         DEGTHR specifies the exponent part X of 10^X [%].";
+    }
+    leaf degm {
+      type int8 {
+        range "2..10";
+      }
+      default "10";
+      description
+        "DEGM:Degraded defect consecutive one-second monitoring intervals";
+    }
+  }
+
+  grouping otu-attributes {
+    description
+      "OTU attributes";
+    leaf rate {
+      type identityref {
+        base otu-rate-identity;
+      }
+      description
+        "rate identity of the OTU. 'identityref' is used
+         to allow to extend for future higher rates";
+    }
+    uses entity-states:oper-status;
+    uses entity-states:admin-status {
+      refine "admin-status" {
+        mandatory false;
+        default "down";
+      }
+    }
+    uses otn:tti-choice;
+    leaf direction {
+      type enumeration {
+        enum "uni-rx" {
+          value 0;
+          description
+            "unidirectional receive only";
+        }
+        enum "uni-tx" {
+          value 1;
+          description
+            "unidirectional transmit only";
+        }
+        enum "bi" {
+          value 2;
+          description
+            "bidirectional";
+        }
+      }
+      description
+        "direction of interface";
+    }
+    uses block-base-ber-threshold;
+    leaf circuit-id {
+      type string {
+        length "0..45";
+      }
+      description
+        "circuit identifier/user label";
+    }
+    leaf fec {
+      type enumeration {
+        enum "off" {
+          value 0;
+          description
+            "fec off";
+        }
+        enum "rsfec" {
+          value 1;
+          description
+            "rsfec";
+        }
+        enum "sdfeca1" {
+          value 2;
+          description
+            "Clariphy SDFEC";
+        }
+        enum "efec" {
+          value 3;
+          description
+            "G.975.1 I.4";
+        }
+        enum "ufec" {
+          value 4;
+          description
+            "G.975.1 I.7";
+        }
+        enum "sdfec" {
+          value 5;
+          description
+            "Soft Decision FEC";
+        }
+        enum "sdfecb1" {
+          value 6;
+          description
+            "SDFEC with SCFEC";
+        }
+        enum "scfec" {
+          value 7;
+          description
+            "Stair case FEC";
+        }
+        enum "hgsdfec" {
+          value 8;
+          description
+            "SDFEC 16% with RSFEC";
+        }
+        enum "hgsdfec2" {
+          value 9;
+          description
+            "SDFEC 23% with RSFEC";
+        }
+      }
+      description
+        "Forward Error Correction";
+    }
+    leaf differential-decode {
+      type enumeration {
+        enum "off" {
+          value 0;
+          description
+            "differntial decode off";
+        }
+        enum "on" {
+          value 1;
+          description
+            "differntial decode on";
+        }
+      }
+      description
+        "Differential Decode";
+    }
+    leaf auto-rx {
+      type boolean;
+      description
+        "enable/disable generation of transient condition when
+         the value of the TTI changes.";
+    }
+    leaf auto-tx {
+      type boolean;
+      description
+        "enable/disable automatic population of outgoing TTI";
+    }
+    uses pmtypedefs:pm-info;
+  }
+
+  augment "/if:interfaces/if:interface" {
+    container otu {
+      when "../if:type = 'ianaift:otnOtu'";
+      presence "Attribute Nodes for Optical Channel Transport Unit (OTU)";
+      description
+        "Optical Channel Transport Unit (OTU)";
+      uses fujitsu-loopback:maint-loopback;
+      uses ains:ains-prov-keywords;
+      leaf actual-vstimer {
+        config false;
+        type string {
+          pattern "([0-4][0-8])-([0-5][0-9])";
+        }
+        description
+          "The amount of time a valid state timer has been running uninterrupted.
+           This timer is in the format <hh>-<mm>.";
+      }
+      uses otu-attributes {
+        refine "oper-status" {
+          config false;
+        }
+      }
+      list list-gcc {
+        key "gccType";
+        description
+          " List of GCC0s";
+        uses fujitsuGcc:gcc-group;
+      }
+    }
+  }
+  notification otu-notif {
+    leaf name {
+      type leafref {
+        path "/if:interfaces/if:interface/if:name";
+      }
+    }
+    container otu {
+      uses ains:ains-prov-keywords;
+      leaf actual-vstimer {
+        config false;
+        type string {
+          pattern "([0-4][0-8])-([0-5][0-9])";
+        }
+        description
+          "The amount of time a valid state timer has been running uninterrupted.
+           This timer is in the format <hh>-<mm>.";
+      }
+      uses otu-attributes;
+    }
+  }
+}

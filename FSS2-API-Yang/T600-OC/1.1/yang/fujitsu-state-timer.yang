@@ -1,0 +1,46 @@
+module fujitsu-state-timer {
+  namespace "urn:fujitsu:params:xml:ns:yang:common:state-timer";
+  prefix state-timer;
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains state timer definitions.
+     
+     Copyright (c) 2014 Fujitsu Ltd. 
+     All rights reserved. ";
+
+  revision 2015-04-01 {
+    description
+      "Initial revision.";
+  }
+
+  grouping state-timer {
+    leaf vstimer {
+      type string {
+        pattern "([0-4][0-8])-([0-5][0-9])";
+      }
+      description
+        "Valid state Timer.
+         This timer is in the format <hh>-<mm> and inidcates the amount
+         of time to stay in ains state wating foir a valid signal.";
+    }
+    leaf actual-vstimer {
+      type string {
+        pattern "([0-4][0-8])-([0-5][0-9])";
+      }
+      description
+        "The amount of time a valid state timer has been running uninterrupted.
+         This timer is in the format <hh>-<mm>.";
+    }
+  }
+}

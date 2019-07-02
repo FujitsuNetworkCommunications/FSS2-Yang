@@ -1,0 +1,237 @@
+module fujitsu-otn-otu-interfaces-dev.prod {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:interface:otu-deviation";
+  prefix otu-deviation;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+  import fujitsu-otn-otu-interfaces {
+    prefix otu;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains YANG deviations
+     for the OTU Interfaces for T3x0.
+     
+     Copyright (c) 2015 Fujitsu Network Communications, inc.
+     All rights reserved. ";
+
+  revision 2018-08-13 {
+    description
+      "Added op-spec-only and all as supported values for tim-det-mode";
+  }
+  revision 2018-08-13 {
+    description
+      "rx/tx/exp-tti-op-spec, auto-rx and auto-tx are supported";
+  }
+  revision 2018-07-30 {
+    description
+      "Added Tim-act-enabled default value";
+  }
+  revision 2017-05-29 {
+    description
+      "AINS,vstimer and ACTVST are supported";
+  }
+  revision 2017-05-22 {
+    description
+      " Removing actual-vstimer";
+  }
+  revision 2017-02-16 {
+    description
+      "pm-value does not supports decimal values for interfaces";
+  }
+  revision 2016-11-19 {
+    description
+      "added default for gccEnabled";
+  }
+  revision 2016-09-19 {
+    description
+      "added restriction for rx-tti (op-spec)";
+  }
+  revision 2016-09-01 {
+    description
+      "added restriction for tti-ansi, tim-det-mode  and op-spec (exp-tti and tx-tti)";
+  }
+  revision 2016-07-27 {
+    description
+      "Changes to support Loopback.";
+  }
+  revision 2015-08-13 {
+    description
+      "Initial revision.";
+  }
+
+  deviation "/if:interfaces/if:interface/otu:otu/otu:fec" {
+    deviate add {
+      mandatory true;
+    }
+  }
+  deviation "/if:interfaces/if:interface/otu:otu/otu:direction" {
+    deviate add {
+      config false;
+    }
+  }
+  deviation "/if:interfaces/if:interface/otu:otu/otu:location" {
+    deviate replace {
+      type enumeration {
+        enum "nearEnd" {
+          value 0;
+          description
+            "Loopback location at near-end";
+        }
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/otu:otu/otu:degthr" {
+    deviate replace {
+      type int16 {
+        range "-3..2";
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/otu:otu/otu:circuit-id" {
+    deviate add {
+      default "";
+    }
+  }
+  deviation "/if:interfaces/if:interface/otu:otu/otu:list-gcc/otu:gccType" {
+    deviate replace {
+      type enumeration {
+        enum "gcc0" {
+          value 0;
+          description
+            "gcc0";
+        }
+      }
+    }
+    deviate add {
+      default "gcc0";
+    }
+  }
+  deviation "/if:interfaces/if:interface/otu:otu/otu:list-gcc/otu:gccEnabled" {
+    deviate add {
+      default "false";
+    }
+  }
+  deviation "/if:interfaces/if:interface/otu:otu/otu:list-gcc/otu:protocol" {
+    deviate replace {
+      type enumeration {
+        enum "IP" {
+          value 0;
+          description
+            "IP";
+        }
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/if:enabled" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/if:link-up-down-trap-enable" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/otu:otu/otu:actual-vstimer" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/otu:otu/otu:auto-rx" {
+    deviate add {
+      default "false";
+    }
+  }
+  deviation "/if:interfaces/if:interface/otu:otu/otu:auto-tx" {
+    deviate add {
+      default "false";
+    }
+  }
+  deviation "/if:interfaces/if:interface/otu:otu/otu:pm/otu:pm-threshold/otu:pm-type" {
+    deviate replace {
+      type enumeration {
+        enum "binned" {
+          value 2;
+          description
+            "Binned PM type";
+        }
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/otu:otu/otu:pm/otu:pm-threshold/otu:pm-th-metered" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/otu:otu/otu:pm/otu:pm-threshold/otu:pm-th-binned/otu:pm-time-periods/otu:pm-time-period" {
+    deviate replace {
+      type enumeration {
+        enum "15-min" {
+          value 1;
+          description
+            "15 minutes period";
+        }
+        enum "1-day" {
+          value 2;
+          description
+            "1 day period";
+        }
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/otu:otu/otu:standard/otu:itu/otu:tti-itu/otu:tim-det-mode" {
+    deviate replace {
+      type enumeration {
+        enum "off" {
+          value 0;
+          description
+            "TIM detection off";
+        }
+        enum "sapi-only" {
+          value 1;
+          description
+            "TIM detection sapi only";
+        }
+        enum "dapi-only" {
+          value 2;
+          description
+            "TIM detection dapi only";
+        }
+        enum "op-spec-only" {
+          value 3;
+          description
+            "TIM detection op-spec only";
+        }
+        enum "sapi-and-dapi" {
+          value 4;
+          description
+            "TIM detection sapi and dapi";
+        }
+        enum "all" {
+          value 7;
+          description
+            "TIM detection all (sapi, dapi, op-spec)";
+        }
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/otu:otu/otu:standard/otu:itu/otu:tti-itu/otu:tim-act-enabled" {
+    deviate add {
+      default "false";
+    }
+  }
+  deviation "/if:interfaces/if:interface/otu:otu/otu:pm/otu:pm-threshold/otu:pm-th-binned/otu:pm-time-periods/otu:pm-value" {
+    deviate replace {
+      type uint64;
+    }
+  }
+  deviation "/if:interfaces/if:interface/otu:otu/otu:standard/otu:ansi/otu:tti-ansi" {
+    deviate not-supported;
+  }
+}

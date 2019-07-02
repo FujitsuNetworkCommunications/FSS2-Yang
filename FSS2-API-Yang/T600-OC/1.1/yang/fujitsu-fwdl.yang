@@ -1,0 +1,239 @@
+module fujitsu-fwdl {
+  namespace "urn:fujitsu:params:xml:ns:yang:fujitsu-fwdl";
+  prefix fujitsu-fwdl;
+
+  import fujitsu-equipment {
+    prefix eqpt;
+  }
+
+  organization
+    "Fujitsu Limited ";
+  contact
+    "Fujitsu Limited
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains definitions for System Management.
+     
+     Copyright (c) 2015 Fujitsu Limited
+     All rights reserved. ";
+
+  revision 2015-09-28 {
+    description
+      "Initial revision.";
+  }
+
+  grouping eqpt-id {
+    leaf shelf-id {
+      type leafref {
+        path "/eqpt:eqpt/eqpt:shelf/eqpt:shelfId";
+      }
+      mandatory true;
+      description
+        "shelf ID";
+    }
+    leaf slot-id {
+      type leafref {
+        path "/eqpt:eqpt/eqpt:shelf/eqpt:slot/eqpt:slotID";
+      }
+      description
+        "slot ID";
+    }
+    leaf sub-slot-id {
+      type leafref {
+        path "/eqpt:eqpt/eqpt:shelf/eqpt:slot/eqpt:subslot/eqpt:subslotID";
+      }
+      description
+        "sub-slot number";
+    }
+  }
+
+  typedef cmd-status {
+    type string {
+      length "4..255";
+    }
+    description
+      "Response of command";
+  }
+
+  typedef fwBankType {
+    type enumeration {
+      enum "ACTIVE" {
+        value 0;
+        description
+          "Active Bank";
+      }
+      enum "STAGE" {
+        value 1;
+        description
+          "Staging Bank";
+      }
+      enum "BACKUP" {
+        value 2;
+        description
+          "Backup Bank";
+      }
+    }
+    description
+      "Firmware Banks";
+  }
+
+  grouping fw-info {
+    leaf entityName {
+      type string;
+      description
+        "EQPT AID
+         Example:
+         fw-info 1  // Show fw of shelf 1
+         fw-info 1/1  // show FW for slot 1 in shelf 1
+         fw-info 1/1/1 // show FW for subslot 1 in slot 1 in shelf 1 ";
+    }
+    leaf fwissue {
+      type string;
+      description
+        " This is the firmware version that is actually installed on the hardware.";
+    }
+    leaf fwcompat {
+      type string;
+      description
+        "This describes the list of FW issue ranges, which the HAL can be compatible with, instead of lowest FW issue";
+    }
+    leaf fwdlType {
+      type string;
+      description
+        "FWDL Type read from HW
+         This is the FWDLType, for a given unit-code (equipment type) different 
+         fwdl-types are different hardware designs that provide the same function.
+         For example, there are many different cards in the system that have
+         different optical modules from different manufacturers. Since each of these
+         optical modules requires different firmware, each of these TPE1 cards has a
+         different FWDLType.";
+    }
+    leaf verFlag {
+      type string;
+      description
+        "Ver Flag read from HW";
+    }
+    leaf expfwissue {
+      type string;
+      description
+        "This is the firmware issue for firmware that is yet to be applied.
+         For example, after upgrading the software, if new firmware is available
+         in the new software load, this is the version of that new firmware.";
+    }
+    leaf expfwcompat {
+      type string;
+      description
+        "This is the firmware compat value for the version of firmware that has yet to be installed (the firmware whose firmware issue is displayed in expfwissue)";
+    }
+    leaf expinservicefwcompat {
+      type string;
+      description
+        "This describes the list of FW issue ranges, for which the new FW upgrade would be hitless, instead of lowest FW issue.";
+    }
+    leaf expverFlag {
+      type string;
+      description
+        "This would be the new ver flag for the firmware yet to be installed. So if this firmware provided new capabilities, this version flag would show those capabilities.";
+    }
+    leaf updateDate {
+      type string;
+      description
+        "Date at which FW was updated";
+    }
+    leaf updateTime {
+      type string;
+      description
+        "Time at which FW was updated";
+    }
+    leaf uCode {
+      type string;
+      description
+        "Unit Code ";
+    }
+    leaf bootLoaderType {
+      type string;
+      default "U-Boot";
+      description
+        "Boot Loader Type ";
+    }
+    leaf bootVersion {
+      type string;
+      description
+        "Boot Loader Version running on the EQPT";
+    }
+    leaf expBootVersion {
+      type string;
+      description
+        "Expected boot loader version ";
+    }
+  }
+
+  rpc fw-update {
+    description
+      "Fpga data update";
+    input {
+      uses eqpt-id;
+      leaf force {
+        type boolean;
+        default "false";
+        description
+          "Used to update the FW irrespective of the EQPT state
+           true - force it
+           false - if eqpt is not in desired state then decline the command
+           default = false
+          ";
+      }
+      leaf overwrite {
+        type boolean;
+        default "false";
+        description
+          "Used to overwrite the FW even if the FW version is same
+           true - update the FW
+           false - FW will not be updated if the FW version is same
+           default = false
+          ";
+      }
+    }
+    output {
+      leaf status {
+        type cmd-status;
+      }
+    }
+  }
+  list fw-info {
+    key "entityName";
+    description
+      "EQPT AID
+       Example:fw-info 1  // Show fw of shelf 1
+       fw-info 1/1  // show FW for slot 1 in shelf 1
+       fw-info 1/1/1// show FW for subslot 1 in slot 1 in shelf 1 ";
+    config false;
+    uses fw-info;
+  }
+  rpc boot-update {
+    description
+      "Bootloader update ";
+    input {
+      uses eqpt-id;
+      leaf fileName {
+        type string;
+        default "";
+        description
+          "Boot image file name
+           This attribute is optional; Can be used if we ever want to support
+           multiple version of boot code";
+      }
+    }
+    output {
+      leaf status {
+        type cmd-status;
+      }
+    }
+  }
+}

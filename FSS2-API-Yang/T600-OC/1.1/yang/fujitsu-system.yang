@@ -1,0 +1,2363 @@
+module fujitsu-system {
+  namespace "urn:fujitsu:params:xml:ns:yang:system";
+  prefix sys;
+  yang-version 1.1;
+
+  import fujitsu-entity-states {
+    prefix entity-states;
+  }
+  import fujitsu-equipment {
+    prefix eqpt;
+  }
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import ietf-yang-types {
+    prefix yang;
+  }
+  import ietf-netconf-acm {
+    prefix nacm;
+  }
+  import fujitsu-security-certificates {
+    prefix secuCert;
+  }
+  import fujitsu-user-security {
+    prefix secu;
+  }
+  import confd_dyncfg {
+    prefix dyncfg;
+  }
+  import tailf-xsd-types {
+    prefix xs;
+  }
+  import fujitsu-ains-keywords {
+    prefix ains;
+  }
+  import fujitsu-license {
+    prefix fl;
+  }
+  import fujitsu-database {
+    prefix fdb;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains definitions for System Management.
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2019-02-07 {
+    description
+      "Add default PPP MRU and IPv4 MTU.";
+  }
+  revision 2018-11-26 {
+    description
+      "Add secondary store usb enable disable container.";
+  }
+  revision 2018-09-19 {
+    description
+      "Corrected errors in description of HTTPS ciphers.";
+  }
+  revision 2018-09-03 {
+    description
+      "Added missing HTTPS ciphers supported by Confd.";
+  }
+  revision 2018-08-03 {
+    description
+      "Added DEFAULT keyword for SSL Ciphers and 
+       Updated the Cipher list as per Confd Support";
+  }
+  revision 2018-08-02 {
+    description
+      "Removed the default value from ssh-algorithm
+       https ciphers and protocols";
+  }
+  revision 2018-07-20 {
+    description
+      "Moving the rest-enabled leaf validation logic to code";
+  }
+  revision 2018-07-04 {
+    description
+      "ssh algorithm default value set
+       in leaf list using yang version 1.1.";
+  }
+  revision 2018-06-28 {
+    description
+      "current-datetime's Day and Month validated";
+  }
+  revision 2018-06-28 {
+    description
+      "Adding RASIS OpenConfig features for system information";
+  }
+  revision 2018-06-27 {
+    description
+      "https ciphers and protocols default value set
+       in leaf list using yang version 1.1.";
+  }
+  revision 2018-06-19 {
+    description
+      "Removed secondary-db-backup-enabled node as a clean up activity
+       as this leaf is not needed anymore.";
+  }
+  revision 2018-06-08 {
+    description
+      "Removed references to external files";
+  }
+  revision 2018-05-31 {
+    description
+      "Support for system uptime";
+  }
+  revision 2018-05-18 {
+    description
+      "Removed default-ref for vstimer";
+  }
+  revision 2018-05-17 {
+    description
+      "Add new leaf fw-auto-update for FWDL in system container";
+  }
+  revision 2018-05-16 {
+    description
+      "Condition checks to ensure that alteast one of the northbound interfaces is up
+       are moved outside of yang, hence removing the checks from the model.";
+  }
+  revision 2018-04-20 {
+    description
+      "Removed gnmi container as its added in seperate file";
+  }
+  revision 2018-04-17 {
+    description
+      "Changed the default system time zone to UTC";
+  }
+  revision 2018-04-16 {
+    description
+      "Added a container gnmi for GNMI related configurations";
+  }
+  revision 2018-04-06 {
+    description
+      "fix various spelling errors";
+  }
+  revision 2018-03-30 {
+    description
+      "New keyword to allow disabling of Serial Port Login
+       New keyword to allow disabling of Last Resort Access";
+  }
+  revision 2018-03-23 {
+    description
+      "Added CLI disable validation to address single commit issue";
+  }
+  revision 2018-03-14 {
+    description
+      "set min-elements as 1 for ssh-algorithms";
+  }
+  revision 2018-03-12 {
+    description
+      "Updated DEFAULT as 0 for ssh-algorithms";
+  }
+  revision 2018-02-27 {
+    description
+      "update system name description";
+  }
+  revision 2018-02-12 {
+    description
+      "Updated host-key algorithm enum value of DEFAULT to 2";
+  }
+  revision 2018-02-02 {
+    description
+      "Removed rsa-sha2-256 and rsa-sha2-512 algorithms from Host key 
+       algorithms provisionable list and added the provision to disable 
+       CLI ssh-server when atleast one  of the other 
+       interfaces(NETCONF/WEBUI/TELNET/REST) is enabled";
+  }
+  revision 2018-01-15 {
+    description
+      "change system name to 63 characters - FSSPD2-953";
+  }
+  revision 2018-01-12 {
+    description
+      "Removed min-elements check from ssh-algorithm";
+  }
+  revision 2017-12-13 {
+    description
+      "Removed min-elements check from ssh-server and sftp-server
+       algorithms like mac and encryption";
+  }
+  revision 2017-12-05 {
+    description
+      "The timezone-name help description is made consistent to show high
+       level description for system clock";
+  }
+  revision 2017-11-29 {
+    description
+      "Added provisionable ssh algorithms like host-key, key-exchange, mac and encryption
+       And deprecated the existing algorithm option under ssh-server and sftp-server";
+  }
+  revision 2017-11-16 {
+    description
+      "New auto-upgrade keyword of ZTP container";
+  }
+  revision 2017-11-15 {
+    description
+      "Added leaf to configure snmpAgent ip";
+  }
+  revision 2017-11-13 {
+    description
+      "A Short-list of time zone abreviations is added in
+       timezone-name description";
+  }
+  revision 2017-10-25 {
+    description
+      "System name supports dot";
+  }
+  revision 2017-08-14 {
+    description
+      "Increased the allowed length of fractional seconds
+       in set-current-datetime rpc";
+  }
+  revision 2017-06-29 {
+    description
+      "System yang process improvement";
+  }
+  revision 2017-05-26 {
+    description
+      "New keyword to configure ssh algoritms with respect to sftp";
+  }
+  revision 2017-05-19 {
+    description
+      "New keyword to configure ssh algoritms";
+  }
+  revision 2017-04-27 {
+    description
+      "New keyword to configure https ciphers";
+  }
+  revision 2017-04-21 {
+    description
+      "New keyword to configure https protocols";
+  }
+  revision 2017-04-05 {
+    description
+      "webgui-timeout help string modified to address OPS-1444";
+  }
+  revision 2017-03-22 {
+    description
+      "New keyword to allow disabling of Internal RSTP feature";
+  }
+  revision 2017-02-20 {
+    description
+      "Changed the type of secondary-db-backup-enabled node 
+       from bool to enum";
+  }
+  revision 2017-02-17 {
+    description
+      "Add new keyword to enable DB backup";
+  }
+  revision 2017-02-16 {
+    description
+      "Adding factor range for Ethernet Holdoff Timer (EHT)";
+  }
+  revision 2017-02-10 {
+    description
+      "Ethernet Holdoff Timer (EHT) enum description updated";
+  }
+  revision 2017-02-08 {
+    description
+      "Removed saml container as it has been moved to a new yang file.";
+  }
+  revision 2017-02-06 {
+    description
+      "Added address check to NTP server";
+  }
+  revision 2017-01-29 {
+    description
+      "Moved the default for neMgmtMode to XML file";
+  }
+  revision 2017-01-26 {
+    description
+      "webgui-timeout help string modified to address FSSPD-487";
+  }
+  revision 2017-01-12 {
+    description
+      "XPATH corrections to include prefixes for each level";
+  }
+  revision 2016-11-17 {
+    description
+      "Introduced Ethernet Holdoff Timer (EHT)";
+  }
+  revision 2016-04-08 {
+    description
+      "Support for AINS has been added.";
+  }
+  revision 2016-02-15 {
+    description
+      "Initial revision.";
+  }
+
+  feature ntp {
+    description
+      "Indicates that the device can be configured to use one or
+       more NTP servers to set the system date and time.";
+  }
+
+  feature timezone-name {
+    description
+      "Indicates that the local time zone on the device
+       can be configured to use the TZ database
+       to set the time zone and manage daylight saving time.";
+    reference "RFC 6557: Procedures for Maintaining the Time Zone Database";
+  }
+
+  typedef ntp-version {
+    type uint8 {
+      range "3..4";
+    }
+    default "4";
+    description
+      "The current NTP version supported by corresponding
+       association. Currently support versions 3 and 4.";
+  }
+
+  typedef ntp-minpoll {
+    type uint8 {
+      range "4..17";
+    }
+    default "4";
+    description
+      "The minimal poll interval for this NTP association. Range: 4-17";
+  }
+
+  typedef ntp-maxpoll {
+    type uint8 {
+      range "4..17";
+    }
+    default "10";
+    description
+      "The maximal poll interval for this NTP association. Range: 4-17";
+  }
+
+  typedef RestartLevel {
+    type enumeration {
+      enum "cold" {
+        value 0;
+        description
+          "cold re-start";
+      }
+      enum "warm" {
+        value 1;
+        description
+          "warm re-start";
+      }
+    }
+    description
+      "initialization level for restart";
+  }
+
+  typedef EHT-value {
+    type int32 {
+      range "0..20";
+    }
+    description
+      "Factor for Ethernet Holdoff Timer .. Range <0..20>";
+  }
+
+  typedef AAT-value {
+    type enumeration {
+      enum "aat-zero" {
+        value 0;
+        description
+          "alarm activation time = 0";
+      }
+      enum "aat-twoPointFive" {
+        value 1;
+        description
+          "alarm activation time = 2.5 ";
+      }
+    }
+    description
+      "Activation time for alarms in seconds";
+  }
+
+  typedef ADT-value {
+    type enumeration {
+      enum "adt-zero" {
+        value 0;
+        description
+          "alarm de-activation time = 0";
+      }
+      enum "adt-ten" {
+        value 1;
+        description
+          "alarm de-activation time = 10";
+      }
+    }
+    description
+      "Deactivation time for alarms in seconds";
+  }
+
+  typedef neMgmtModeType {
+    type enumeration {
+      enum "Router" {
+        value 0;
+        description
+          "Router: NE management plane is running in Router mode";
+      }
+      enum "Bridge" {
+        value 1;
+        description
+          "Bridge: NE management plan is running L2 Bridge";
+      }
+      enum "MixMode" {
+        value 2;
+        description
+          "MixMode: LCN1 and LCN2 ports in Bridge and all others in Router mode";
+      }
+    }
+    description
+      " NE management plane modes";
+  }
+
+  typedef ctrl-status {
+    type enumeration {
+      enum "no-entry" {
+        value 0;
+        description
+          "no entry";
+      }
+      enum "not-registered" {
+        value 1;
+        description
+          "not registered";
+      }
+      enum "registered" {
+        value 2;
+        description
+          "registered";
+      }
+    }
+    description
+      "status of controller registration";
+  }
+
+  typedef tlsVersion {
+    type enumeration {
+      enum "tlsv1" {
+        value 0;
+        description
+          "TLS Version 1";
+      }
+      enum "tlsv1.1" {
+        value 1;
+        description
+          "TLS Version 1.1";
+      }
+      enum "tlsv1.2" {
+        value 2;
+        description
+          "TLS Version 1.2";
+      }
+    }
+  }
+
+  typedef sslCiphers {
+    type enumeration {
+      enum "DEFAULT" {
+        value 0;
+        description
+          "Sets SSL Cipher to ECDHE-RSA-AES256-SHA,ECDHE-RSA-AES128-SHA,DHE-RSA-AES256-SHA256,DHE-DSS-AES256-SHA256,
+           DHE-RSA-AES128-SHA256,DHE-DSS-AES128-SHA256,DHE-RSA-AES256-SHA,DHE-DSS-AES256-SHA,
+           DHE-RSA-AES128-SHA,DHE-DSS-AES128-SHA";
+      }
+      enum "DHE-RSA-AES256-SHA256" {
+        value 1;
+        description
+          "DHE-RSA-AES256-SHA256 Cipher";
+      }
+      enum "DHE-DSS-AES256-SHA256" {
+        value 2;
+        description
+          "DHE-DSS-AES256-SHA256 Cipher";
+      }
+      enum "AES256-SHA256" {
+        value 3;
+        description
+          "AES256-SHA256 Cipher";
+      }
+      enum "DHE-RSA-AES128-SHA256" {
+        value 4;
+        description
+          "DHE-RSA-AES128-SHA256 Cipher";
+      }
+      enum "DHE-DSS-AES128-SHA256" {
+        value 5;
+        description
+          "DHE-DSS-AES128-SHA256 Cipher";
+      }
+      enum "AES128-SHA256" {
+        value 6;
+        description
+          "AES128-SHA256 Cipher";
+      }
+      enum "DHE-RSA-AES256-SHA" {
+        value 7;
+        description
+          "DHE-RSA-AES256-SHA Cipher";
+      }
+      enum "DHE-DSS-AES256-SHA" {
+        value 8;
+        description
+          "DHE-DSS-AES256-SHA Cipher";
+      }
+      enum "AES256-SHA" {
+        value 9;
+        description
+          "AES256-SHA Cipher";
+      }
+      enum "DHE-RSA-AES128-SHA" {
+        value 10;
+        description
+          "DHE-RSA-AES128-SHA Cipher";
+      }
+      enum "DHE-DSS-AES128-SHA" {
+        value 11;
+        description
+          "DHE-DSS-AES128-SHA Cipher";
+      }
+      enum "AES128-SHA" {
+        value 12;
+        description
+          "AES128-SHA Cipher";
+      }
+      enum "EDH-RSA-DES-CBC3-SHA" {
+        value 13;
+        description
+          "EDH-RSA-DES-CBC3-SHA Cipher";
+      }
+      enum "EDH-DSS-DES-CBC3-SHA" {
+        value 14;
+        description
+          "EDH-DSS-DES-CBC3-SHA Cipher";
+      }
+      enum "DES-CBC3-SHA" {
+        value 15;
+        description
+          "DES-CBC3-SHA Cipher";
+      }
+      enum "EDH-RSA-DES-CBC-SHA" {
+        value 16;
+        description
+          "EDH-RSA-DES-CBC-SHA Cipher";
+      }
+      enum "DES-CBC-SHA" {
+        value 17;
+        description
+          "DES-CBC-SHA Cipher";
+      }
+      enum "ECDHE-RSA-AES256-SHA" {
+        value 18;
+        description
+          "ECDHE-RSA-AES256-SHA Cipher";
+      }
+      enum "ECDHE-RSA-AES128-SHA" {
+        value 19;
+        description
+          "ECDHE-RSA-AES128-SHA Cipher";
+      }
+      enum "ECDH-ECDSA-AES128-SHA" {
+        value 20;
+        description
+          "ECDH-ECDSA-AES128-SHA Cipher";
+      }
+      enum "ECDH-RSA-AES128-SHA" {
+        value 21;
+        description
+          "ECDH-RSA-AES128-SHA Cipher";
+      }
+      enum "ECDH-ECDSA-DES-CBC3-SHA" {
+        value 22;
+        description
+          "ECDH-ECDSA-DES-CBC3-SHA Cipher";
+      }
+      enum "ECDH-RSA-DES-CBC3-SHA" {
+        value 23;
+        description
+          "ECDH-RSA-DES-CBC3-SHA Cipher";
+      }
+      enum "ECDHE-ECDSA-AES128-SHA" {
+        value 24;
+        description
+          "ECDHE-ECDSA-AES128-SHA Cipher";
+      }
+      enum "ECDH-ECDSA-AES256-SHA" {
+        value 25;
+        description
+          "ECDH-ECDSA-AES256-SHA Cipher";
+      }
+      enum "ECDH-RSA-AES256-SHA" {
+        value 26;
+        description
+          "ECDH-RSA-AES256-SHA Cipher";
+      }
+      enum "ECDHE-ECDSA-DES-CBC3-SHA" {
+        value 27;
+        description
+          "ECDHE-ECDSA-DES-CBC3-SHA Cipher";
+      }
+      enum "ECDHE-RSA-DES-CBC3-SHA" {
+        value 28;
+        description
+          "ECDHE-RSA-DES-CBC3-SHA Cipher";
+      }
+      enum "ECDHE-ECDSA-AES256-SHA" {
+        value 29;
+        description
+          "ECDHE-ECDSA-AES256-SHA Cipher";
+      }
+      enum "ECDHE-ECDSA-AES128-SHA256" {
+        value 30;
+        description
+          "ECDHE-ECDSA-AES128-SHA256 Cipher";
+      }
+      enum "ECDHE-RSA-AES128-SHA256" {
+        value 31;
+        description
+          "ECDHE-RSA-AES128-SHA256 Cipher";
+      }
+      enum "ECDH-ECDSA-AES128-SHA256" {
+        value 32;
+        description
+          "ECDH-ECDSA-AES128-SHA256 Cipher";
+      }
+      enum "ECDH-RSA-AES128-SHA256" {
+        value 33;
+        description
+          "ECDH-RSA-AES128-SHA256 Cipher";
+      }
+      enum "ECDHE-ECDSA-AES256-SHA384" {
+        value 34;
+        description
+          "ECDHE-ECDSA-AES256-SHA384 Cipher";
+      }
+      enum "ECDHE-RSA-AES256-SHA384" {
+        value 35;
+        description
+          "ECDHE-RSA-AES256-SHA384 Cipher";
+      }
+      enum "ECDH-ECDSA-AES256-SHA384" {
+        value 36;
+        description
+          "ECDH-ECDSA-AES256-SHA384 Cipher";
+      }
+      enum "ECDH-RSA-AES256-SHA384" {
+        value 37;
+        description
+          "ECDH-RSA-AES256-SHA384 Cipher";
+      }
+    }
+  }
+
+  typedef macAlgor {
+    type enumeration {
+      enum "hmac-md5" {
+        value 0;
+        description
+          "hmac-md5 ssh MAC Algorithm";
+      }
+      enum "hmac-sha1" {
+        value 1;
+        description
+          "hmac-sha1 ssh MAC Algorithm";
+      }
+      enum "hmac-sha2-256" {
+        value 2;
+        description
+          "hmac-sha2-256 ssh MAC Algorithm";
+      }
+      enum "hmac-sha2-512" {
+        value 3;
+        description
+          "hmac-sha2-512 ssh MAC Algorithm";
+      }
+      enum "hmac-sha1-96" {
+        value 4;
+        description
+          "hmac-sha1-96 ssh MAC Algorithm";
+      }
+      enum "hmac-md5-96" {
+        value 5;
+        description
+          "hmac-md5-96 ssh MAC Algorithm";
+      }
+    }
+  }
+
+  typedef encryptAlgor {
+    type enumeration {
+      enum "aes128-ctr" {
+        value 0;
+        description
+          "aes128-ctr ssh encryption Algorithm";
+      }
+      enum "aes192-ctr" {
+        value 1;
+        description
+          "aes192-ctr ssh encryption Algorithm";
+      }
+      enum "aes256-ctr" {
+        value 2;
+        description
+          "aes256-ctr ssh encryption Algorithm";
+      }
+      enum "aes128-cbc" {
+        value 3;
+        description
+          "aes128-cbc ssh encryption Algorithm";
+      }
+      enum "aes256-cbc" {
+        value 4;
+        description
+          "aes256-cbc ssh encryption Algorithm";
+      }
+      enum "3des-cbc" {
+        value 5;
+        description
+          "3des-cbc ssh encryption Algorithm";
+      }
+    }
+  }
+
+  typedef hostKeyAlg {
+    type enumeration {
+      enum "DEFAULT" {
+        value 0;
+        description
+          "Sets host key algorithm to ssh-dss and ssh-rsa";
+      }
+      enum "ssh-dss" {
+        value 1;
+        description
+          "Sets host key algorithm to ssh-dss and UI supported";
+      }
+      enum "ssh-rsa" {
+        value 2;
+        description
+          "Sets host key algorithm to ssh-rsa and UI supported";
+      }
+    }
+  }
+
+  typedef kexAlg {
+    type enumeration {
+      enum "DEFAULT" {
+        value 0;
+        description
+          "Sets key exchange algorithm to curve25519-sha256@libssh.org, diffie-hellman-group-exchange-sha256,
+           diffie-hellman-group1-sha1, diffie-hellman-group14-sha1, diffie-hellman-group14-sha256,
+           diffie-hellman-group16-sha512, diffie-hellman-group18-sha512, ecdh-sha2-nistp256,
+           ecdh-sha2-nistp384 and  ecdh-sha2-nistp521";
+      }
+      enum "curve25519-sha256@libssh.org" {
+        value 1;
+        description
+          "Sets key exchange algorithm to curve25519-sha256@libssh.org";
+      }
+      enum "diffie-hellman-group-exchange-sha1" {
+        value 2;
+        description
+          "Sets key exchange algorithm to diffie-hellman-group-exchange-sha1 and UI supported";
+      }
+      enum "diffie-hellman-group-exchange-sha256" {
+        value 3;
+        description
+          "Sets key exchange algorithm to diffie-hellman-group-exchange-sha256 and UI supported";
+      }
+      enum "diffie-hellman-group1-sha1" {
+        value 4;
+        description
+          "Sets key exchange algorithm to diffie-hellman-group1-sha1 and UI supported";
+      }
+      enum "diffie-hellman-group14-sha1" {
+        value 5;
+        description
+          "Sets key exchange algorithm to diffie-hellman-group14-sha1 and UI supported";
+      }
+      enum "diffie-hellman-group14-sha256" {
+        value 6;
+        description
+          "Sets key exchange algorithm to diffie-hellman-group14-sha256";
+      }
+      enum "diffie-hellman-group16-sha512" {
+        value 7;
+        description
+          "Sets key exchange algorithm to diffie-hellman-group16-sha512";
+      }
+      enum "diffie-hellman-group18-sha512" {
+        value 8;
+        description
+          "Sets key exchange algorithm to diffie-hellman-group18-sha512";
+      }
+      enum "ecdh-sha2-nistp256" {
+        value 9;
+        description
+          "Sets key exchange algorithm to ecdh-sha2-nistp256";
+      }
+      enum "ecdh-sha2-nistp384" {
+        value 10;
+        description
+          "Sets key exchange algorithm to ecdh-sha2-nistp384";
+      }
+      enum "ecdh-sha2-nistp521" {
+        value 11;
+        description
+          "Sets key exchange algorithm to ecdh-sha2-nistp521";
+      }
+    }
+  }
+
+  typedef macAlg {
+    type enumeration {
+      enum "DEFAULT" {
+        value 0;
+        description
+          "Sets mac algorithm to hmac-sha1, hmac-sha1-etm@openssh.com, hmac-sha2-256,
+           hmac-sha2-256-etm@openssh.com, hmac-sha2-512, hmac-sha2-512-etm@openssh.com,
+           umac-128-etm@openssh.com, umac-128@openssh.com, umac-64-etm@openssh.com and
+           umac-64@openssh.com";
+      }
+      enum "hmac-md5" {
+        value 1;
+        description
+          "Sets mac algorithm to hmac-md5 and UI supported";
+      }
+      enum "hmac-sha1" {
+        value 2;
+        description
+          "Sets mac algorithm to hmac-sha1 and UI supported";
+      }
+      enum "hmac-sha2-256" {
+        value 3;
+        description
+          "Sets mac algorithm to hmac-sha2-256 and UI supported";
+      }
+      enum "hmac-sha2-512" {
+        value 4;
+        description
+          "Sets mac algorithm to hmac-sha2-512 and UI supported";
+      }
+      enum "hmac-sha1-96" {
+        value 5;
+        description
+          "Sets mac algorithm to hmac-sha1-96 and UI supported";
+      }
+      enum "hmac-md5-96" {
+        value 6;
+        description
+          "Sets mac algorithm to hmac-md5-96 and UI supported";
+      }
+      enum "hmac-sha1-etm@openssh.com" {
+        value 7;
+        description
+          "Sets mac algorithm to hmac-sha1-etm@openssh.com";
+      }
+      enum "hmac-sha2-256-etm@openssh.com" {
+        value 8;
+        description
+          "Sets mac algorithm to hmac-sha2-256-etm@openssh.com";
+      }
+      enum "hmac-sha2-512-etm@openssh.com" {
+        value 9;
+        description
+          "Sets mac algorithm to hmac-sha2-512-etm@openssh.com";
+      }
+      enum "umac-128-etm@openssh.com" {
+        value 10;
+        description
+          "Sets mac algorithm to umac-128-etm@openssh.com";
+      }
+      enum "umac-128@openssh.com" {
+        value 11;
+        description
+          "Sets mac algorithm to umac-128@openssh.com.com";
+      }
+      enum "umac-64-etm@openssh.com" {
+        value 12;
+        description
+          "Sets mac algorithm to umac-64-etm@openssh.com";
+      }
+      enum "umac-64@openssh.com" {
+        value 13;
+        description
+          "Sets mac algorithm to umac-64@openssh.com";
+      }
+    }
+  }
+
+  typedef encAlg {
+    type enumeration {
+      enum "DEFAULT" {
+        value 0;
+        description
+          "Sets encrytion algorithm to 3des-cbc, aes128-ctr, aes128-gcm@openssh.com,
+           aes192-ctr, aes256-ctr, aes256-gcm@openssh.com and chacha20-poly1305@openssh.com";
+      }
+      enum "aes128-ctr" {
+        value 1;
+        description
+          "Sets encryption algorithm to aes128-ctr and UI supported";
+      }
+      enum "aes192-ctr" {
+        value 2;
+        description
+          "Sets encryption algorithm to aes192-ctr and UI supported";
+      }
+      enum "aes256-ctr" {
+        value 3;
+        description
+          "Sets encryption algorithm to aes256-ctr and UI supported";
+      }
+      enum "aes128-cbc" {
+        value 4;
+        description
+          "Sets encryption algorithm to aes128-cbc and UI supported";
+      }
+      enum "aes256-cbc" {
+        value 5;
+        description
+          "Sets encryption algorithm to aes256-cbc and UI supported";
+      }
+      enum "3des-cbc" {
+        value 6;
+        description
+          "Sets encryption algorithm to 3des-cbc and UI supported";
+      }
+      enum "aes128-gcm@openssh.com" {
+        value 7;
+        description
+          "Sets encryption algorithm to aes128-gcm@openssh.com";
+      }
+      enum "aes192-cbc" {
+        value 8;
+        description
+          "Sets encryption algorithm to aes192-cbc";
+      }
+      enum "aes256-gcm@openssh.com" {
+        value 9;
+        description
+          "Sets encryption algorithm to aes256-gcm@openssh.com";
+      }
+      enum "arcfour" {
+        value 10;
+        description
+          "Sets encryption algorithm to arcfour";
+      }
+      enum "blowfish-cbc" {
+        value 11;
+        description
+          "Sets encryption algorithm to blowfish-cbc";
+      }
+      enum "cast128-cbc" {
+        value 12;
+        description
+          "Sets encryption algorithm to cast128-cbc";
+      }
+      enum "chacha20-poly1305@openssh.com" {
+        value 13;
+        description
+          "Sets encryption algorithm to chacha20-poly1305@openssh.com";
+      }
+    }
+  }
+
+  augment "/eqpt:eqpt/eqpt:shelf/eqpt:slot/eqpt:subslot/eqpt:port" {
+    uses ains:ains-prov-keywords {
+      refine "ains" {
+        must "(current()='disabled' or (current()='enabled' and current()/../eqpt:admin-status='down'))" {
+          error-message "admin-status cannot be up when AINS is enabled";
+        }
+      }
+    }
+  }
+  container system {
+    description
+      "System related configurations";
+    leaf vendor {
+      type string;
+      description
+        "Vendor Name - \"Fujitsu Limited\" ";
+    }
+    leaf name {
+      type string {
+        length "7..63";
+        pattern "(([a-zA-Z]([a-zA-Z0-9-/.-]*)([a-zA-Z0-9])))";
+      }
+      description
+        "Admin assigned name/hostname to this system. 
+         Name starts with a letter, ends with a letter or digit.
+         Interior characters are only letters, digits, periods and hyphens.";
+    }
+    leaf location {
+      type string;
+      description
+        "location information";
+    }
+    leaf contact {
+      type string;
+      description
+        "Contact information for this system";
+    }
+    leaf neType {
+      type string;
+      config false;
+      description
+        "Network Element type";
+    }
+    leaf neTypeInDB {
+      type string;
+      description
+        "Network Element Type";
+    }
+    leaf neMgmtMode {
+      type neMgmtModeType;
+      description
+        "Network Element Management Modes - Router or Bridge";
+    }
+    leaf softwareVersion {
+      type string;
+      config false;
+      description
+        "Software version of the system";
+    }
+    leaf upTime {
+      type uint32;
+      config false;
+      description
+        "Number of TimeTicks ( in one hudredth of second) since last time System was initilized";
+    }
+    leaf sys-uptime {
+      type string;
+      config false;
+      description
+        "Displays how long the system has been running.
+         The current time, how long the system has been running,
+         how many users are currently logged on,
+         and the system load averages for the past 1, 5, and 15 minutes";
+    }
+    leaf autoP {
+      type boolean;
+      description
+        "Global flag to turn ON/OFF auto provisioning on the system";
+    }
+    leaf EHT {
+      type EHT-value;
+      default "0";
+      description
+        "Ethernet Holdoff Timer";
+    }
+    leaf AAT {
+      type AAT-value;
+      description
+        "Alarm Activation Time";
+    }
+    leaf ADT {
+      type ADT-value;
+      description
+        "Alarm De-activation Time";
+    }
+    leaf showFwBackwardCompatAllAlarm {
+      type boolean;
+      default "true";
+      description
+        "true: show firmwareBackwardCompatibleAll alarm
+         false: Do not show firmwareBackwardCompatibleAll alarm";
+    }
+    leaf fw-auto-update {
+      type boolean;
+      default "false";
+      description
+        "true: hitless fw-update triggered automatically after swdl
+         false: hitless fw-update has to be triggered manually";
+    }
+    leaf sys-vstimer {
+      type string {
+        pattern "((([0-3][0-9]|4[0-7])-([0-5][0-9]))|48-00)";
+      }
+      description
+        "value of validation timer in hh-mm";
+      default "08-00";
+    }
+    leaf internal-rstp-enabled {
+      type boolean;
+      default "true";
+      description
+        "Global flag to enable (true) or disable (false) Internal-RSTP on the system";
+    }
+    container console {
+      description
+        "Configuration of the console port properties.";
+      leaf console-enabled {
+        type boolean;
+        default "true";
+        description
+          "Global flag to enable (true) or disable (false) console login on the system";
+      }
+    }
+    leaf enable-last-resort-access {
+      type boolean;
+      default "true";
+      description
+        "Global flag to enable (true) or disable (false) Last Resort Access on the system";
+    }
+    container clock {
+      description
+        "Configuration of the system date and time properties.";
+      leaf timezone-name {
+        if-feature "timezone-name";
+        default "UTC";
+        type string;
+        description
+          "The TZ database name to use for the system.
+           The allowed ones's are
+            Mexico/General,
+            Mexico/BajaSur,
+            Mexico/BajaNorte,
+            America/Denver,
+            America/Caracas,
+            America/Nassau,
+            America/Tortola,
+            America/Los_Angeles,
+            America/Boa_Vista,
+            America/Martinique,
+            America/Indianapolis,
+            America/Phoenix,
+            America/Catamarca,
+            America/Paramaribo,
+            America/Pangnirtung,
+            America/Monterrey,
+            America/Araguaina,
+            America/Guatemala,
+            America/Inuvik,
+            America/Shiprock,
+            America/Adak,
+            America/Yakutat,
+            America/Halifax,
+            America/St_Barthelemy,
+            America/Thunder_Bay,
+            America/Grenada,
+            America/Godthab,
+            America/Sao_Paulo,
+            America/Danmarkshavn,
+            America/Bahia_Banderas,
+            America/Anchorage,
+            America/Whitehorse,
+            America/Ensenada,
+            America/Belem,
+            America/Curacao,
+            America/Nome,
+            America/Menominee,
+            America/Vancouver,
+            America/Lima,
+            America/Guayaquil,
+            America/North_Dakota/Center,
+            America/North_Dakota/Beulah,
+            America/North_Dakota/New_Salem,
+            America/Bogota,
+            America/Blanc-Sablon,
+            America/Recife,
+            America/Fortaleza,
+            America/Porto_Velho,
+            America/Yellowknife,
+            America/Edmonton,
+            America/Winnipeg,
+            America/El_Salvador,
+            America/Kentucky/Monticello,
+            America/Kentucky/Louisville,
+            America/Port_of_Spain,
+            America/Atka,
+            America/Scoresbysund,
+            America/Detroit,
+            America/Guadeloupe,
+            America/Guyana,
+            America/Thule,
+            America/Manaus,
+            America/Marigot,
+            America/Iqaluit,
+            America/Atikokan,
+            America/Juneau,
+            America/Swift_Current,
+            America/Buenos_Aires,
+            America/Santiago,
+            America/Bahia,
+            America/New_York,
+            America/St_Kitts,
+            America/Knox_IN,
+            America/Maceio,
+            America/Mendoza,
+            America/Panama,
+            America/Cambridge_Bay,
+            America/Coral_Harbour,
+            America/Virgin,
+            America/Anguilla,
+            America/Metlakatla,
+            America/Cayman,
+            America/Puerto_Rico,
+            America/Hermosillo,
+            America/Creston,
+            America/Dawson,
+            America/Aruba,
+            America/Montserrat,
+            America/Havana,
+            America/Eirunepe,
+            America/Asuncion,
+            America/Nipigon,
+            America/Kralendijk,
+            America/Rankin_Inlet,
+            America/Rosario,
+            America/Montevideo,
+            America/Santarem,
+            America/Tegucigalpa,
+            America/Argentina/ComodRivadavia,
+            America/Argentina/Catamarca,
+            America/Argentina/San_Juan,
+            America/Argentina/Salta,
+            America/Argentina/Rio_Gallegos,
+            America/Argentina/San_Luis,
+            America/Argentina/Buenos_Aires,
+            America/Argentina/La_Rioja,
+            America/Argentina/Mendoza,
+            America/Argentina/Ushuaia,
+            America/Argentina/Jujuy,
+            America/Argentina/Cordoba,
+            America/Argentina/Tucuman,
+            America/Montreal,
+            America/Chicago,
+            America/Dawson_Creek,
+            America/Tijuana,
+            America/Toronto,
+            America/Barbados,
+            America/Glace_Bay,
+            America/Chihuahua,
+            America/Belize,
+            America/Jamaica,
+            America/St_Thomas,
+            America/Moncton,
+            America/Boise,
+            America/Santo_Domingo,
+            America/Cayenne,
+            America/Campo_Grande,
+            America/Grand_Turk,
+            America/Mexico_City,
+            America/Mazatlan,
+            America/Fort_Wayne,
+            America/Noronha,
+            America/Jujuy,
+            America/Cancun,
+            America/Regina,
+            America/Santa_Isabel,
+            America/Merida,
+            America/Resolute,
+            America/St_Lucia,
+            America/St_Vincent,
+            America/Indiana/Petersburg,
+            America/Indiana/Indianapolis,
+            America/Indiana/Winamac,
+            America/Indiana/Marengo,
+            America/Indiana/Vevay,
+            America/Indiana/Knox,
+            America/Indiana/Vincennes,
+            America/Indiana/Tell_City,
+            America/Costa_Rica,
+            America/Port-au-Prince,
+            America/Sitka,
+            America/Miquelon,
+            America/Goose_Bay,
+            America/Louisville,
+            America/Cordoba,
+            America/Porto_Acre,
+            America/Rainy_River,
+            America/Antigua,
+            America/Lower_Princes,
+            America/Dominica,
+            America/Matamoros,
+            America/Rio_Branco,
+            America/Ojinaga,
+            America/La_Paz,
+            America/Cuiaba,
+            America/Managua,
+            America/St_Johns,
+            HST,
+            UTC,
+            WET,
+            Etc/GMT-1,
+            Etc/GMT+3,
+            Etc/UTC,
+            Etc/GMT+4,
+            Etc/GMT-11,
+            Etc/GMT-8,
+            Etc/GMT-6,
+            Etc/GMT0,
+            Etc/Universal,
+            Etc/Greenwich,
+            Etc/GMT-3,
+            Etc/GMT-4,
+            Etc/GMT+0,
+            Etc/GMT+1,
+            Etc/GMT+10,
+            Etc/GMT-12,
+            Etc/GMT-13,
+            Etc/GMT-5,
+            Etc/GMT-7,
+            Etc/GMT-14,
+            Etc/GMT+5,
+            Etc/GMT+9,
+            Etc/GMT-9,
+            Etc/GMT-2,
+            Etc/GMT+7,
+            Etc/GMT-10,
+            Etc/UCT,
+            Etc/Zulu,
+            Etc/GMT+2,
+            Etc/GMT-0,
+            Etc/GMT+11,
+            Etc/GMT+12,
+            Etc/GMT+6,
+            Etc/GMT+8,
+            Etc/GMT,
+            GMT0,
+            Universal,
+            Greenwich,
+            Indian/Comoro,
+            Indian/Chagos,
+            Indian/Maldives,
+            Indian/Mayotte,
+            Indian/Mauritius,
+            Indian/Reunion,
+            Indian/Christmas,
+            Indian/Mahe,
+            Indian/Kerguelen,
+            Indian/Antananarivo,
+            Indian/Cocos,
+            GMT+0,
+            Pacific/Honolulu,
+            Pacific/Noumea,
+            PRC,
+            EET,
+            NZ,
+            Asia/Manila,
+            Asia/Hovd,
+            Asia/Katmandu,
+            Asia/Kamchatka,
+            Asia/Makassar,
+            Asia/Ujung_Pandang,
+            Asia/Dushanbe,
+            Asia/Thimbu,
+            Asia/Yakutsk,
+            Asia/Tehran,
+            Asia/Oral,
+            Asia/Choibalsan,
+            Asia/Novokuznetsk,
+            Asia/Irkutsk,
+            Asia/Jayapura,
+            Asia/Tel_Aviv,
+            Asia/Ashgabat,
+            Asia/Aqtau,
+            Asia/Tashkent,
+            Asia/Almaty,
+            Asia/Tbilisi,
+            Asia/Macau,
+            Asia/Ho_Chi_Minh,
+            Asia/Ulan_Bator,
+            Asia/Ust-Nera,
+            Asia/Samarkand,
+            Asia/Kuala_Lumpur,
+            Asia/Pontianak,
+            Asia/Colombo,
+            Asia/Omsk,
+            Asia/Thimphu,
+            Asia/Ashkhabad,
+            Asia/Kabul,
+            Asia/Dubai,
+            Asia/Seoul,
+            Asia/Aden,
+            Asia/Tokyo,
+            Asia/Gaza,
+            Asia/Jerusalem,
+            Asia/Chungking,
+            Asia/Istanbul,
+            Asia/Hebron,
+            Asia/Saigon,
+            Asia/Nicosia,
+            Asia/Kuwait,
+            Asia/Vladivostok,
+            Asia/Bangkok,
+            Asia/Urumqi,
+            Asia/Kashgar,
+            Asia/Khandyga,
+            Asia/Ulaanbaatar,
+            Asia/Magadan,
+            Asia/Baghdad,
+            Asia/Vientiane,
+            Asia/Karachi,
+            Asia/Riyadh,
+            Asia/Damascus,
+            Asia/Macao,
+            Asia/Amman,
+            Asia/Taipei,
+            Asia/Dacca,
+            Asia/Calcutta,
+            Asia/Harbin,
+            Asia/Krasnoyarsk,
+            Asia/Shanghai,
+            Asia/Bahrain,
+            Asia/Chongqing,
+            Asia/Novosibirsk,
+            Asia/Baku,
+            Asia/Pyongyang,
+            Asia/Qyzylorda,
+            Asia/Aqtobe,
+            Asia/Singapore,
+            Asia/Jakarta,
+            Asia/Yekaterinburg,
+            Asia/Qatar,
+            Asia/Phnom_Penh,
+            Asia/Bishkek,
+            Asia/Hong_Kong,
+            Asia/Kathmandu,
+            Asia/Anadyr,
+            Asia/Yerevan,
+            Asia/Kolkata,
+            Asia/Sakhalin,
+            Asia/Kuching,
+            Asia/Dili,
+            Asia/Dhaka,
+            Asia/Brunei,
+            Asia/Beirut,
+            Asia/Muscat,
+            Asia/Rangoon,
+            GB,
+            EST5EDT,
+            NZ-CHAT,
+            ROK,
+            EST,
+            W-SU,
+            MST,
+            CET,
+            CST6CDT,
+            MST7MDT,
+            Europe/Prague,
+            Europe/Helsinki,
+            Europe/Tiraspol,
+            Europe/Vilnius,
+            Europe/Zaporozhye,
+            Europe/Simferopol,
+            Europe/Minsk,
+            Europe/Bucharest,
+            Europe/Tirane,
+            Europe/Zurich,
+            Europe/Paris,
+            Europe/Brussels,
+            Europe/Berlin,
+            Europe/Sarajevo,
+            Europe/Chisinau,
+            Europe/Dublin,
+            Europe/Lisbon,
+            Europe/Vatican,
+            Europe/Belfast,
+            Europe/Istanbul,
+            Europe/Oslo,
+            Europe/Sofia,
+            Europe/Nicosia,
+            Europe/Podgorica,
+            Europe/Samara,
+            Europe/Rome,
+            Europe/Copenhagen,
+            Europe/Belgrade,
+            Europe/Mariehamn,
+            Europe/Ljubljana,
+            Europe/London,
+            Europe/Uzhgorod,
+            Europe/Kiev,
+            Europe/Skopje,
+            Europe/Volgograd,
+            Europe/Busingen,
+            Europe/Isle_of_Man,
+            Europe/Luxembourg,
+            Europe/Zagreb,
+            Europe/Warsaw,
+            Europe/Gibraltar,
+            Europe/Riga,
+            Europe/San_Marino,
+            Europe/Monaco,
+            Europe/Andorra,
+            Europe/Athens,
+            Europe/Vaduz,
+            Europe/Guernsey,
+            Europe/Moscow,
+            Europe/Bratislava,
+            Europe/Stockholm,
+            Europe/Kaliningrad,
+            Europe/Madrid,
+            Europe/Tallinn,
+            Europe/Malta,
+            Europe/Amsterdam,
+            Europe/Jersey,
+            Europe/Vienna,
+            Europe/Budapest,
+            Brazil/DeNoronha,
+            Brazil/West,
+            Brazil/Acre,
+            Brazil/East,
+            PST8PDT,
+            CT,
+            Zulu,
+            MET,
+            GMT-0,
+            Australia/Brisbane,
+            Australia/Sydney,
+            Australia/Darwin,
+            Australia/Adelaide,
+            US/Samoa,
+            US/Central,
+            US/Eastern,
+            US/Aleutian,
+            US/Hawaii,
+            US/Pacific,
+            US/East-Indiana,
+            US/Michigan,
+            US/Alaska,
+            US/Mountain,
+            US/Arizona,
+            US/Indiana-Starke,
+            Chile/Continental,
+            Chile/EasterIsland,
+            Africa/Cairo,
+            GMT,
+            Canada/Central,
+            Canada/Eastern,
+            Canada/Saskatchewan,
+            Canada/Atlantic,
+            Canada/Newfoundland,
+            Canada/Pacific,
+            Canada/Mountain,
+            Canada/Yukon,
+            Canada/East-Saskatchewan,
+            ROC.";
+      }
+    }
+    uses fdb:database-options;
+    container ntp {
+      if-feature "ntp";
+      presence
+        "Enables the NTP client unless the 'enabled' leaf
+         (which defaults to 'true') is set to 'false'";
+      description
+        "Configuration of the NTP client.";
+      leaf enabled {
+        type boolean;
+        default "true";
+        description
+          "Enable/Disable NTP synchronization";
+      }
+      list servers {
+        key "name";
+        unique "address";
+        max-elements "2";
+        description
+          "List of NTP servers to use for system clock
+           synchronization.  If '/system/ntp/enabled'
+           is 'true', then the system will attempt to
+           contact and utilize the specified NTP servers.";
+        leaf name {
+          type string;
+          description
+            "An arbitrary name for the NTP server.";
+        }
+        leaf address {
+          type inet:ip-address;
+          mandatory true;
+          must "not(starts-with(current(),'127.'))" {
+            error-message "Loopback addresses are not supported";
+          }
+          description
+            "The address of the NTP server.";
+        }
+        leaf version {
+          type ntp-version;
+          description
+            "NTP version. Supports versions 3 and 4";
+        }
+        leaf association-type {
+          type enumeration {
+            enum "server" {
+              description
+                "Use client association mode.  This device
+                 will not provide synchronization to the
+                 configured NTP server.";
+            }
+          }
+          default "server";
+          description
+            "The desired association type for this NTP server.";
+        }
+        leaf minpoll {
+          type ntp-minpoll;
+          description
+            "The minimal poll interval used in this association. Range: 4-17";
+        }
+        leaf maxpoll {
+          type ntp-maxpoll;
+          description
+            "The maximal poll interval used in this association. Range: 4-17";
+        }
+        leaf prefer {
+          type boolean;
+          default "false";
+          description
+            "Indicates whether this server should be preferred
+             or not.";
+        }
+      }
+    }
+    container ztp {
+      description
+        "Configuration of the ZTP app.";
+      leaf ztp-enabled {
+        type boolean;
+        default "true";
+        description
+          "Enable/Disable ZTP application";
+      }
+      leaf auto-upgrade {
+        type boolean;
+        default "true";
+        description
+          "Enable/Disable ZTP Boot";
+      }
+      container ztp-oper-data {
+        config false;
+        leaf controller-reg-status {
+          type ctrl-status;
+          description
+            "Controller registration status.";
+        }
+        leaf controller-ip-addr {
+          type inet:ip-address;
+          description
+            "IP address of the controller";
+        }
+      }
+    }
+    container services {
+      description
+        "System Service Configuration";
+      container ssh-server {
+        description
+          "SSH server related configuration ";
+        leaf ssh-server-enabled {
+          type boolean;
+          default "true";
+          description
+            "Enable/Disable SSH server";
+        }
+        leaf ssh-server-port {
+          type uint16 {
+            range "22|2000..6021|6023..32767|61001..65535";
+          }
+          default "22";
+          description
+            "SSH server port to listen on: 22|2000..6021|6023..32767|61001..65535";
+        }
+        container algorithms {
+          status deprecated;
+          description
+            "SSH server related algorithms ";
+          leaf-list mac {
+            status deprecated;
+            max-elements "6";
+            type macAlgor;
+            ordered-by user;
+            description
+              "Specifies the mac algorithms supported in SSH.
+               The supported mac alogorithms are hmac-md5, hmac-sha1,
+               hmac-sha2-256, hmac-sha2-512,
+               hmac-sha1-96 and hmac-md5-96";
+          }
+          leaf-list encryption {
+            status deprecated;
+            max-elements "6";
+            type encryptAlgor;
+            ordered-by user;
+            description
+              "Specifies the encryption algorithm supported in SSH.
+               The supported encryption algorithms
+               are aes128-ctr, aes192-ctr, aes256-ctr, aes128-cbc,
+               aes256-cbc and 3des-cbc";
+          }
+        }
+      }
+      container web-server {
+        description
+          "Web Server related configuration";
+        leaf webgui-enabled {
+          type boolean;
+          default "true";
+          description
+            "Enable/Disable WebGUI";
+        }
+        leaf webgui-timeout {
+          type xs:duration;
+          description
+            "Timeout value for WebGUI.
+             PT0M means no timeout. Default is PT30M, ie 30 minutes.
+             Minimum acceptable timeout is PT10M, ie 10 minutes.
+             Please logout and log back in, for changes to take effect after commit";
+        }
+        container rest {
+          description
+            "rest related configuration";
+          leaf rest-enabled {
+            type boolean;
+            default "false";
+            description
+              "Enable/Disable REST";
+          }
+        }
+        container http {
+          description
+            "Enables http transport";
+          presence "Enables http transport";
+          leaf http-port {
+            type inet:port-number {
+              range "80|2000..6021|6023..32767|61001..65535";
+            }
+            default "80";
+            description
+              "HTTP port to listen on: 80|2000..6021|6023..32767|61001..65535";
+          }
+        }
+        container https {
+          description
+            "Enables SSL Transport";
+          presence "Enables SSL Transport";
+          choice certType {
+            mandatory true;
+            leaf certificate-id {
+              type leafref {
+                path "/secu:security/secuCert:certificates/secuCert:certificate-id";
+              }
+              description
+                "ID of the certificate from security table";
+            }
+            leaf system-generated-certificate {
+              type empty;
+              description
+                "Use the system generated certificate";
+            }
+          }
+          leaf https-port {
+            type inet:port-number {
+              range "443|2000..6021|6023..32767|61001..65535";
+            }
+            default "443";
+            description
+              "HTTPS port to listen on: 443|2000..6021|6023..32767|61001..65535";
+          }
+          leaf-list protocols {
+            max-elements "3";
+            type tlsVersion;
+            ordered-by user;
+            description
+              "Specifies the SSL/TLS protocol versions to be used by the server.
+               The supported protocol versions are tlsv1, tlsv1.1 and tlsv1.2 ";
+          }
+          leaf-list ciphers {
+            max-elements "38";
+            type sslCiphers;
+            ordered-by user;
+            description
+              "Specifies the cipher suites allowed on the secure connection.
+               The supported ciphers are DHE-RSA-AES256-SHA256,DHE-DSS-AES256-SHA256,
+               AES256-SHA256, DHE-RSA-AES128-SHA256,DHE-DSS-AES128-SHA256,
+               AES128-SHA256, DHE-RSA-AES256-SHA,
+               DHE-DSS-AES256-SHA, AES256-SHA, EDH-RSA-DES-CBC3-SHA,
+               EDH-DSS-DES-CBC3-SHA, DES-CBC3-SHA, DHE-RSA-AES128-SHA,
+               DHE-DSS-AES128-SHA, AES128-SHA, EDH-RSA-DES-CBC-SHA, DES-CBC-SHA,
+               ECDHE-RSA-AES256-SHA,ECDHE-RSA-AES128-SHA,ECDH-ECDSA-AES128-SHA,
+               ECDH-RSA-AES128-SHA,ECDH-ECDSA-DES-CBC3-SHA,ECDH-RSA-DES-CBC3-SHA,    
+               ECDHE-ECDSA-AES128-SHA,ECDH-ECDSA-AES256-SHA,ECDH-RSA-AES256-SHA, 
+               ECDHE-ECDSA-DES-CBC3-SHA,ECDHE-RSA-DES-CBC3-SHA,ECDHE-ECDSA-AES256-SHA,
+               ECDHE-ECDSA-AES128-SHA256,ECDHE-RSA-AES128-SHA256,ECDH-ECDSA-AES128-SHA256,
+               ECDH-RSA-AES128-SHA256,ECDHE-ECDSA-AES256-SHA384,ECDHE-RSA-AES256-SHA384,
+               ECDH-ECDSA-AES256-SHA384,ECDH-RSA-AES256-SHA384, 
+               or the word DEFAULT ( to configure all the default
+               Ciphers).";
+          }
+        }
+      }
+      container ftp {
+        description
+          "ftp related configuration";
+        uses ftp-server_g;
+        uses ftp-client_g;
+      }
+      container sftp {
+        description
+          "sftp related configuration";
+        uses sftp-server_g;
+        uses sftp-client_g;
+      }
+      container telnet {
+        description
+          "telnet related configuration";
+        leaf telnet-enabled {
+          type boolean;
+          default "false";
+          description
+            "Enable/Disable telnet";
+        }
+        leaf telnet-port {
+          type uint8 {
+            range "23";
+          }
+          default "23";
+          description
+            "Telnet port to listen on: 23";
+        }
+      }
+      container netconf {
+        description
+          "netconf related configuration";
+        leaf netconf-enabled {
+          type boolean;
+          default "false";
+          description
+            "Enable/Disable NETCONF";
+        }
+        leaf netconf-port {
+          type inet:port-number {
+            range "830|2000..6021|6023..32767|61001..65535";
+          }
+          default "830";
+          description
+            "NETCONF port to listen on: 830|2000..6021|6023..32767|61001..65535";
+        }
+        leaf netconf-timeout {
+          description
+            "netconf-timeout";
+          type xs:duration;
+        }
+      }
+      container snmp {
+        description
+          "SNMP Agent related configuration";
+        leaf snmp-enabled {
+          type boolean;
+          default "false";
+          description
+            "Enable/Disable SNMP Agent";
+        }
+        leaf snmp-port {
+          type inet:port-number {
+            range "161|2000..6021|6023..32767|61001..65535";
+          }
+          default "161";
+          description
+            "SNMP port to listen on: 161|2000..6021|6023..32767|61001..65535";
+        }
+        leaf snmp-ip {
+          type inet:ip-address;
+          default "0.0.0.0";
+          description
+            "SNMP agent-address in V1 trap";
+        }
+      }
+      container ssh-algorithm {
+        description
+          "SSH server algorithm related configuration";
+        leaf-list key-exchange-algorithm {
+          max-elements "12";
+          type kexAlg;
+          ordered-by user;
+          description
+            "Specifies the key-exchange-algorithms for User Interface (applicable ports), Debug and SFTP ports.
+             The supported algorithms are curve25519-sha256@libssh.org, diffie-hellman-group-exchange-sha1,
+             diffie-hellman-group-exchange-sha256, diffie-hellman-group1-sha1, diffie-hellman-group14-sha1,
+             diffie-hellman-group14-sha256, diffie-hellman-group16-sha512, diffie-hellman-group18-sha512,
+             ecdh-sha2-nistp256, ecdh-sha2-nistp384, ecdh-sha2-nistp521 or the word DEFAULT ( to configure
+             all  the default algorithms)";
+        }
+        leaf-list host-key-algorithm {
+          max-elements "3";
+          type hostKeyAlg;
+          ordered-by user;
+          description
+            "Specifies the host-key-algorithms for User Interface (applicable ports), Debug and SFTP ports.
+             The supported algorithms are ssh-dss and ssh-rsa
+             or the word DEFAULT ( to configure all the default algorithms)";
+        }
+        leaf-list mac-algorithm {
+          max-elements "14";
+          type macAlg;
+          ordered-by user;
+          description
+            "Specifies the mac algorithms for User Interface (applicable ports), Debug and SFTP ports.
+             The supported algorithms are hmac-md5, hmac-md5-96, hmac-sha1 ,
+             hmac-sha1-96, hmac-sha1-etm@openssh.com, hmac-sha2-256,
+             hmac-sha2-256-etm@openssh.com, hmac-sha2-512, hmac-sha2-512-etm@openssh.com,
+             umac-128-etm@openssh.com, umac-128@openssh.com, umac-64-etm@openssh.com,
+             umac-64@openssh.com or the word DEFAULT ( to configure all the default
+             algorithms)";
+        }
+        leaf-list encryption-algorithm {
+          max-elements "14";
+          type encAlg;
+          ordered-by user;
+          description
+            "Specifies the encryption algorithms for User Interface (applicable ports), Debug and SFTP ports.
+             The supported encryption algorithms are 3des-cbc, aes128-cbc, aes128-ctr,
+             aes128-gcm@openssh.com, aes192-cbc, aes192-ctr, aes256-cbc, aes256-ctr,
+             aes256-gcm@openssh.com, arcfour, blowfish-cbc, cast128-cbc,
+             chacha20-poly1305@openssh.com or the word DEFAULT (to configure all the
+             default algorithms)";
+        }
+      }
+    }
+    container filter-timer {
+      description
+        "It is used for the filter management of FAN on Blade. ";
+      list shelfId {
+        key "shelf_Id";
+        leaf shelf_Id {
+          type leafref {
+            path "/eqpt:eqpt/eqpt:shelf/eqpt:shelfId";
+          }
+        }
+        leaf repl {
+          type uint8 {
+            range "0..5";
+          }
+          default "2";
+          description
+            "Number of times the filter can be cleaned
+             before the filter needs to be replaced.
+             repl = 0 means replace everytime.
+             
+             Clean Time = FILTTM /( REPL + 1)
+             TYPE=REPLACE has to be specified when
+             using REPL in init-filter-timer command.";
+        }
+        leaf filttm {
+          type uint8 {
+            range "0 | 30..180";
+          }
+          default "90";
+          units "day";
+          description
+            "Filter Replace Time (in Days)
+             0 - The Timer is Inhibited";
+        }
+        leaf filttmr {
+          type uint8 {
+            range "0..180";
+          }
+          config false;
+          description
+            "Remaining Filter Replacement Time (in Days)";
+        }
+      }
+    }
+    container mem-info {
+      config false;
+      description
+        "It can know use state of the memory.";
+      list target {
+        key "target";
+        leaf target {
+          type enumeration {
+            enum "workRAM" {
+              value 0;
+              description
+                "Ram";
+            }
+            enum "storage" {
+              value 1;
+              description
+                "Storage disk";
+            }
+          }
+          description
+            "WorkRAM or Storage disk";
+        }
+        leaf size {
+          type uint8;
+          units "byte";
+          description
+            "On-board memory size";
+        }
+        leaf used {
+          type uint8;
+          units "byte";
+          description
+            "Memory utilization";
+        }
+        leaf avail {
+          type uint8;
+          units "byte";
+          description
+            "Available Memory size ";
+        }
+      }
+    }
+    container memory-statistics {
+      config false;
+      description
+        "System memory status";
+      leaf physical {
+        type uint64;
+        description
+          "Total available memory in Mega Bytes";
+      }
+      leaf reserved {
+        type uint64;
+        description
+          "Total used memory in Mega Bytes";
+      }
+    }
+    container cpu-statistics {
+      config false;
+      description
+        "System level CPU statistics";
+      list cpu {
+        key "index user-type";
+        leaf index {
+          type uint8;
+          description
+            "CPU core index";
+        }
+        uses cpu-statistics;
+      }
+    }
+    container process-statistics {
+      config false;
+      description
+        "System level process information";
+      list process {
+        key "pid";
+        leaf pid {
+          type uint64;
+          description
+            "Process PID";
+        }
+        leaf name {
+          type string;
+          description
+            "process name";
+        }
+        leaf args {
+          type string;
+          description
+            "Arguments passed for the process";
+        }
+        leaf start-time {
+          type uint64;
+          description
+            "Start time of the process";
+        }
+        leaf uptime {
+          type uint64;
+          description
+            "Total process uptime";
+        }
+        leaf cpu-usage-user {
+          type uint64;
+          description
+            "Amount of CPU used, user context";
+        }
+        leaf cpu-usage-system {
+          type uint64;
+          description
+            "Amount of CPU used, system context";
+        }
+        leaf cpu-utilization {
+          description
+            "percentage of CPU utilization";
+          type decimal64 {
+            fraction-digits 2;
+          }
+        }
+        leaf mem-usage {
+          type uint64;
+          description
+            "Memory usage by the process";
+        }
+        leaf mem-utilization {
+          description
+            "percentage of memory utilization";
+          type decimal64 {
+            fraction-digits 2;
+          }
+        }
+      }
+    }
+  }
+  container system-state {
+    description
+      "System group operational state.";
+    container clock {
+      description
+        "Monitoring of the system date and time properties.";
+      leaf datetime {
+        type string {
+          pattern "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}";
+        }
+        config false;
+        description
+          "The current system date and time.";
+      }
+    }
+    container cpu-operating-ratio {
+      description
+        "Operating ratio in each CPU core. ";
+      config false;
+      list cores {
+        key "core";
+        leaf core {
+          type string;
+        }
+        leaf now-5s {
+          type uint8;
+          units "%";
+          description
+            "Average of CPU availability from now to 5s ago";
+        }
+        leaf now-60s {
+          type uint8;
+          units "%";
+          description
+            "Average of CPU availability from now to 60s ago";
+        }
+        leaf now-300s {
+          type uint8;
+          units "%";
+          description
+            "Average of CPU availability from now to 300s ago";
+        }
+        leaf heapMemory {
+          type uint8;
+          units "%";
+          description
+            "Usage rate of HEAP memory";
+        }
+      }
+    }
+  }
+  container defaults {
+    leaf def-neMgmtMode {
+      type neMgmtModeType;
+      default "Bridge";
+      description
+        "Network Element Management Modes - Router or Bridge";
+    }
+    leaf def-ppp-mru {
+      type uint32;
+      default "1500";
+      description
+        "PPP Maximum Receive Unit size.";
+    }
+    leaf def-ipv4-mtu {
+      type uint16;
+      default "1500";
+      description
+        "IPv4 Maximum Tranmission Unit size.";
+    }
+  }
+
+  grouping ftp-server_g {
+    container ftp-server {
+      leaf ftp-server-enabled {
+        type boolean;
+        default "false";
+        description
+          "Enable/Disable FTP server";
+      }
+      leaf ftp-server-port {
+        type uint8 {
+          range "21";
+        }
+        default "21";
+        description
+          "FTP server port to listen on: 21";
+      }
+    }
+  }
+
+  grouping ftp-client_g {
+    container ftp-client {
+      leaf ftp-client-enabled {
+        type boolean;
+        default "false";
+        description
+          "Enable/Disable FTP client";
+      }
+    }
+  }
+
+  grouping sftp-server_g {
+    container sftp-server {
+      leaf sftp-server-enabled {
+        type boolean;
+        default "false";
+        description
+          "Enable/Disable SFTP server";
+      }
+      leaf sftp-server-port {
+        type uint16 {
+          range "2000..6021|6023..32767|61001..65535";
+        }
+        default "2202";
+        description
+          "SFTP server port to listen on: 2000..6021|6023..32767|61001..65535";
+      }
+      container algorithms {
+        description
+          "SSH server related algorithms ";
+        leaf-list allowed-mac {
+          max-elements "6";
+          type macAlgor;
+          ordered-by user;
+          description
+            "Specifies the mac algorithms supported in SSH.
+             The supported mac alogorithms are hmac-md5, hmac-sha1,
+             hmac-sha2-256, hmac-sha2-512,
+             hmac-sha1-96 and hmac-md5-96";
+        }
+        leaf-list allowed-encryption {
+          max-elements "6";
+          type encryptAlgor;
+          ordered-by user;
+          description
+            "Specifies the encryption algorithm supported in SSH.
+             The supported encryption algorithms
+             are aes128-ctr, aes192-ctr, aes256-ctr, aes128-cbc,
+             aes256-cbc and 3des-cbc";
+        }
+      }
+    }
+  }
+
+  grouping sftp-client_g {
+    container sftp-client {
+      leaf sftp-client-enabled {
+        type boolean;
+        default "false";
+        description
+          "Enable/Disable SFTP client";
+      }
+    }
+  }
+
+  rpc set-current-datetime {
+    description
+      "Set the /system-state/clock/current-datetime leaf
+       to the specified value.
+       If the system is using NTP (i.e., /system/ntp/enabled
+       is set to 'true'), then this operation will fail with
+       error-tag 'operation-failed' and error-app-tag value of
+       'ntp-active'.";
+    input {
+      leaf current-datetime {
+        type string {
+          pattern "(19[7-9][0-9]|20[0-2][0-9]|203[0-5])-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])T([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])(\\.([0-9]+))?";
+        }
+        mandatory true;
+        description
+          "The current system date and time.Format: CCYY-MM-DDTHH:MM:SS.mm";
+      }
+    }
+    output {
+      leaf status {
+        type string;
+      }
+    }
+  }
+  rpc restartSystem {
+    input {
+      leaf level {
+        type RestartLevel;
+        mandatory true;
+        description
+          "restart level.";
+      }
+    }
+    output {
+      leaf status {
+        type string;
+      }
+    }
+  }
+  rpc init-filter-timer {
+    description
+      "Please execute it when you clean or exchange the filter of the FAN. 
+       The filter timer value becomes 0";
+    input {
+      leaf shelfID {
+        type leafref {
+          path "/eqpt:eqpt/eqpt:shelf/eqpt:shelfId";
+        }
+      }
+    }
+    output {
+      leaf status {
+        type string;
+      }
+    }
+  }
+
+  grouping cpu-statistics {
+    leaf user-type {
+      type string;
+      description
+        "CPU user type";
+    }
+    leaf instant {
+      type decimal64 {
+        fraction-digits 2;
+      }
+      description
+        "Current CPU usage in %";
+    }
+    leaf avg {
+      type decimal64 {
+        fraction-digits 2;
+      }
+      description
+        "Average CPU usage in %";
+    }
+    leaf min {
+      type decimal64 {
+        fraction-digits 2;
+      }
+      description
+        "Minimum CPU usage in %";
+    }
+    leaf max {
+      type decimal64 {
+        fraction-digits 2;
+      }
+      description
+        "Maximum CPU usage in %";
+    }
+    leaf interval {
+      type uint64;
+      description
+        "CPU statistics computed interval in nanoseconds";
+    }
+  }
+}

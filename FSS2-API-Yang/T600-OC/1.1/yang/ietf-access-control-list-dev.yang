@@ -1,0 +1,108 @@
+module ietf-access-control-list-dev {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:ietf-access-control-list-dev";
+  prefix acl-dvn;
+
+  import ietf-access-control-list {
+    prefix acl;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+     Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module is used to remove specific features in the ietf-access-control-list
+     module that are not supported at this time.
+     Copyright (c) 2016 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2018-06-07 {
+    description
+      "Protocol field excluded from deviation.";
+  }
+  revision 2017-03-02 {
+    description
+      "Added special character restirction in ACL name and ACL rule name.";
+  }
+  revision 2016-01-14;
+
+  deviation "/acl:access-lists/acl:acl" {
+    deviate add {
+      max-elements "10";
+    }
+  }
+  deviation "/acl:access-lists/acl:acl/acl:access-list-entries/acl:ace" {
+    deviate add {
+      max-elements "50";
+    }
+  }
+  deviation "/acl:access-lists/acl:acl/acl:acl-name" {
+    deviate replace {
+      type string {
+        length "1..28";
+        pattern "[a-zA-Z0-9_.-]*" {
+          error-message "The ACL name must have only alphabets, digits, minus, underscore and dot";
+        }
+      }
+    }
+  }
+  deviation "/acl:access-lists/acl:acl/acl:access-list-entries/acl:ace/acl:rule-name" {
+    deviate replace {
+      type string {
+        length "1..255";
+        pattern "[a-zA-Z0-9_.-]*" {
+          error-message "The ACL rule name must have only alphabets, digits, minus, underscore and dot";
+        }
+      }
+    }
+  }
+  deviation "/acl:access-lists/acl:acl/acl:access-list-entries/acl:ace/acl:actions/acl:packet-handling" {
+    deviate replace {
+      default "permit";
+    }
+  }
+  deviation "/acl:access-lists/acl:acl/acl:access-list-entries/acl:ace/acl:matches/acl:ace-type/acl:ace-ip/acl:ace-ip-version/acl:ace-ipv4/acl:destination-ipv4-network" {
+    deviate not-supported;
+  }
+  deviation "/acl:access-lists/acl:acl/acl:access-list-entries/acl:ace/acl:matches/acl:ace-type/acl:ace-ip/acl:ace-ip-version/acl:ace-ipv6/acl:destination-ipv6-network" {
+    deviate not-supported;
+  }
+  deviation "/acl:access-lists/acl:acl/acl:access-list-entries/acl:ace/acl:matches/acl:ace-type/acl:ace-ip/acl:ace-ip-version/acl:ace-ipv6/acl:flow-label" {
+    deviate not-supported;
+  }
+  deviation "/acl:access-lists/acl:acl/acl:access-list-entries/acl:ace/acl:matches/acl:ace-type/acl:ace-ip/acl:dscp" {
+    deviate not-supported;
+  }
+  deviation "/acl:access-lists/acl:acl/acl:access-list-entries/acl:ace/acl:matches/acl:ace-type/acl:ace-ip/acl:source-port-range" {
+    deviate not-supported;
+  }
+  deviation "/acl:access-lists/acl:acl/acl:access-list-entries/acl:ace/acl:matches/acl:ace-type/acl:ace-ip/acl:destination-port-range" {
+    deviate not-supported;
+  }
+  deviation "/acl:access-lists/acl:acl/acl:access-list-entries/acl:ace/acl:matches/acl:ace-type/acl:ace-eth" {
+    deviate not-supported;
+  }
+  deviation "/acl:access-lists/acl:acl/acl:access-list-entries/acl:ace/acl:matches/acl:input-interface" {
+    deviate not-supported;
+  }
+  deviation "/acl:access-lists/acl:acl/acl:access-list-entries/acl:ace/acl:matches/acl:absolute-time" {
+    deviate not-supported;
+  }
+  deviation "/acl:access-lists/acl:acl/acl:acl-type" {
+    deviate not-supported;
+  }
+  deviation "/acl:access-lists/acl:acl/acl:access-list-entries/acl:ace/acl:ace-oper-data" {
+    deviate not-supported;
+  }
+  deviation "/acl:access-lists/acl:acl/acl:acl-oper-data" {
+    deviate not-supported;
+  }
+}

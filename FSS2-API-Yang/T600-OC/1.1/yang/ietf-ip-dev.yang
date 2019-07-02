@@ -1,0 +1,111 @@
+module ietf-ip-dev {
+  namespace "urn:fujitsu:params:xml:ns:yang:ietf-ip-dev";
+  prefix ietf-ip-dev;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+  import ietf-ip {
+    prefix ip;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+     Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This file contains the deviations
+     for the ietf ip yang model.
+     
+      Copyright (c) 2016 Fujitsu Ltd.
+        All rights reserved. ";
+
+  revision 2019-02-07 {
+    description
+      "Move Ipv4 MTU to annotation.";
+  }
+  revision 2017-04-19 {
+    description
+      "Added support for SC-E1/2";
+  }
+  revision 2017-04-10 {
+    description
+      "Added support for E2 ports for ip numbered interfaces";
+  }
+  revision 2017-03-06 {
+    description
+      "OSC interface specific validations are made generic to support E-SC-E2 interface";
+  }
+
+  deviation "/if:interfaces/if:interface/ip:ipv4/ip:address/ip:subnet/ip:netmask" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces-state/if:interface/ip:ipv4/ip:address/ip:subnet" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/ip:ipv4/ip:enabled" {
+    deviate replace {
+      type boolean;
+      default "false";
+    }
+    description
+      "Default ipv4 as disabled";
+  }
+  deviation "/if:interfaces/if:interface/ip:ipv6/ip:enabled" {
+    deviate replace {
+      type boolean;
+      default "false";
+    }
+    description
+      "Default ipv6 as disabled";
+  }
+  deviation "/if:interfaces/if:interface/ip:ipv4/ip:mtu" {
+    deviate replace {
+      type uint16 {
+        range "68..1500";
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/ip:ipv6/ip:mtu" {
+    deviate replace {
+      type uint32 {
+        range "1280..1500";
+      }
+    }
+    deviate add {
+      default "1500";
+    }
+  }
+  deviation "/if:interfaces/if:interface/ip:ipv6/ip:address" {
+    deviate add {
+      max-elements "1";
+    }
+  }
+  deviation "/if:interfaces/if:interface/ip:ipv4/ip:address" {
+    deviate add {
+      max-elements "20";
+    }
+  }
+  deviation "/if:interfaces/if:interface/ip:ipv4/ip:neighbor" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/ip:ipv6/ip:neighbor" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/ip:ipv6/ip:dup-addr-detect-transmits" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/ip:ipv6/ip:autoconf" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces-state/if:interface/ip:ipv6/ip:neighbor/ip:is-router" {
+    deviate not-supported;
+  }
+}

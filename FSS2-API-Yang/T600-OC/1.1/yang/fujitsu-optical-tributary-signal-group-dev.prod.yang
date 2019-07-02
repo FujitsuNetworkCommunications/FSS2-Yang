@@ -1,0 +1,97 @@
+module fujitsu-optical-tributary-signal-group-dev.prod {
+  namespace "urn:fujitsu:params:xml:ns:yang:interface:optical-tributary-signal-group-deviation";
+  prefix otsig-deviation;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+  import fujitsu-optical-tributary-signal-group {
+    prefix otsig;
+  }
+
+  revision 2016-11-04 {
+    description
+      "Modified for T200 R2.1 REGEN support";
+  }
+
+  deviation "/if:interfaces/if:interface/otsig:otsig/otsig:vstimer" {
+    deviate not-supported;
+    description
+      "For T200, OTSiG does not support this Attribute";
+  }
+  deviation "/if:interfaces/if:interface/otsig:otsig/otsig:actual-vstimer" {
+    deviate not-supported;
+    description
+      "For T200, OTSiG does not support this Attribute";
+  }
+  deviation "/if:interfaces/if:interface/otsig:otsig/otsig:admin-status" {
+    deviate not-supported;
+    description
+      "For T200, OTSiG is a virtual entity, no admin-status";
+  }
+  deviation "/if:interfaces/if:interface/otsig:otsig/otsig:oper-status" {
+    deviate not-supported;
+    description
+      "For T200, OTSiG is a virtual entity, no oper-status";
+  }
+  deviation "/if:interfaces/if:interface/otsig:otsig/otsig:modulation-format" {
+    deviate replace {
+      type enumeration {
+        enum "dp-qpsk" {
+          value 3;
+          description
+            "dual-polarization binary phase-shift keying";
+        }
+        enum "dp-qam16" {
+          value 5;
+          description
+            "dual-polarization quadrature amplitude modulation 16";
+        }
+        enum "dc-dp-qam16" {
+          value 6;
+          description
+            "dual-carrier dual-polarization quadrature amplitude modulation 16";
+        }
+        enum "dc-dp-qam8" {
+          value 9;
+          description
+            "dual-carrier dual-polarization quadrature amplitude modulation 8";
+        }
+      }
+    }
+    deviate add {
+      mandatory true;
+    }
+  }
+  deviation "/if:interfaces/if:interface/otsig:otsig/otsig:direction" {
+    deviate add {
+      default "bi";
+    }
+  }
+  deviation "/if:interfaces/if:interface/otsig:otsig/otsig:fec" {
+    deviate replace {
+      type enumeration {
+        enum "hpdfec1" {
+          value 0;
+          description
+            "25% SDFEC used for UTP T200.";
+        }
+      }
+    }
+    deviate add {
+      default "hpdfec1";
+    }
+  }
+  deviation "/if:interfaces/if:interface/otsig:otsig/otsig:ais-pt" {
+    deviate replace {
+      type enumeration {
+        enum "none" {
+          value 1;
+        }
+      }
+    }
+    deviate add {
+      default "none";
+    }
+  }
+}

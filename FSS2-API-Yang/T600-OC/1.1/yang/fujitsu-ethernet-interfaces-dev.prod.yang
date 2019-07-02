@@ -1,0 +1,211 @@
+module fujitsu-ethernet-interfaces-dev.prod {
+  namespace "urn:fujitsu:params:xml:ns:yang:interface:eth-dev.prod";
+  prefix fujitsu-ethernet-interfaces-dev.prod;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+  import fujitsu-ethernet-interfaces {
+    prefix eth;
+  }
+  import fujitsu-equipment {
+    prefix eqpt;
+  }
+
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+             Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "Deviation YANG definitions for T-Series ethernet interface.
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2018-09-18 {
+    description
+      "defaut value added for mac-fcs";
+  }
+  revision 2018-08-13 {
+    description
+      "policy-profile not supported, 1GE added to rate attribute & deviation removed for testPattern";
+  }
+  revision 2018-07-11 {
+    description
+      "deviations updated for eth:fec, added autofec";
+  }
+  revision 2018-03-29 {
+    description
+      "default value added for tx-clock-source";
+  }
+  revision 2018-03-13 {
+    description
+      "PM supported for tera-dsp,
+       deviation added for testPattern, fec, rate, location,
+       transport-signal-failure, backward-transport-signal-failure,
+       direction, pm-type, pm-th-metered, pm-time-period, pm-value";
+  }
+  revision 2017-02-07 {
+    description
+      "PM not supported";
+  }
+
+  deviation "/if:interfaces/if:interface/eth:ethernet/eth:link-oam" {
+    deviate not-supported;
+    description
+      "ETH does not support this Attribute";
+  }
+  deviation "/if:interfaces/if:interface/eth:ethernet/eth:transport/eth:policy-profile" {
+    deviate not-supported;
+    description
+      "ETH does not support policy-profile";
+  }
+  deviation "/if:interfaces/if:interface/eth:ethernet/eth:fec" {
+    deviate replace {
+      type enumeration {
+        enum "off" {
+          value 0;
+          description
+            "FEC value is off";
+        }
+        enum "rsfec" {
+          value 1;
+          description
+            "FEC value is rsfec";
+        }
+        enum "autofec" {
+          value 2;
+          description
+            "FEC value is autofec";
+        }
+      }
+    }
+    deviate add {
+      default "off";
+    }
+  }
+  deviation "/if:interfaces/if:interface/eth:ethernet/eth:rate" {
+    deviate replace {
+      type uint32 {
+        range "1000000 | 10000000 | 100000000";
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/eth:ethernet/eth:location" {
+    deviate replace {
+      type enumeration {
+        enum "nearEnd" {
+          value 0;
+          description
+            "Loopback location at near-end";
+        }
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/eth:ethernet/eth:testPattern" {
+    deviate add {
+      default "IDLE";
+    }
+  }
+  deviation "/if:interfaces/if:interface/eth:ethernet/eth:transport/eth:transport-signal-failure" {
+    deviate replace {
+      type enumeration {
+        enum "tsf-local-fault" {
+          value 0;
+          description
+            "Local Fault";
+        }
+        enum "tsf-idle" {
+          value 1;
+          description
+            "Idle";
+        }
+      }
+    }
+    deviate add {
+      default "tsf-local-fault";
+    }
+  }
+  deviation "/if:interfaces/if:interface/eth:ethernet/eth:transport/eth:backward-transport-signal-failure" {
+    deviate replace {
+      type enumeration {
+        enum "none" {
+          value 0;
+          description
+            "Nothing";
+        }
+        enum "remote-fault" {
+          value 1;
+          description
+            "Remote Fault";
+        }
+      }
+    }
+    deviate add {
+      default "none";
+    }
+  }
+  deviation "/if:interfaces/if:interface/eth:ethernet/eth:transport/eth:direction" {
+    deviate replace {
+      type enumeration {
+        enum "bi-dir" {
+          value 2;
+          description
+            "bidirectional";
+        }
+      }
+    }
+    deviate add {
+      default "bi-dir";
+    }
+  }
+  deviation "/if:interfaces/if:interface/eth:ethernet/eth:transport/eth:mac-fcs" {
+    deviate add {
+      default "mac-fcs-transport";
+    }
+  }
+  deviation "/if:interfaces/if:interface/eth:ethernet/eth:transport/eth:tx-clock-source" {
+    deviate add {
+      default "through";
+    }
+  }
+  deviation "/if:interfaces/if:interface/eth:ethernet/eth:pm/eth:pm-threshold/eth:pm-type" {
+    deviate replace {
+      type enumeration {
+        enum "binned" {
+          value 2;
+          description
+            "Binned PM type";
+        }
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/eth:ethernet/eth:pm/eth:pm-threshold/eth:pm-th-metered" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/eth:ethernet/eth:pm/eth:pm-threshold/eth:pm-th-binned/eth:pm-time-periods/eth:pm-time-period" {
+    deviate replace {
+      type enumeration {
+        enum "15-min" {
+          value 1;
+          description
+            "15 minutes period";
+        }
+        enum "1-day" {
+          value 2;
+          description
+            "1 day period";
+        }
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/eth:ethernet/eth:pm/eth:pm-threshold/eth:pm-th-binned/eth:pm-time-periods/eth:pm-value" {
+    deviate replace {
+      type uint64;
+    }
+  }
+}

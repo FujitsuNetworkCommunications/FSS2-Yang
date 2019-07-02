@@ -1,0 +1,152 @@
+module fujitsu-ppp-interface {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:interface:ppp";
+  prefix ppp;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+  import fujitsu-entity-states {
+    prefix entity-states;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Author: Abinder S Dhillon
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains YANG definitions 
+     for the PPP Interfaces. 
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2019-02-07 {
+    description
+      "Move MRU default to annotation.";
+  }
+  revision 2017-05-08 {
+    description
+      "Add PPP sync leaf.";
+  }
+  revision 2016-01-11 {
+    description
+      "Initial revision.";
+  }
+
+  grouping ppp-attributes {
+    description
+      "Point to Point (PPP)  attributes";
+    leaf restartTimer {
+      type uint32;
+      must ". = 3" {
+        error-message "restartTimer must be 3.";
+      }
+      default "3";
+      description
+        " Restart Timer timer is used to time transmissions of
+          Configure-Request and Terminate-Request packets.
+          Expiration of the Restart timer causes a Timeout event,
+          and retransmission of the corresponding Configure-Request
+          or Terminate-Request packet.
+          default: 3 seconds
+          Standards allow this configurable but we only support
+          3 seconds";
+    }
+    leaf MRU {
+      type uint32 {
+        range "128..16384";
+      }
+      description
+        " PPP Maximum Receive Unit size";
+    }
+    leaf magicNumber {
+      type boolean;
+      default "false";
+      description
+        " If true then the local node will attempt to
+          perform Magic Number negotiation with the
+          remote node. If false then this negotiation
+          is not performed";
+    }
+    leaf fcsSize {
+      type uint32;
+      must ". = 16" {
+        error-message "fcsSize must be 16.";
+      }
+      default "16";
+      description
+        " The size of FCS in bits
+         Allowed value is only 16
+         default : 16 ";
+    }
+    leaf sync {
+      type boolean;
+      default "false";
+      description
+        "Enable/disable HDLC serial encoding rule.";
+    }
+    uses entity-states:admin-status {
+      refine "admin-status" {
+        mandatory false;
+        default "down";
+        description
+          "PPP port admin status";
+      }
+    }
+  }
+
+  augment "/if:interfaces/if:interface" {
+    container ppp-config {
+      when "../if:type = 'ianaift:ppp'";
+      description
+        "PPP Interface";
+      uses ppp-attributes;
+    }
+  }
+
+  grouping ppp-packet-stats {
+    leaf numBytesRx {
+      type uint32;
+      description
+        " Number of Received Bytes";
+    }
+    leaf numBytesTx {
+      type uint32;
+      description
+        " Number of Tx Bytes";
+    }
+    leaf numPduRx {
+      type uint32;
+      description
+        " Number of Received PDus";
+    }
+    leaf numPduTx {
+      type uint32;
+      description
+        " Number of Tx PDUs";
+    }
+  }
+
+  augment "/if:interfaces-state/if:interface" {
+    container ppp-if-status {
+      when "../if:type = 'ianaift:ppp'";
+      description
+        "PPP Interface Status";
+      container packet-stats {
+        uses ppp-packet-stats {
+          description
+            " PPP Link Status";
+        }
+      }
+    }
+  }
+}

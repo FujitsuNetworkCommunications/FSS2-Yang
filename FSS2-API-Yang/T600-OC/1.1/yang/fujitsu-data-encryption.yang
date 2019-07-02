@@ -1,0 +1,231 @@
+module fujitsu-data-encryption {
+  namespace "urn:fujitsu:params:xml:ns:yang:dataenc";
+  prefix dataenc;
+
+  import fujitsu-user-security {
+    prefix secu;
+  }
+  import ietf-interfaces {
+    prefix if;
+  }
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains yang model for data-encryption.
+     
+     Copyright (c) 2016 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2017-09-19 {
+    description
+      "Revised the range of key-refresh-interval to [15 minutes, 48 hours]";
+  }
+  revision 2017-08-29 {
+    description
+      "Restricted the pattern for key-refresh-interval to block 00-00-00";
+  }
+  revision 2017-05-31 {
+    description
+      "Restricted the pattern for key-refresh-interval";
+  }
+  revision 2017-05-19 {
+    description
+      "Added traffic-squelch-tolerance-timer";
+  }
+  revision 2017-05-16 {
+    description
+      "1. Added Length Restriction to PSK String.
+       2. Corrected the description of hybrid bypass-encryption mode";
+  }
+  revision 2017-04-12 {
+    description
+      "Add DEGRADED state for operational data";
+  }
+  revision 2017-03-20 {
+    description
+      "Changed pattern for intervals";
+  }
+  revision 2017-02-17 {
+    description
+      "Made key-exchanges as string type";
+  }
+  revision 2017-01-23 {
+    description
+      "Initial revision.";
+  }
+
+  augment "/secu:security" {
+    container data-encryption {
+      description
+        "configurations specific to data-encryption";
+      presence "Enables data-encryption";
+      leaf bypass-encryption {
+        type enumeration {
+          enum "not-allowed" {
+            description
+              "allow only encrypted traffic out of the box";
+            value 1;
+          }
+          enum "hybrid" {
+            description
+              "allow a mix of encrypted and unencrypted traffic on the box";
+            value 2;
+          }
+        }
+        mandatory true;
+        description
+          "choose the strictness level in enforcing encryption on the box";
+      }
+      leaf traffic-squelch-tolerance-time {
+        description
+          "Time within which the peer is expected to have the encryption provisioning/deprovisioning completed.Traffic is squelched on expiry of this timer. Range [15 minutes, 48 hours]. Default is 15 minutes";
+        type string {
+          pattern "(00-15|00-1[6-9]|00-[2-5][0-9]|0[1-9]-[0-5][0-9]|[1-3][0-9]-[0-5][0-9]|4[0-7]-[0-5][0-9])(-[0-5][0-9])?|48-00(-00)?";
+        }
+        default "00-15";
+      }
+      list interface {
+        description
+          "list of interfaces where encryption will be on";
+        key "ifName";
+        leaf ifName {
+          type leafref {
+            path "/if:interfaces/if:interface/if:name";
+          }
+          description
+            "The interface where encryption is to be turned on/off";
+        }
+        leaf psk {
+          type string {
+            pattern "[0-9A-Fa-f]+";
+            length "1..64";
+          }
+          description
+            "The pre-shared key to be used for the handshake";
+          mandatory true;
+        }
+        choice tls-role {
+          mandatory true;
+          case server {
+            leaf key-refresh-interval {
+              type string {
+                pattern "(00-15|00-1[6-9]|00-[2-5][0-9]|0[1-9]-[0-5][0-9]|[1-3][0-9]-[0-5][0-9]|4[0-7]-[0-5][0-9])(-[0-5][0-9])?|48-00(-00)?";
+              }
+              default "00-15";
+              description
+                "The key refresh interval in format hh-mm-ss or hh-mm. Range [15 minutes, 48 hours]. Suggested default 00-15";
+            }
+          }
+          case client {
+            leaf remote-server-ip {
+              type inet:ip-address;
+              description
+                "The remote server's IP address";
+              mandatory true;
+            }
+          }
+        }
+        leaf encryption-uptime {
+          type string;
+          config false;
+          description
+            "Specifies the encryption uptime in the format hh-mm-ss";
+        }
+        leaf next-key-refresh-in {
+          type string {
+            pattern "([0-5][0-9]-[0-5][0-9])(-[0-5][0-9])?";
+          }
+          config false;
+          description
+            "Specifies the time left for the next key refresh to happen in the format hh-mm-ss";
+        }
+        leaf num-of-failed-key-exchanges {
+          type uint64;
+          config false;
+          description
+            "Specifies the number of times key exchange failed";
+        }
+        leaf last-successful-key-exchange {
+          type string {
+            pattern "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}";
+          }
+          config false;
+          description
+            "Specifies the date and time of last successful key exchange";
+        }
+        leaf last-unsuccessful-key-exchange {
+          type string {
+            pattern "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}";
+          }
+          config false;
+          description
+            "Specifies the date and time of last successful key exchange";
+        }
+        leaf cipher-used {
+          type string;
+          config false;
+          description
+            "Specifies the cipher used for the current tls session";
+        }
+        leaf state {
+          type enumeration {
+            enum "INIT" {
+              value 0;
+            }
+            enum "READY" {
+              value 1;
+            }
+            enum "UP" {
+              value 2;
+            }
+            enum "DOWN" {
+              value 3;
+            }
+            enum "DEGRADED" {
+              value 4;
+            }
+          }
+          config false;
+          description
+            "Specifies the encryption state";
+        }
+      }
+    }
+  }
+  rpc zeroize-data-encryption {
+    description
+      "RPC to perform zeroization of data-encryption partition";
+    output {
+      leaf status {
+        type enumeration {
+          enum "Successful" {
+            value 1;
+          }
+          enum "Failed" {
+            value 2;
+          }
+        }
+        description
+          "Indicates the rpc succeeded/failed";
+      }
+      leaf status-message {
+        type string;
+        description
+          "Gives a more detailed reason for failure";
+      }
+    }
+  }
+}
