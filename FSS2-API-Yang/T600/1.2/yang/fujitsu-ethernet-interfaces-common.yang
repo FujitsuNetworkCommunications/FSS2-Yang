@@ -1,0 +1,100 @@
+module fujitsu-ethernet-interfaces-common {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:interface:eth-common";
+  prefix eth-common;
+
+  import fujitsu-entity-states {
+    prefix entity-states;
+  }
+  import fujitsu-entity-maintenance-loopback {
+    prefix fujitsu-loopback;
+  }
+  import fujitsu-entity-maintenance-testsignal {
+    prefix fujitsu-testsignal;
+  }
+  import fujitsu-performance-monitoring-typedefs {
+    prefix pmtypedefs;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains the common YANG definitions 
+     for Ethernet  and Transport Ethernet Interfaces. 
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2018-06-07 {
+    description
+      "OPS-3100 Adding circuit-id leaf";
+  }
+  revision 2015-08-31 {
+    description
+      "Initial revision.";
+  }
+
+  grouping common-eth-attributes {
+    uses entity-states:admin-status {
+      refine "admin-status" {
+        mandatory false;
+        default "down";
+      }
+    }
+    leaf rate {
+      type uint32 {
+        range "500..100000000";
+      }
+      default "500";
+      description
+        "Set rate - units kbps.";
+    }
+    leaf fec {
+      type enumeration {
+        enum "off";
+        enum "rsfec";
+        enum "autofec";
+      }
+      description
+        "Forward Error Correction Choices. ";
+    }
+    leaf circuit-id {
+      type string {
+        length "0..45";
+      }
+      description
+        "Circuit identifier which can be used in
+         alarm correlation and/or connection management ";
+    }
+    uses fujitsu-loopback:maint-loopback;
+    uses entity-states:oper-status {
+      refine "oper-status" {
+        config false;
+      }
+    }
+    uses fujitsu-testsignal:maint-testsignal {
+      refine "bitErrors" {
+        config false;
+      }
+      refine "bitErrorsTerminal" {
+        config false;
+      }
+      refine "syncSeconds" {
+        config false;
+      }
+      refine "syncSecondsTerminal" {
+        config false;
+      }
+    }
+    uses pmtypedefs:pm-info;
+  }
+}

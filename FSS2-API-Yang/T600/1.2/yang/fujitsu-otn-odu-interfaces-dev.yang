@@ -1,0 +1,55 @@
+module fujitsu-otn-odu-interfaces-dev {
+  namespace "urn:fujitsu:params:xml:ns:yang:interface:odu-dev";
+  prefix odu-dev;
+
+  import fujitsu-otn-odu-interfaces {
+    prefix odu;
+  }
+  import ietf-interfaces {
+    prefix if;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains YANG definitions
+     for the ODU Interfaces of an Optical White Box (OWB).
+     
+     Copyright (c) 2019 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2019-03-11 {
+    description
+      " Initial revision";
+  }
+
+  deviation "/if:interfaces/if:interface/odu:odu/odu:pm/odu:pm-threshold/odu:pm-th-metered/odu:pm-th-high" {
+    deviate replace {
+      type decimal64 {
+        fraction-digits 2;
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:tcm/odu:pm/odu:pm-threshold/odu:pm-th-metered/odu:pm-th-high" {
+    deviate replace {
+      type decimal64 {
+        fraction-digits 2;
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:pm/odu:pm-threshold/odu:pm-th-metered/odu:pm-th-low" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:tcm/odu:pm/odu:pm-threshold/odu:pm-th-metered/odu:pm-th-low" {
+    deviate not-supported;
+  }
+}

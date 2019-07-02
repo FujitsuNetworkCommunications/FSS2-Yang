@@ -1,0 +1,113 @@
+module fujitsu-rasis-utils-framework {
+  namespace "urn:fujitsu:params:xml:ns:yang:fujitsu-rasis-utils-framework";
+  prefix fujitsu-rasis-utils-framework;
+
+  import fujitsu-equipment {
+    prefix eqpt;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  description
+    "This module defines the commands to
+      1) Trigger an one-time, async RASIS task
+      2) Schedule a RASIS periodic task
+      3) Show the Configurations of periodic tasks
+     Copyright (c) 2017 Fujitsu Ltd.
+     All rights reserved.";
+
+  revision 2018-09-26 {
+    description
+      "Change shelf id type to string to handle DBCOR case";
+  }
+  revision 2018-03-20 {
+    description
+      "Changed the prefix to comply with the naming conventions";
+  }
+  revision 2017-12-12 {
+    description
+      "Changed the description of the module";
+  }
+  revision 2017-12-05 {
+    description
+      "Changed the info-type name of the periodic backup";
+  }
+  revision 2017-11-07 {
+    description
+      "Added a description to list info-type in list rasis-utils";
+  }
+  revision 2017-10-06 {
+    description
+      "Changed the info-type in rasis-utils list from a union to a string";
+  }
+  revision 2017-10-04 {
+    description
+      "Modified YANG so it can return multiple info types for a shelf id";
+  }
+  revision 2017-09-14 {
+    description
+      "Added the command for showing all the periodic tasks";
+  }
+  revision 2017-09-07 {
+    description
+      "Added the command for executing one-time tasks and periodic tasks";
+  }
+
+  list rasis-utils {
+    key "shelf-id";
+    config false;
+    leaf shelf-id {
+      type string;
+      description
+        "Shelf ID";
+    }
+    list info-type {
+      key "name";
+      config false;
+      leaf name {
+        type string;
+        description
+          "The name of an info type";
+      }
+      leaf options {
+        type string;
+        description
+          "The configuration options of the periodic tasks";
+      }
+      description
+        "Display the options (configurations) of an async task";
+    }
+    description
+      "list all the periodic tasks managed by RASIS Utilities Framework.";
+  }
+  rpc rasis-util-create {
+    description
+      "Execute an one-time info collection or Schedule a periodic task";
+    input {
+      leaf shelf-id {
+        type string;
+        mandatory true;
+        description
+          "Shelf ID";
+      }
+      leaf info-type {
+        type string;
+        mandatory true;
+        description
+          "Available Options Here: (1) tech_info; (2) backup; (3) any other available options";
+      }
+      leaf options {
+        type string;
+        description
+          "The parameters passed to the script to be executed";
+      }
+    }
+    output {
+      leaf status {
+        type string {
+          length "1..255";
+        }
+      }
+    }
+  }
+}

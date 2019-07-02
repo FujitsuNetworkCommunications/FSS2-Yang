@@ -1,0 +1,414 @@
+module fujitsu-swdl {
+  namespace "urn:fujitsu:params:xml:ns:yang:fujitsu-swdl";
+  prefix fujitsu-swdl;
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+
+  organization
+    "Fujitsu Limited ";
+  contact
+    "Fujitsu Limited
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains definitions for System Management.
+     
+     Copyright (c) 2015 Fujitsu Limited
+     All rights reserved. ";
+
+  revision 2019-02-26 {
+    description
+      "Change pattern associated with validationTimer input
+       for the request sw-activate rpc to allow a validation
+       timer of up to 240 hours (10 days).";
+  }
+  revision 2018-06-22 {
+    description
+      "Add new parameters for sw-stage that will allow the user
+       to disable the gissue checks (to permit downgrade in the
+       case where the upgrade path is prescribed in the master
+       manifest file), and also disable the shelfrole checking
+       (to permit staging a software load that is only for TRIB
+       cards onto a board that is running as a MAIN board).";
+  }
+  revision 2017-10-19 {
+    description
+      "Add a pattern for the sw-activate validationTimer to limit
+       the range of acceptable input. Also improve some comments.";
+  }
+  revision 2017-08-23 {
+    description
+      "tailf yang refactoring";
+  }
+  revision 2017-05-04 {
+    description
+      "Add format-usb and remove-usb commands.";
+  }
+  revision 2017-05-02 {
+    description
+      "Delete the build-detail entry from the sw-repo-bank because the
+       information is duplicated in the pgm-entry. Rename the sw-manifest-list
+       to pgm since that is the file the customer sees (not the software
+       manifest which is internal).";
+  }
+  revision 2017-04-25 {
+    description
+      "Add the SECONDARY bank enumeration.";
+  }
+  revision 2017-04-18 {
+    description
+      "Added the support for the sw-repo table to the fujitsu yang model.
+       Added support for an optional repository field for the sw-stage RPC.";
+  }
+  revision 2017-03-27 {
+    description
+      "Add the definition for the ssw-overwrite RPC.";
+  }
+  revision 2015-09-28 {
+    description
+      "Initial revision.";
+  }
+
+  typedef swBankType {
+    type enumeration {
+      enum "ACTIVE" {
+        value 0;
+        description
+          "Active Bank";
+      }
+      enum "STAGE" {
+        value 1;
+        description
+          "Staging Bank";
+      }
+      enum "BACKUP" {
+        value 2;
+        description
+          "Backup Bank";
+      }
+      enum "SECONDARY" {
+        value 3;
+        description
+          "Secondary Bank";
+      }
+    }
+    description
+      "SW Banks";
+  }
+
+  grouping sw-bank {
+    leaf bankType {
+      type swBankType;
+      description
+        "sw bank type ";
+    }
+    leaf gissue {
+      type string;
+      description
+        "Gissue of the SW in this bank";
+    }
+    leaf build-detail {
+      type string;
+      description
+        "detailed build information";
+    }
+    leaf validation-timer {
+      type string;
+      description
+        "value of validation timer in hh-mm-ss";
+    }
+    leaf activation-date-time {
+      type yang:date-and-time;
+      description
+        "activation date and time: The date load was activated";
+    }
+  }
+
+  rpc sw-unpack {
+    description
+      "SW unpack  - copies the SW from destination dir to repository.
+       This command is only run at NE if repository is on the NE";
+    input {
+      leaf filename {
+        type string {
+          length "10..255";
+        }
+        description
+          "Path and TAR.GZIP file name which has the load";
+      }
+    }
+    output {
+      leaf status {
+        type string {
+          length "4..255";
+        }
+        description
+          "response of the command";
+      }
+    }
+  }
+  rpc sw-stage {
+    description
+      "Stage a software PGM file or signed.tgz file for software activation";
+    input {
+      leaf filename {
+        type string {
+          length "10..255";
+        }
+        description
+          "The software PGM or signed.tgz file name.";
+      }
+      leaf repository {
+        type swBankType;
+        default "STAGE";
+        description
+          "The destination repository bank.";
+      }
+      leaf gissue-check {
+        type boolean;
+        default "true";
+        description
+          "Setting gissue-check to false will disable the upgrade-path checks if
+           an upgrade path is specified in the PGM file.";
+      }
+      leaf shelfrole-check {
+        type boolean;
+        default "true";
+        description
+          "Setting shelfrole-check to false will disable the check that would
+           prevent loading a MAIN shelf with a PGM file that is designed only
+           for shelves configured as TRIBs.";
+      }
+    }
+    output {
+      leaf status {
+        type string {
+          length "4..255";
+        }
+        description
+          "response of the command";
+      }
+    }
+  }
+  rpc sw-activate {
+    description
+      "Activate a new software load";
+    input {
+      leaf gissue {
+        type string;
+        description
+          "GISSUE of the new load which is being activated";
+      }
+      leaf validationTimer {
+        type string {
+          pattern "(240-00-00)|((2[0-3][0-9]|1[0-9][0-9]|0?[1-9][0-9]|0?0?[1-9])-[0-5][0-9]-[0-5][0-9])";
+        }
+        default "01-00-00";
+        description
+          "Validation timer in hhh-mm-ss (hours-minutes-seconds).
+           The validation time is an amount of time after software
+           activation during which the user can validate system
+           behavior before accepting the new software load. Mininum
+           01-00-00 (one hour), maximum 240-00-00.";
+      }
+    }
+    output {
+      leaf status {
+        type string {
+          length "4..255";
+        }
+        description
+          "response of the command";
+      }
+    }
+  }
+  rpc cancel-validation-timer {
+    description
+      "Cancel the validation timer which was provisioned as part of the
+       sw-activate command";
+    input {
+      leaf accept {
+        type boolean;
+        default "true";
+        description
+          "true will cancel the validation timer and accept the new software load,
+           false will trigger an immediate reversion to the previous software load";
+      }
+    }
+    output {
+      leaf status {
+        type string {
+          length "4..255";
+        }
+        description
+          "response of the command";
+      }
+    }
+  }
+  rpc ssw-overwrite {
+    description
+      "Overwrite of the secondary software repository.";
+    output {
+      leaf status {
+        type string {
+          length "4..255";
+        }
+        description
+          "response of the command";
+      }
+    }
+  }
+  list sw-version {
+    key "bankType";
+    config false;
+    uses sw-bank;
+  }
+  rpc format-usb {
+    description
+      "Format and Encrypt USB device.";
+    output {
+      leaf-list status {
+        type string {
+          length "1..max";
+        }
+        description
+          "Response of the command. ";
+      }
+    }
+  }
+  rpc remove-usb {
+    description
+      "Safely unmount USB device. ";
+    output {
+      leaf-list status {
+        type string {
+          length "1..max";
+        }
+        description
+          "Response of the command. ";
+      }
+    }
+  }
+  rpc show-file {
+    description
+      "Show one or more files in the specified directory.";
+    input {
+      leaf filename {
+        type string {
+          length "1..255";
+        }
+        description
+          "Specify file(s) to be listed (* is allowed as wild-card). ";
+      }
+    }
+    output {
+      leaf-list status {
+        type string {
+          length "1..max";
+        }
+        description
+          "File display per request (single file or all files). ";
+      }
+    }
+  }
+  rpc delete-file {
+    description
+      "Delete one or more files in the specified directory.";
+    input {
+      choice delete-options {
+        leaf admin-level {
+          type empty;
+          description
+            "Warning: Level-6 and Level-4 users can delete any file or directory owned by any users of Level 1-6.";
+        }
+        leaf syslog {
+          type empty;
+          description
+            "Deletes the file of path /var/log/syslog-local.";
+        }
+      }
+      leaf filename {
+        type string {
+          length "1..255";
+        }
+        mandatory true;
+        description
+          "Specify file(s) to be deleted (* is allowed as wild-card).";
+      }
+    }
+    output {
+      leaf status {
+        type string {
+          length "1..max";
+        }
+        description
+          "Response of command";
+      }
+    }
+  }
+
+  grouping pgm-entry {
+    leaf pgm-name {
+      type string;
+      description
+        "The name of the PGM file";
+    }
+    leaf gissue {
+      type string;
+      description
+        "GISSUE of the software PGM";
+    }
+    leaf build-detail {
+      type string;
+      description
+        "Detailed build information";
+    }
+    leaf card-support {
+      type string;
+      description
+        "A comma separated list of unitNames supported by this PGM";
+    }
+    leaf present {
+      type boolean;
+      description
+        "Describes whether a PGM's content is present in the repository";
+    }
+  }
+
+  grouping sw-repo-bank {
+    description
+      "A repository bank";
+    leaf repository-bank {
+      type swBankType;
+      description
+        "The repository bank type";
+    }
+    leaf master-manifest-name {
+      type string;
+      description
+        "The name of the master manifest file in this repository bank";
+    }
+    list pgm {
+      description
+        "A list of PGMs which are referred to by the master manifest in this repository bank";
+      key "pgm-name";
+      config false;
+      uses pgm-entry;
+    }
+  }
+
+  list sw-repository {
+    description
+      "A list of software repositories";
+    key "repository-bank";
+    config false;
+    uses sw-repo-bank;
+  }
+}

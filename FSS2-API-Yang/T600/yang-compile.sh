@@ -14,7 +14,7 @@ set -xe
 product=T600
 product_dir=FSS2-API-Yang/${product}
 # append product version to versions
-versions="1.1"
+versions="1.1 1.2"
 
 yang_compile() {
     yang_dir=$1
@@ -35,7 +35,6 @@ yang_compile() {
         else
             pyang --lax-quote-checks --lax-xpath-checks $fname 2>&1
         fi
-        echo "$err_flag"
         if [ "$?" != "0" ]; then
             echo "Error in $fname"
             return_val=1

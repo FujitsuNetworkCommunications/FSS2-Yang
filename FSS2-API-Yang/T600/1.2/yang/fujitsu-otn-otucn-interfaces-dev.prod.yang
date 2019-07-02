@@ -1,0 +1,182 @@
+module fujitsu-otn-otucn-interfaces-dev.prod {
+  namespace "urn:fujitsu:params:xml:ns:yang:interface:otucn-deviation";
+  prefix otucn-deviation;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+  import fujitsu-otn-otucn-interfaces {
+    prefix otucn;
+  }
+
+  revision 2018-07-26 {
+    description
+      "Tim-act-enabled not supported for OTUCN";
+  }
+  revision 2017-05-19 {
+    description
+      "T200 - R1.2 - Added deviate not-supported for loopback";
+  }
+  revision 2016-09-13 {
+    description
+      "Added default value for circuit-id";
+  }
+
+  deviation "/if:interfaces/if:interface/otucn:otucn/otucn:rate" {
+    deviate replace {
+      config false;
+    }
+  }
+  deviation "/if:interfaces/if:interface/otucn:otucn/otucn:direction" {
+    deviate replace {
+      config false;
+    }
+  }
+  deviation "/if:interfaces/if:interface/otucn:otucn/otucn:list-gcc/otucn:gccType" {
+    deviate replace {
+      type enumeration {
+        enum "gcc0" {
+          value 0;
+          description
+            "gcc0";
+        }
+      }
+    }
+    deviate add {
+      default "gcc0";
+    }
+  }
+  deviation "/if:interfaces/if:interface/otucn:otucn/otucn:list-gcc/otucn:protocol" {
+    deviate replace {
+      type enumeration {
+        enum "IP" {
+          value 0;
+          description
+            "IP";
+        }
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/otucn:otucn/otucn:list-gcc/otucn:gccEnabled" {
+    deviate add {
+      default "false";
+    }
+  }
+  deviation "/if:interfaces/if:interface/if:enabled" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/if:link-up-down-trap-enable" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/otucn:otucn/otucn:auto-rx" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/otucn:otucn/otucn:auto-tx" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/otucn:otucn/otucn:standard/otucn:ansi" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/otucn:otucn/otucn:vstimer" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/otucn:otucn/otucn:actual-vstimer" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/otucn:otucn/otucn:loopback" {
+    deviate not-supported;
+  }
+  //deviation "/if:interfaces/if:interface/otucn:otucn/otucn:location" {
+  //  deviate not-supported;
+  //}
+  //deviation "/if:interfaces/if:interface/otucn:otucn/otucn:type" {
+  //  deviate not-supported;
+  //}
+  deviation "/if:interfaces/if:interface/otucn:otucn/otucn:admin-status" {
+    deviate replace {
+      type enumeration {
+        enum "up" {
+          value 1;
+          description
+            "Ready to pass packets.";
+        }
+        enum "down" {
+          value 2;
+          description
+            "Not ready to pass packets and not in some test mode.";
+        }
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/otucn:otucn/otucn:degthr" {
+    deviate replace {
+      type int16 {
+        range "-5..2";
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/otucn:otucn/otucn:type" {
+    deviate replace {
+      type enumeration {
+        enum "fac" {
+          value 0;
+          description
+            "pre-FEC Loopback in the facility direction";
+        }
+        enum "term" {
+          value 1;
+          description
+            "Loopback in the terminal direction";
+        }
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/otucn:otucn/otucn:location" {
+    deviate replace {
+      type enumeration {
+        enum "nearEnd" {
+          value 0;
+          description
+            "Loopback location at near-end";
+        }
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/otucn:otucn/otucn:standard/otucn:itu/otucn:tti-itu/otucn:tim-det-mode" {
+    deviate replace {
+      type enumeration {
+        enum "off" {
+          value 0;
+          description
+            "TIM detection off";
+        }
+        enum "sapi-only" {
+          value 1;
+          description
+            "TIM detection sapi only";
+        }
+        enum "dapi-only" {
+          value 2;
+          description
+            "TIM detection dapi only";
+        }
+        enum "sapi-and-dapi" {
+          value 4;
+          description
+            "TIM detection sapi and dapi";
+        }
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/otucn:otucn/otucn:standard/otucn:itu/otucn:tti-itu/otucn:tim-act-enabled" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/otucn:otucn/otucn:standard/otucn:itu/otucn:tti-itu/otucn:exp-tti/otucn:op-spec" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/otucn:otucn/otucn:circuit-id" {
+    deviate add {
+      default "";
+    }
+  }
+}

@@ -1,0 +1,19 @@
+module fujitsu-radius-client-dev {
+  namespace "urn:fujitsu:params:xml:ns:yang:typedef:radius-client-dev";
+  prefix radius-client-dev;
+
+  import fujitsu-user-security {
+    prefix secu;
+  }
+  import fujitsu-radius-client {
+    prefix radius-client;
+  }
+
+  deviation "/secu:security/radius-client:radius/radius-client:authentication/radius-client:auth-server/radius-client:auth-server-name" {
+    deviate replace {
+      type string {
+        length "1..64";
+      }
+    }
+  }
+}

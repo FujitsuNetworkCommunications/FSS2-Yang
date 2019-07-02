@@ -1,0 +1,53 @@
+module fujitsu-if-type {
+  namespace "urn:fujitsu:params:xml:ns:yang:fujitsu-if-type";
+  prefix fjift;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module defines Fujitsu proprietary iana-if-type.
+     
+     Copyright (c) 2015 Fujitsu Network Communications, inc.
+     All rights reserved. ";
+
+  revision 2019-04-04 {
+    description
+      "Retained only T600 specific interfaces.";
+  }
+  revision 2018-04-09 {
+    description
+      "Adding IfType fujitsuOtsiV2";
+  }
+  revision 2015-10-09 {
+    description
+      "Initial revision.";
+  }
+
+  identity fujitsu-if-type {
+    base if:interface-type;
+    description
+      "This identity is used as a base for all fujitsu interface types
+       defined in the 'ifType definitions' registry.";
+  }
+
+  identity fujitsuOtsiV2 {
+    base fujitsu-if-type;
+  }
+
+  identity fujitsuOduc {
+    base fujitsu-if-type;
+  }
+}
