@@ -15,14 +15,26 @@ The repository is structured as follows:
 |   |           |-- docs
 |   |           |-- standards
 |   |           |-- third_party
+
+Note: Each product includes its own yang validation script. The scripts can be run individually to validate the yang models for each product. The master validation script can be run to check yang models for all the products.
+
+cd FSS-API-Yang/product
+vi yang-compile.sh
+# chnage the release/version to appropriately
+bash ./yang-compile
+
+# OR 
+# Run the master checker
+# cd into FSS2-Yang and run the master validation script
+# NOTE: Please ensure the correct versions to validate are included in the individual validation scripts.
+bash yang-validate.sh
 ```
+
 License
 ----
 This project is licensed under the [Apache 2.0](https://github.com/FujitsuNetworkCommunications/FSS2-Yang/blob/master/LICENSE) License - see the LICENSE file for details
 
 
 ## Maintainers 
-
-Daniel Lain  [@DanielLain](https://github.com/orgs/FujitsuNetworkCommunications/people/DanielLain)
 
 Suraj Bennur [@bennfnc](https://github.com/orgs/FujitsuNetworkCommunications/people/bennfnc)
