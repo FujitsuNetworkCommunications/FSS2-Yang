@@ -1,0 +1,207 @@
+module ietf-ip-ext {
+
+    namespace "urn:fujitsu:params:xml:ns:yang:ietf-ip-ext";
+    prefix ietf-ip-ext;
+
+    import ietf-interfaces {
+        prefix if;
+    } 
+
+    import ietf-ip {
+        prefix ip;
+    }
+
+    import ietf-yang-types {
+        prefix yang;
+    }
+
+    import tailf-common {
+        prefix tailf;
+    }
+
+    // As the tailf-common:validate cannot be annotated into a choice, but we
+    // need to validate the "choice subnet" for contiguous netmask in 1FINITY.
+    // So we use the deviation to take out the subnet, then use extension to
+    // to define the subnet with tailf-common:validate added directly.
+    // The deviation file took out the "subnet" for working around adding the
+    // netmask validation, here we re-define the subnet with tailf validate 
+    // added directly.
+    augment "/if:interfaces/if:interface/ip:ipv4/ip:address/ip:subnet" {
+         leaf netmask {
+           type yang:dotted-quad;
+           tailf:validate netmask-validation {
+           tailf:dependency '.';
+           }
+           // NEM interfaces shall be configured only with
+           // 255.255.255.255 as netmask
+           // For other interfaces this check would be skipped
+           must "not(((current()/../../../if:name = 'ip-1/0/0/NEM') or (current()/../../../if:name = 'ip-200/0/0/NEM'))) " +
+                "or current() = '255.255.255.255'" {
+              error-message "The netmask of NEM interface shall be 255.255.255.255";
+           }
+           description
+             "The subnet specified as a contiguous netmask.";
+         }
+    }
+
+    augment "/if:interfaces/if:interface/ip:ipv4/ip:address" {
+      when "re-match(../../if:name ,'ip-.*(NEM)' )";
+      leaf preferred {
+        // corresponding dh is in dcn dh L3 (update addr hook dh)
+        tailf:callpoint set-preferred-node {
+          tailf:transaction-hook node;
+        }
+        type enumeration {
+          enum "true" {
+            value "1";
+            tailf:info "The IP is automatically preferred for unnumbered use";
+          }
+          enum "false" {
+            value "0";
+            tailf:info "The IP is not automatically preferred for unnumbered use";
+          }
+        }
+        default "false";
+        must "count(../../ip:address[ietf-ip-ext:preferred='true'])=1" {
+          error-message "one NEM IP Address should be exclusively be marked as preferred";
+          tailf:dependency '.';
+        }        
+      description
+        "Mark address availablity for unnumbered interface use.";
+      }
+   }
+
+    // The deviation file took out the "subnet" for simplificaiton, here we
+    // add back the prefix-length associated with the ipv4 address.
+    augment "/if:interfaces-state/if:interface/ip:ipv4/ip:address" {
+
+      leaf prefix-length {
+        type uint8 {
+          range "0..32";
+        }
+      }
+    }
+
+    augment "/if:interfaces/if:interface/ip:ipv4" {
+
+      /*The choice is being commented out as a temporary workaround
+        for WebUI rendering to work
+        choice unnumbered-itf-addresses {*/
+        // address-src & addr node, shall be available in the model, only when the interface is a E-SC-E1 interface
+        // or a E1:0 interface at IP level
+        // Idea is to show this option on CLI only when some basic conditions
+        // w.r.t the interface name is met.
+        //when "re-match( /if:interfaces/if:interface[if:name=current()/../if:name]/if:name,'ip-.*(E-SC-E1|E1:.*)')";
+        when "re-match(../if:name ,'ip-.*(E-SC-E1|E1:.*|E1.[1-2]:.*|C.*.0)' )";
+
+        // The update addr hook data handler (dcn dh L3) will toggle this
+        // leaf each time the ip NEM address designated as preferred true is updated
+        leaf update-addr {
+          tailf:hidden update-addr;
+          type enumeration {
+            enum "0" {
+              value "0";
+            }
+            enum "1" {
+              value "1";
+            }
+          }
+          default "0";
+        }
+
+        /*case refer-nem-interface{*/
+          leaf address-src {
+            type enumeration {
+              enum "ip-1/0/0/NEM" {
+                value "1";
+                tailf:info "IPv4 NEM IP as shared source IP";
+              }
+              enum "ip-200/0/0/NEM" {
+                value "2";
+                tailf:info "IPv4 NEM IP for the C20X";
+              }
+              enum "ip-1/0/0/LCN1" {
+                value "3";
+                  tailf:info "IPv4 LCN1 IP as source IP auto-assigned to NEM";
+                    //Fake enum to be later changed to leafref of the interfaces table 
+              }
+            }
+              // Ensure that the IETF interface name in context is of type ip
+              must "/if:interfaces/if:interface[if:name=current()/../../if:name]/if:type='ianaift:ip'" {
+                 error-message "IP Address Source must be assigned to an IP interface";
+              }
+     
+              // Ensure that if address-src node is utilized, then there should not be any
+              // Dotted IP address, assigned to the IETF interface, in the current context.
+              //must "count (/if:interfaces/if:interface[if:name=current()/../../if:name]/ip:ipv4/ip:address)=0" {
+              //   error-message "Dotted IP Address & address-src cannot be applied at the same time";
+              //}
+     
+              // The interface name chosen in address-src node, shall already exist in the 
+              // interfaces table
+              must "count (/if:interfaces/if:interface[if:name=current()]/if:name) > 0" {
+                 error-message "The interface referenced as ipv4 address-src shall exist";
+              }
+     
+              // The interface name chosen in address-src node, shall already exist in the 
+              // interfaces table & the interface shall be enabled already
+              must "/if:interfaces/if:interface[if:name=current()]/if:enabled = 'true'" {
+                 error-message "The interface referenced as ipv4 address-src shall be enabled";
+              }
+     
+              // The interface name chosen in address-src node, shall exist in the 
+              // interfaces table & that interface shall also have a dotted ip
+              must "count (/if:interfaces/if:interface[if:name=current()]/ip:ipv4/ip:address/ip:ip) > 0" {
+                 error-message "The interface referenced as ipv4 address-src shall exist and shall have an ip address";
+              }
+     
+              // The interface name chosen in address-src node, shall exist in the 
+              // interfaces table & that interface shall have its ipv4 stack enabled
+              //
+              //This option is not honoured by the lower layers as of now.. hence, commenting it out
+              //must "/if:interfaces/if:interface[if:name=current()]/ip:ipv4/ip:enabled = 'true'" {
+              //   error-message "The interface referenced as ipv4 interface shall be enabled";
+              //}
+              
+     
+              // For E-SC-E1 interface, address-src chosen shall be set to NEM only
+              //must "not ( re-match( /if:interfaces/if:interface[if:name=current()/../../if:name]/if:name,'ip-.*(E-SC-E1|E1:.*)' ) )  or " + 
+              //     "current() = 'ip-1/0/0/NEM' " {
+              //   error-message "E-SC-E1 or E1 interface shall have address-src set to that of NEM interface"; 
+              //} 
+           
+              // If NEM interface, address-src shall be set to LCN1 only
+              //must "not ( re-match( /if:interfaces/if:interface[if:name=current()/../../if:name]/if:name,'ip-.*(NEM)') ) or " +
+              //     "current() = 'ip-1/0/0/LCN1'  " {
+              //   error-message "NEM interface shall have address-src set to that of LCN1 interface"; 
+              //}
+              /* 
+              must "count(/if:interfaces/if:interface[if:name='ip-1/0/0/NEM']/ip:ipv4/ip:address[preferred='true'])=1" {
+                 error-message "Unnumbered interface's address source" +
+                               "configuration requires one NEM IP to be" +
+                               " marked as preferred";
+              }*/
+               description
+                 "The source of the shared IP address for unnumbered IP interface.";
+          }//address-src
+        /*}//case refer-nem-interface*/
+
+        /*case specify-explicit-address {*/
+          leaf address-force {
+            type leafref {
+              path "/if:interfaces/if:interface/ip:ipv4/ip:address/ip:ip";
+            }
+            must "/if:interfaces/if:interface[if:name='ip-1/0/0/NEM']/ip:ipv4/ip:address[ip:ip=current()]/ip:ip = current() or 
+                  /if:interfaces/if:interface[if:name='ip-200/0/0/NEM']/ip:ipv4/ip:address[ip:ip=current()]/ip:ip = current()" { 
+               error-message "IP address shall be sourced from the NEM interface only"; 
+            }
+            must "not (../address-src)" {
+                 error-message "Both address-src & address-force cannot be configured at the same time";
+            }
+            description
+              "The IP address to use for the unnumbered interface";
+          }
+        /*}//case specify-explicit-address*/
+      /*}//choice unnumbered-itf-addresses*/
+    } //augment
+}

@@ -1,0 +1,313 @@
+module fujitsu-user-security {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:usersecurity";
+  prefix secu;
+
+  import fujitsu-user-security-typedefs {
+    prefix usersecu-type;
+  }
+  import tailf-aaa {
+    prefix taa;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains definitions for managment of security feature 
+     defaults used for user account provisioning as well as system wide
+     security feature settings.
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2016-11-21 {
+    description
+      "Updated for configurable banner support";
+  }
+  revision 2016-11-04 {
+    description
+      "Modified the type to password-type for each leaf of rpc change-password";
+  }
+  revision 2015-09-30;
+
+  container security {
+    description
+      "Security related Configurations";
+    container defaults {
+      leaf uage {
+        type usersecu-type:uage-type;
+        mandatory true;
+      }
+      leaf page {
+        type usersecu-type:page-type;
+        mandatory true;
+      }
+      leaf minit {
+        type usersecu-type:minit-type;
+        mandatory true;
+      }
+      leaf reauth {
+        type usersecu-type:reauth-type;
+        mandatory true;
+      }
+      leaf idle-timeout {
+        type uint64 {
+          range "0 .. 8192";
+        }
+        mandatory true;
+      }
+    }
+    container systemwide {
+      leaf umin {
+        type usersecu-type:umin-type;
+      }
+      leaf pmin {
+        type usersecu-type:pmin-type;
+      }
+      leaf pcontent {
+        type usersecu-type:pcontent-type;
+        description
+          "Determines the allowed password content - BASIC or ENHANCED";
+      }
+      leaf prot {
+        type usersecu-type:prot-type;
+      }
+      leaf smt {
+        type usersecu-type:smt-type;
+      }
+      leaf dural {
+        type usersecu-type:dural-type;
+      }
+      leaf maxinv {
+        type usersecu-type:maxinv-type;
+      }
+      leaf pre-login-banner {
+        type string {
+          length "0..1600";
+        }
+        default
+          "Welcome to the FUJITSU 1FINITY
+           Copyright Fujitsu Network Communications";
+        description
+          "Pre-login banner that is to be displayed before user enters the login
+           details";
+      }
+      leaf post-login-banner {
+        type string {
+          length "0..1600";
+        }
+        default "NOTICE: THIS IS A PRIVATE COMPUTER SYSTEM. UNAUTHORIZED ACCESS OR USE MAY LEAD TO PROSECUTION.";
+        description
+          "Post-login banner that is to be displayed after successful login";
+      }
+      leaf lastlogin {
+        type usersecu-type:lastlogin-type;
+      }
+      leaf warn {
+        type usersecu-type:warn-type;
+      }
+      leaf debug {
+        type usersecu-type:yORn-type;
+      }
+      leaf-list authentication-order {
+        max-elements "3";
+        type usersecu-type:authentication-type;
+        ordered-by user;
+      }
+    }
+    container systemwide-private {
+      leaf minGID {
+        type int32;
+      }
+      leaf maxGID {
+        type int32;
+      }
+      leaf minUID {
+        type int32;
+      }
+      leaf maxUID {
+        type int32;
+      }
+    }
+  }
+  list usergrp {
+    description
+      "User group related configurations";
+    key "group";
+    leaf group {
+      type usersecu-type:group-type;
+    }
+    leaf gid {
+      type int32;
+    }
+  }
+  list usersec {
+    description
+      "User security related configurations";
+    key "username";
+    leaf username {
+      must "/secu:users/secu:user[secu:username=current()]/secu:username = current()" {
+        error-message "Entered username must already be provisioned in users.";
+      }
+      type usersecu-type:username-type;
+    }
+    leaf uage {
+      type usersecu-type:uage-type;
+    }
+    leaf uidout {
+      when "../uage != 'OFF'";
+      config false;
+      type int32;
+    }
+    leaf page {
+      type usersecu-type:page-type;
+    }
+    leaf pidout {
+      when "../page != 'OFF'";
+      config false;
+      type int32;
+    }
+    leaf minit {
+      type usersecu-type:minit-type;
+    }
+    leaf reauth {
+      type usersecu-type:reauth-type;
+    }
+    leaf idle-timeout {
+      type int32;
+    }
+  }
+  container users {
+    description
+      "Users related configurations";
+    must "boolean(/secu:users/secu:user[(secu:group='level-4') and (secu:adminState='allow')] ) or (/secu:users/secu:user[(secu:group='level-6') and (secu:adminState='allow')])" {
+      error-message "Atleast one Level-4 or Level-6 user with allow admin state must be present";
+    }
+    list user {
+      max-elements "100";
+      key "username";
+      leaf username {
+        type usersecu-type:username-type;
+        mandatory true;
+      }
+      leaf crypt-password {
+        type sha-256-digest-string;
+      }
+      leaf password {
+        type usersecu-type:password-type;
+      }
+      leaf group {
+        must "/secu:usergrp[secu:group=current()]/secu:group = current()" {
+          error-message "entered group must be level-1, level-2..., or level-6";
+        }
+        type usersecu-type:group-type;
+        mandatory true;
+      }
+      leaf adminState {
+        type usersecu-type:adminState-type;
+        default "allow";
+      }
+    }
+  }
+  rpc change-password {
+    description
+      "RPC to change the logged in user's password";
+    input {
+      leaf currentPassword {
+        type usersecu-type:password-type;
+        description
+          "provide the current password";
+        mandatory true;
+      }
+      leaf newPassword {
+        type usersecu-type:password-type;
+        description
+          "provide a new password";
+        mandatory true;
+      }
+      leaf newPasswordConfirm {
+        type usersecu-type:password-type;
+        description
+          "re-enter the new password ";
+        mandatory true;
+      }
+    }
+    output {
+      leaf status {
+        type enumeration {
+          enum "Successful" {
+            value 1;
+          }
+          enum "Failed" {
+            value 2;
+          }
+        }
+        mandatory true;
+        description
+          "Successful or Failed";
+      }
+      leaf status-message {
+        type string;
+        description
+          "Gives a more detailed reason for success / failure";
+      }
+    }
+  }
+  list oldPasswords {
+    key "name";
+    leaf name {
+      type leafref {
+        path "/secu:users/secu:user/secu:username";
+      }
+    }
+    leaf-list password {
+      type usersecu-type:password-type;
+    }
+  }
+
+  typedef sha-256-digest-string {
+    type string {
+      pattern "$0$.*|$5$(rounds=\\d+$)?[a-zA-Z0-9./]{1,16}$[a-zA-Z0-9./]{43}";
+    }
+    description
+      "The sha-256-digest-string type automatically computes a SHA-256
+       digest for a value adhering to this type.
+       
+       A value of this type matches one of the forms:
+       
+        $0$<clear text password>
+        $5$<salt>$<password hash>
+        $5$rounds=<number>$<salt>$<password hash>
+       
+       The '$0$' prefix signals that this is plain text. When a plain
+       text value is received by the server, a SHA-256 digest is
+       calculated, and the string '$5$<salt>$' is prepended to the
+       result, where <salt> is a random 16 character salt used to
+       generate the digest.  This value is stored in the configuration
+       data store. The algorithm can be tuned via the
+       /confdConfig/cryptHash/rounds parameter, which if set to a number
+       other than the default will cause '$5$rounds=<number>$<salt>$' to
+       be prepended instead of only '$5$<salt>$'.
+       
+       If a value starting with '$5$' is received, the server
+       knows that the value already represents a SHA-256 digest, and
+       stores it as is in the data store.
+       
+       If a default value is specified, it must have a '$5$' prefix.
+       
+       The digest algorithm used is the same as the SHA-256 crypt function
+       used for encrypting passwords for various UNIX systems, see e.g.
+       http://www.akkadia.org/drepper/SHA-crypt.txt";
+    reference
+      "IEEE Std 1003.1-2008 - crypt() function
+       FIPS.180-3.2008: Secure Hash Standard";
+  }
+}

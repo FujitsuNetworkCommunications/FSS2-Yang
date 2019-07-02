@@ -1,0 +1,59 @@
+module fujitsu-equipment {
+  namespace "urn:fujitsu:params:xml:ns:yang:equipment";
+  prefix equipment;
+
+  import fujitsu-shelf {
+    prefix shelf;
+  }
+  import fujitsu-notifications {
+    prefix notifications;
+  }
+  import fujitsu-notification-types {
+    prefix notification-types;
+  }
+  import fujitsu-physical-inventory {
+    prefix pi;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains definitions for Equipment Management.
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2015-05-07 {
+    description
+      "Initial revision.";
+  }
+
+  container eqpt {
+    description
+      "The top container for all equipment entities.
+       Contains a list of shelves identified by the 'shelfId'";
+    list shelf {
+      key "shelfId";
+      uses shelf:Shelf;
+    }
+  }
+  augment "/notifications:event-notification" {
+    container physical-inventory {
+      when
+        "/notifications:event-notification/notifications:event-type-id =
+         'notification-types:equipmentPlugin'";
+      description
+        "Equipment Pyhical Inventory";
+      uses pi:PhysicalInventory;
+    }
+  }
+}

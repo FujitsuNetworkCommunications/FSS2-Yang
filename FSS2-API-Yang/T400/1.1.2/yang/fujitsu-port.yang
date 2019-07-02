@@ -1,0 +1,103 @@
+module fujitsu-port {
+  namespace "urn:fujitsu:params:xml:ns:yang:equipment:port";
+  prefix port;
+
+  import fujitsu-physical-inventory {
+    prefix physical-inventory;
+  }
+  import fujitsu-entity-states {
+    prefix entity-states;
+  }
+  import fujitsu-subport {
+    prefix subport;
+  }
+  import fujitsu-performance-monitoring {
+    prefix pm;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd. Address: 2801 Telecom Parkway Richardson, Texas
+     75082 Tel: +1-800-USE-FTAC (1-800-873-3822) Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains definitions for Pluggable equipment management.
+     Copyright (c) 2015 Fujitsu Ltd. All rights reserved. ";
+
+  revision 2017-02-21 {
+    description
+      "Provided default values for remoteSrcPeerPort-id
+       and remoteDestPeerPort-id.";
+  }
+  revision 2015-05-01 {
+    description
+      "Initial revision.";
+  }
+
+  typedef FixedOrPlugUnitClass {
+    type string;
+    description
+      "Classification of a fixed unit or pluggable unit. Examples for
+       fixed: FIBER, NBO Examples for pluggable: CFP, XFP, SFP+";
+  }
+
+  grouping Port {
+    leaf portID {
+      type string;
+      description
+        "A unique port ID";
+    }
+    leaf pluggableInterfaceType {
+      type string;
+      description
+        "interface type of the pluggable/fixed unit";
+    }
+    leaf num-lanes {
+      type string;
+      description
+        "num of lanes for the port, auto create num-lanes of subports
+         when num-lanes > 1";
+    }
+    uses entity-states:oper-status {
+      refine "oper-status" {
+        config false;
+      }
+    }
+    uses entity-states:admin-status {
+      refine "admin-status" {
+        mandatory false;
+        default "down";
+      }
+    }
+    container pi {
+      when "../../subslotID = '0'";
+      uses physical-inventory:PhysicalInventory;
+      config false;
+    }
+    uses pm:pm-info;
+    leaf remoteSrcPeerPort-id {
+      type string;
+      default "";
+      description
+        "The port ID of the remote source port to be associated with local
+         destination port. Shall be specified in the format of
+         <system name SID>/<shelf>/<slot>/<subslot>/<port>";
+    }
+    leaf remoteDestPeerPort-id {
+      type string;
+      default "";
+      description
+        "The port ID of the remote destination port to be associated with
+         local source port. Shall be specified in the format of
+         <system name SID>/<shelf>/<slot>/<subslot>/<port>";
+    }
+    list subport {
+      when "../num-lanes > 1";
+      key "subPortID";
+      uses subport:subPort;
+      description
+        "list of subport identified by subPortID";
+    }
+  }
+}

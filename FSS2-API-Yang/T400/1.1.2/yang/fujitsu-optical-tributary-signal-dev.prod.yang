@@ -1,0 +1,234 @@
+
+//
+// This is T200-specific customization for fujitsu-optical-tributary-signal.yang
+//
+
+module fujitsu-optical-tributary-signal-dev.prod {
+    namespace "urn:fujitsu:params:xml:ns:yang:interface:optical-tributary-signal-deviation";
+    prefix otsi-deviation;
+
+    import ietf-interfaces {
+        prefix if;
+    }
+
+    import fujitsu-optical-tributary-signal {
+        prefix otsi;
+    }
+
+    revision 2016-09-10 {
+        description
+        "Changed the default value and range of npcc-averaging-length to 10 and 0..10";
+    }
+
+    revision 2016-09-13 {
+        description
+        "Added default value for circuit-id";
+    }
+
+    revision 2016-10-17 {
+        description
+        "1. Renamed NLC parameter names
+         2. Removed the range value from center-frequency and center-frequency-rx";
+    }
+
+    // not-supported nodes
+    // need confirmation with Fred-san if we can simply remove this.
+    deviation "/if:interfaces/if:interface/if:enabled" {
+        deviate not-supported; 
+    }
+    // need confirmation with Fred-san if we can simply remove this.
+    deviation "/if:interfaces/if:interface/if:link-up-down-trap-enable" {
+        deviate not-supported; 
+    }
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:vstimer" {
+        deviate not-supported; 
+        description "For T200, OTSi does not support this Attribute";
+    }
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:actual-vstimer" {
+        deviate not-supported; 
+        description "For T200, OTSi does not support this Attribute";
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:center-frequency" {
+        deviate add {
+            default '0';
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:center-frequency-rx" {
+        deviate add {
+            default '0';
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:slot-width" {
+        deviate add {
+            default '50.00';
+        }
+   }
+
+    //setting default value of circuit-id
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:circuit-id" {
+        deviate add {
+            default "";
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-A" {
+        deviate add {
+           default "true";
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-B" {
+        deviate add {
+           default "true";
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-C" {
+        deviate replace {
+            type uint32 {
+               range "1..127" {
+                    description "Valid range 1 - 127";
+                }
+            }
+        }
+        deviate add {
+            default '14';
+        }
+   }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-D" {
+       deviate replace {
+            type uint32 {
+                range "0..31" {
+                    description "Valid range 0 - 31";
+                }
+            }
+        }
+        deviate add {
+            default '30';
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-E" {
+        deviate replace {
+            type uint32 {
+                range "0..10" {
+                    description "Valid range 0 - 10";
+                }
+            }
+        }
+        deviate add {
+            default '10';
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-F" {
+        deviate replace {
+            type uint32 {
+                range "0..127" {
+                    description "Valid range 0 - 127";
+                }
+            }
+        }
+        deviate add {
+            default '0';
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-G" {
+        deviate replace {
+            type uint32 {
+                range "0..127" {
+                    description "Valid range 0 - 127";
+                }
+            }
+        }
+        deviate add {
+            default '0';
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-H" {
+        deviate replace {
+            type uint32 {
+                range "9..509" {
+                    description "Valid range 9 - 509";
+                }
+            }
+        }
+        deviate add {
+            default '509';
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-I" {
+        deviate replace {
+            type uint32 {
+                range "9..509" {
+                    description "Valid range 9 - 509";
+                }
+            }
+        }
+        deviate add {
+            default '509';
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-J" {
+        deviate replace {
+            type decimal64 {
+                fraction-digits 4;
+                range "-8192.0000..8191.9375" {
+                    description "Valid range -8192.0000 - 8191.9375";
+                }
+            }
+        }
+        deviate add {
+            default '0';
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-K" {
+        deviate replace {
+            type decimal64 {
+                fraction-digits 4;
+                range "-2048.0000..2047.9375" {
+                    description "Valid range -2048.0000 - 2047.9375";
+                }
+            }
+        }
+        deviate add {
+            default '0';
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-L" {
+        deviate replace {
+            type decimal64 {
+                fraction-digits 4;
+                range "-2048.0000..2047.9375" {
+                    description "Valid range -2048.0000 - 2047.9375";
+                }
+            }
+        }
+        deviate add {
+            default '0';
+        }
+    }
+	
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-M" {
+       deviate replace {
+            type uint32 {
+                range "0..763" {
+                    description "Valid range 0 - 763";
+                }
+            }
+        }
+        deviate add {
+            default '0';
+        }
+    }
+}

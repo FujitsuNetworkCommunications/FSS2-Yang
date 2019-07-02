@@ -1,0 +1,316 @@
+module fujitsu-license {
+  namespace "urn:fujitsu:params:xml:ns:yang:ilf";
+  prefix fujitsu-license;
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+
+  organization
+    "Fujitsu Network Communications, Inc.";
+  contact
+    "Fujitsu Network Comminucations, Inc.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains the individually licensed Feature (ILF) model
+     for Fujitsu Equipment.
+     
+     Copyright (c) 2015 Fujitsu Network Communications, Inc. 
+     All rights reserved. ";
+
+  revision 2015-08-02 {
+    description
+      "Initial revision.";
+    reference "None.";
+  }
+
+  container restrict {
+    leaf temp-extension-delete {
+      type leafref {
+        path "/fujitsu-license:licenses/fujitsu-license:license/fujitsu-license:license-id";
+      }
+      description
+        "This leaf ref is to avoid deletion of TEMP_EXTENSION";
+    }
+  }
+  container licenses {
+    description
+      "Container that has the list of licenses user can provision";
+    list license {
+      key "license-id";
+      leaf license-id {
+        type string;
+        description
+          "The individually licensed feature ID.";
+      }
+      leaf license-key {
+        when "../license-temp-agree = 'no' or (../license-temp-agree = 'yes' and ../license-id = 'TEMP_EXTENSION') ";
+        type string;
+        description
+          "The individually licensed feature Key that was 
+           downloaded from the license key site. This ky
+           is needed to enable this licensed feature on
+           the device.";
+      }
+      leaf license-temp-agree {
+        type enumeration {
+          enum "yes" {
+            value 2;
+            description
+              " License Temporary mode enabled";
+          }
+          enum "no" {
+            value 1;
+            description
+              " License Temporary mode disabled";
+          }
+        }
+        default "no";
+        description
+          "The License Temp Mode. If agreed to then the License
+           will be enabled for up to 60 days to enable usage.
+           If after 60 days a Software Key for the ILF is not
+           entered then provisioning will be locked until a
+           valid key is entered.";
+      }
+      leaf license-temp-instances {
+        when "(../license-temp-agree = 'yes' and ../license-id != 'TEMP_EXTENSION') ";
+        type uint32;
+        default "1";
+        description
+          "The number of instances to enable in License Temp 
+           Mode for the ILF.";
+      }
+      leaf in-use {
+        type uint32;
+        default "0";
+        description
+          "The number of instances activated that are in use.";
+      }
+      leaf installed {
+        type uint32;
+        default "0";
+        description
+          "The number of instances that have been activated.";
+      }
+      leaf license-user-id {
+        type string;
+        description
+          "The User ID of the user that installed the Key.";
+      }
+      leaf license-date-time-installed {
+        type yang:date-and-time;
+        description
+          "The Date and Time the License was activated.";
+      }
+    }
+    list license-map {
+      key "entity-name";
+      description
+        "The list of entities that have licenses activated and in use";
+      leaf entity-name {
+        type string;
+        description
+          "Entity name which is created with license id.";
+      }
+      list license-id-list {
+        key "used-lic-id";
+        description
+          "List of License id's used by the entity provisioned.";
+        leaf used-lic-id {
+          type string;
+          description
+            "License id used by the entity provisioned.";
+        }
+        leaf use-pattern {
+          type enumeration {
+            enum "range_step" {
+              value 1;
+              description
+                "License instances are within a range and
+                 each time increment/decrement by instance-degree per entity";
+            }
+            enum "range_step_with_free" {
+              value 2;
+              description
+                "License instances are within a range, 
+                 each time increment/decrement by instance-degree per entity, 
+                 and free instace is provided first before license is charged";
+            }
+            enum "range_step_per_slot" {
+              value 3;
+              description
+                "License instances are within a range,
+                 each time increment/decrement by instance-degree per slot,
+                 there might be more than one entities in one slot";
+            }
+            enum "one_per_blade" {
+              value 4;
+              description
+                "Only one instance is required per blade";
+            }
+            enum "range_step_with_free_port_per_slot" {
+              value 5;
+              description
+                "Free instances for first port on every slot";
+            }
+          }
+          default "range_step";
+          description
+            "The use pattern type for the license";
+        }
+        leaf instance-degree {
+          type uint32;
+          default "1";
+          description
+            "Number of license instances required for each stepping";
+        }
+      }
+    }
+  }
+  container licenses-status {
+    config false;
+    list license-status {
+      key "license-id";
+      leaf license-id {
+        type string;
+        description
+          "The individually licensed feature ID.";
+      }
+      leaf key-valid {
+        type enumeration {
+          enum "yes" {
+            value 2;
+            description
+              " License Key installed is valid";
+          }
+          enum "no" {
+            value 1;
+            description
+              " License Key installed is invalid";
+          }
+        }
+        description
+          "Flag to indicate if installed KEY is valid
+           License.";
+      }
+      leaf key-type {
+        when "../key-valid = 'yes'";
+        type enumeration {
+          enum "REGULAR" {
+            value 1;
+            description
+              " Regular License Key";
+          }
+          enum "GOLDEN" {
+            value 2;
+            description
+              " Golden License Key";
+          }
+          enum "TEMP_EXTENSION" {
+            value 3;
+            description
+              " Temporary Extension License Key";
+          }
+        }
+        description
+          "The License Key Type installed.";
+      }
+      leaf system-name {
+        when "../key-valid = 'yes' and ((../key-type = 'REGULAR') or  (../key-type = 'TEMP_EXTENSION'))";
+        type string;
+        description
+          "The System Name associated with the KEY at key
+           generation time.";
+      }
+      leaf customer-name {
+        when "../key-valid = 'yes' and ../key-type = 'GOLDEN'";
+        type string;
+        description
+          "The Customer name the Key was generated for. Valid
+           for Golden Key. Quoted string. Maximum size
+           including quotes is 20+4 = 24 chars.";
+      }
+      leaf customer-id {
+        when "../key-valid = 'yes'";
+        type string;
+        description
+          "The Customer ID the Key was generated for. 
+           Quoted string. Maximum size including quotes is
+           10+4 = 14 chars.";
+      }
+      leaf user-id {
+        type string;
+        description
+          "The User ID of the user that installed the Key.";
+      }
+      leaf date-time-installed {
+        type yang:date-and-time;
+        description
+          "The Date and Time the License was activated.";
+      }
+      leaf instances-installed {
+        type uint32;
+        description
+          "The number of instances that have been activated.";
+      }
+      leaf instances-in-use {
+        type uint32;
+        description
+          "The number of instances activated that are in use.";
+      }
+      leaf extension-days {
+        when "../key-type = 'TEMP_EXTENSION'";
+        type uint32;
+        units "days";
+        description
+          "The number of days provided in extension key.";
+      }
+      leaf temp-days-remaining {
+        when "../key-valid = 'no'";
+        type uint32;
+        units "days";
+        description
+          "The number of days remaining in extension period.";
+      }
+      leaf ne-type {
+        when "../key-valid = 'yes'";
+        type string;
+        description
+          "The NE Type in the ILF key";
+      }
+    }
+  }
+  rpc key-unlock {
+    description
+      "Provide a SW Key to enable the system during ILF violation.";
+    input {
+      leaf license-id {
+        type string;
+        mandatory true;
+        description
+          "The individually licensed feature ID.";
+      }
+      leaf license-key {
+        type string;
+        mandatory true;
+        description
+          "The individually licensed feature Key that was 
+           downloaded from the license key site. This ky
+           is needed to enable this licensed feature on
+           the device.";
+      }
+    }
+    output {
+      leaf status {
+        type string;
+      }
+    }
+  }
+}

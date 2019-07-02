@@ -1,0 +1,658 @@
+module fujitsu-pm-types {
+  namespace "urn:fujitsu:params:xml:ns:yang:perfmon:pm-types";
+  prefix pm-types;
+
+  import fujitsu-performance-monitoring {
+    prefix perfmon;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains supported Performance Monitoring types.
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2016-10-09 {
+    description
+      "New PM type(FECB) added for T210.";
+  }
+  revision 2016-08-30 {
+    description
+      "New PM types added for L-Series R3.1.";
+  }
+  revision 2015-05-12 {
+    description
+      "Initial revision.";
+  }
+
+  identity temperature {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity temperatureMin {
+    base temperature;
+  }
+
+  identity temperatureMax {
+    base temperature;
+  }
+
+  identity temperatureAvg {
+    base temperature;
+  }
+
+  identity shelfCurrentMax {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerReceive {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerReceiveMin {
+    base opticalPowerReceive;
+  }
+
+  identity opticalPowerReceiveMax {
+    base opticalPowerReceive;
+  }
+
+  identity opticalPowerReceiveAvg {
+    base opticalPowerReceive;
+  }
+
+  identity totalOpticalPowerReceive {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity totalOpticalPowerReceiveMin {
+    base totalOpticalPowerReceive;
+  }
+
+  identity totalOpticalPowerReceiveMax {
+    base totalOpticalPowerReceive;
+  }
+
+  identity opticalPowerTransmit {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerTransmitMin {
+    base opticalPowerTransmit;
+  }
+
+  identity opticalPowerTransmitMax {
+    base opticalPowerTransmit;
+  }
+
+  identity opticalPowerTransmitAvg {
+    base opticalPowerTransmit;
+  }
+
+  identity laserBiasCurrent {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerReceiveLane1 {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerReceiveLane1Min {
+    base opticalPowerReceiveLane1;
+  }
+
+  identity opticalPowerReceiveLane1Max {
+    base opticalPowerReceiveLane1;
+  }
+
+  identity opticalPowerTransmitLane1 {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerTransmitLane1Min {
+    base opticalPowerTransmitLane1;
+  }
+
+  identity opticalPowerTransmitLane1Max {
+    base opticalPowerTransmitLane1;
+  }
+
+  identity laserBiasCurrentLane1 {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerReceiveLane2 {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerReceiveLane2Min {
+    base opticalPowerReceiveLane2;
+  }
+
+  identity opticalPowerReceiveLane2Max {
+    base opticalPowerReceiveLane2;
+  }
+
+  identity opticalPowerTransmitLane2 {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerTransmitLane2Min {
+    base opticalPowerTransmitLane2;
+  }
+
+  identity opticalPowerTransmitLane2Max {
+    base opticalPowerTransmitLane2;
+  }
+
+  identity laserBiasCurrentLane2 {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerReceiveLane3 {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerReceiveLane3Min {
+    base opticalPowerReceiveLane3;
+  }
+
+  identity opticalPowerReceiveLane3Max {
+    base opticalPowerReceiveLane3;
+  }
+
+  identity opticalPowerTransmitLane3 {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerTransmitLane3Min {
+    base opticalPowerTransmitLane3;
+  }
+
+  identity opticalPowerTransmitLane3Max {
+    base opticalPowerTransmitLane3;
+  }
+
+  identity laserBiasCurrentLane3 {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerReceiveLane4 {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerReceiveLane4Min {
+    base opticalPowerReceiveLane4;
+  }
+
+  identity opticalPowerReceiveLane4Max {
+    base opticalPowerReceiveLane4;
+  }
+
+  identity opticalPowerTransmitLane4 {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerTransmitLane4Min {
+    base opticalPowerTransmitLane4;
+  }
+
+  identity opticalPowerTransmitLane4Max {
+    base opticalPowerTransmitLane4;
+  }
+
+  identity laserBiasCurrentLane4 {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity chromaticDispersion {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity chromaticDispersionMin {
+    base chromaticDispersion;
+  }
+
+  identity chromaticDispersionMax {
+    base chromaticDispersion;
+  }
+
+  identity opticalSignalNoiseRatio {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalSignalNoiseRatioMin {
+    base opticalSignalNoiseRatio;
+  }
+
+  identity opticalSignalNoiseRatioMax {
+    base opticalSignalNoiseRatio;
+  }
+
+  identity polarizationDependentLoss {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity polarizationDependentLossMin {
+    base polarizationDependentLoss;
+  }
+
+  identity polarizationDependentLossMax {
+    base polarizationDependentLoss;
+  }
+
+  identity polarizationModeDispersion {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity polarizationModeDispersionMin {
+    base polarizationModeDispersion;
+  }
+
+  identity polarizationModeDispersionMax {
+    base polarizationModeDispersion;
+  }
+
+  identity sD-FECuncorrectedBlocks {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity sD-FECcorrectedBlocks {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity sD-FECcorrectedBits {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity preFECbitErrorRate {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity erroredBlocks {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity fECcorrectedBits {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity fECuncorrectedBlocks {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity fECuncorrectedCodewords {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity fECcorrectedCodewords {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity fECcorrectedSymbols {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity preFecBitErrorRate {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity fECcorrectedBlocks {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifUcastPackets {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifBroadcastPackets {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifMulticastPackets {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifPauseFrames {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifDiscards {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifUnknownProtos {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifOctets {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifErroredFrames {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity localFaultSeconds {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity remoteFaultSeconds {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifInUnsupportedLOAMDrop {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifInLOAMPDU {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifOutLOAMPDU {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifInLoopbackPDU {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifOutLoopbackPDU {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity codingViolation {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity erroredSecond {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity severelyErroredSecond {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity unavailableSecond {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity backgroundBlockErrors {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity backgroundBlockErrorRatio {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity severelyErroredSecondRatio {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity delayMeasurement {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity delayMeasurementMin {
+    base delayMeasurement;
+  }
+
+  identity delayMeasurementMax {
+    base delayMeasurement;
+  }
+
+  identity codingViolationSection {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity erroredSecondSection {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity severelyErroredSecondSection {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity codingViolationLine {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity erroredSecondLine {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity severelyErroredSecondLine {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity unavailableSecondLine {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity severelyErroredFrameSecondSection {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity failureCountLine {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerReceiveOts {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerReceiveOtsMin {
+    base opticalPowerReceiveOts;
+  }
+
+  identity opticalPowerReceiveOtsMax {
+    base opticalPowerReceiveOts;
+  }
+
+  identity opticalPowerReceiveOtsAvg {
+    base opticalPowerReceiveOts;
+  }
+
+  identity opticalPowerTransmitOts {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerTransmitOtsMin {
+    base opticalPowerTransmitOts;
+  }
+
+  identity opticalPowerTransmitOtsMax {
+    base opticalPowerTransmitOts;
+  }
+
+  identity opticalPowerTransmitOtsAvg {
+    base opticalPowerTransmitOts;
+  }
+
+  identity opticalPowerReceiveOms {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerReceiveOmsMin {
+    base opticalPowerReceiveOms;
+  }
+
+  identity opticalPowerReceiveOmsMax {
+    base opticalPowerReceiveOms;
+  }
+
+  identity opticalPowerReceiveOmsAvg {
+    base opticalPowerReceiveOms;
+  }
+
+  identity opticalPowerTransmitOms {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerTransmitOmsMin {
+    base opticalPowerTransmitOms;
+  }
+
+  identity opticalPowerTransmitOmsMax {
+    base opticalPowerTransmitOms;
+  }
+
+  identity opticalPowerTransmitOmsAvg {
+    base opticalPowerTransmitOms;
+  }
+
+  identity opticalPowerReceiveOsc {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerReceiveOscMin {
+    base opticalPowerReceiveOsc;
+  }
+
+  identity opticalPowerReceiveOscMax {
+    base opticalPowerReceiveOsc;
+  }
+
+  identity opticalPowerReceiveOscAvg {
+    base opticalPowerReceiveOsc;
+  }
+
+  identity opticalPowerTransmitOsc {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity opticalPowerTransmitOscMin {
+    base opticalPowerTransmitOsc;
+  }
+
+  identity opticalPowerTransmitOscMax {
+    base opticalPowerTransmitOsc;
+  }
+
+  identity opticalPowerTransmitOscAvg {
+    base opticalPowerTransmitOsc;
+  }
+
+  identity spanLoss {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity spanLossMin {
+    base spanLoss;
+  }
+
+  identity spanLossMax {
+    base spanLoss;
+  }
+
+  identity spanLossAvg {
+    base spanLoss;
+  }
+
+  identity spanLossVariation {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity spanLossVariationMin {
+    base spanLossVariation;
+  }
+
+  identity spanLossVariationMax {
+    base spanLossVariation;
+  }
+
+  identity spanLossVariationAvg {
+    base spanLossVariation;
+  }
+
+  identity reflectionPower {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity reflectionPowerMin {
+    base reflectionPower;
+  }
+
+  identity reflectionPowerMax {
+    base reflectionPower;
+  }
+
+  identity reflectionPowerAvg {
+    base reflectionPower;
+  }
+
+  identity ifGoodOctets {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifFrameCheckSumErrors {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifGoodFrames {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifJumboFrames {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifOversizedFrames {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifUndersizedFrames {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifFragments {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifJabber {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifDropEvents {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifPackets {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifFramesOfSize64 {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifFramesOfSize65To127 {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifFramesOfSize128To255 {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifFramesOfSize256To511 {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifFramesOfSize512To1023 {
+    base perfmon:performance-monitor-identity;
+  }
+
+  identity ifFramesOfSize1024To1518 {
+    base perfmon:performance-monitor-identity;
+  }
+}

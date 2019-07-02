@@ -1,0 +1,236 @@
+module fujitsu-optical-tributary-signal {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:interface:otsi";
+  prefix otsi;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+  import fujitsu-state-timer {
+    prefix st;
+  }
+  import fujitsu-entity-states {
+    prefix entity-states;
+  }
+  import fujitsu-if-type {
+    prefix fjift;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains YANG definitions 
+     for the Optical Transport Interfaces.
+     
+     Copyright (c) 2015 Fujitsu Network Communications, inc.
+     All rights reserved. ";
+
+  revision 2015-04-10 {
+    description
+      "Initial revision.";
+  }
+  revision 2016-10-17 {
+    description
+      "1. Added Frequency range for center-frequency and center-frequency-rx.
+       2. Renamed NLC Parameters";
+  }
+
+  grouping otsi-attributes {
+    description
+      "Optical Tributary Signal attributes (OTSI)";
+    uses entity-states:oper-status;
+    uses entity-states:admin-status {
+      refine "admin-status" {
+        mandatory false;
+        default "down";
+      }
+    }
+    leaf act-laser {
+      type enumeration {
+        enum "normal" {
+          value 0;
+        }
+        enum "shutdown" {
+          value 1;
+        }
+        enum "none" {
+          value 2;
+        }
+      }
+    }
+    leaf center-frequency {
+      type decimal64 {
+        fraction-digits 5;
+        range "0 | 191.35000..196.10000" {
+          description
+            "Valid range 191.35000 - 196.10000";
+        }
+      }
+      units "THz";
+      description
+        "frequency of the transmit optical channel";
+    }
+    leaf lambda {
+      type decimal64 {
+        fraction-digits 2;
+      }
+      units "nm";
+      description
+        "lambda corresponding to transmit frequency";
+    }
+    leaf center-frequency-rx {
+      type decimal64 {
+        fraction-digits 5;
+        range "0 | 191.35000..196.10000" {
+          description
+            "Valid range 191.35000 - 196.10000";
+        }
+      }
+      units "THz";
+      description
+        "frequency of the receive optical channel";
+    }
+    leaf lambda-rx {
+      type decimal64 {
+        fraction-digits 2;
+      }
+      units "nm";
+      description
+        "lambda corresponding to receive frequency";
+    }
+    leaf circuit-id {
+      type string {
+        length "0..45";
+      }
+      description
+        "circuit identifier/user label";
+    }
+    leaf slot-width {
+      type decimal64 {
+        fraction-digits 2;
+      }
+      units "GHz";
+      description
+        "Channel slot width in GHz";
+    }
+    leaf param-A {
+      type boolean;
+      description
+        "";
+    }
+    leaf param-B {
+      type boolean;
+      description
+        "";
+    }
+    leaf param-C {
+      type uint32;
+      description
+        "";
+    }
+    leaf param-D {
+      type uint32;
+      description
+        "";
+    }
+    leaf param-E {
+      type uint32;
+      description
+        "";
+    }
+    leaf param-F {
+      type uint32;
+      description
+        "";
+    }
+    leaf param-G {
+      type uint32;
+      description
+        "";
+    }
+    leaf param-H {
+      type uint32;
+      description
+        "";
+    }
+    leaf param-I {
+      type uint32;
+      description
+        "";
+    }
+    leaf param-J {
+      type decimal64 {
+        fraction-digits 4;
+      }
+      description
+        "";
+    }
+    leaf param-K {
+      type decimal64 {
+        fraction-digits 4;
+      }
+      description
+        "";
+    }
+    leaf param-L {
+      type decimal64 {
+        fraction-digits 4;
+      }
+      description
+        "";
+    }
+    leaf param-M {
+      type uint32;
+      description
+        "";
+    }
+  }
+
+  augment "/if:interfaces/if:interface" {
+    container otsi {
+      when "../if:type = 'fjift:fujitsuOtsi'";
+      presence "Attribute Nodes for Optical Transport Signal (otsi)";
+      description
+        "Optical Tributary Signal attributes (OTSI) Models the optical channel interfaces for an Optical White Box.";
+      uses st:state-timer {
+        refine "actual-vstimer" {
+          config false;
+        }
+      }
+      uses otsi-attributes {
+        refine "oper-status" {
+          config false;
+        }
+        refine "lambda" {
+          config false;
+        }
+        refine "lambda-rx" {
+          config false;
+        }
+        refine "act-laser" {
+          config false;
+        }
+      }
+    }
+  }
+  notification otsi-notif {
+    leaf name {
+      type leafref {
+        path "/if:interfaces/if:interface/if:name";
+      }
+    }
+    container otsi {
+      uses st:state-timer;
+      uses otsi-attributes;
+    }
+  }
+}

@@ -1,0 +1,372 @@
+module fujitsu-notification-types {
+  namespace "urn:fujitsu:params:xml:ns:yang:notifications:notification-types";
+  prefix notification-types;
+
+  import fujitsu-notifications {
+    prefix notifications;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains supported alarm types.
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2016-09-28 {
+    description
+      "Add OTDR Notifications.";
+  }
+  revision 2015-07-26 {
+    description
+      "Initial revision.";
+  }
+
+  identity manualSwitch {
+    base notifications:event-identity;
+    description
+      "Manual Switch";
+  }
+
+  identity workingSwitchProtection {
+    base notifications:event-identity;
+    description
+      "Working Switch to Protection";
+  }
+
+  identity workingSwitchProtectionManual {
+    base notifications:event-identity;
+    description
+      "Working Switch to Protection - Manual";
+  }
+
+  identity workingSwitchProtectionForced {
+    base notifications:event-identity;
+    description
+      "Working Switch to Protection - Forced";
+  }
+
+  identity workingSwitchWorking {
+    base notifications:event-identity;
+    description
+      "Working Switch back to Working";
+  }
+
+  identity databaseActivation {
+    base notifications:event-identity;
+    description
+      "System Database Activation";
+  }
+
+  identity databaseActivationFailure {
+    base notifications:event-identity;
+    description
+      "System Database Activation Failure";
+  }
+
+  identity databaseActivationReversion {
+    base notifications:event-identity;
+    description
+      "System Database Activation Reversion";
+  }
+
+  identity firmwareActivation {
+    base notifications:event-identity;
+    description
+      "Firmware Activation";
+  }
+
+  identity firmwareActivationComplete {
+    base notifications:event-identity;
+    description
+      "Firmware Activation Complete";
+  }
+
+  identity firmwareActivationFailure {
+    base notifications:event-identity;
+    description
+      "Firmware Activation Failure";
+  }
+
+  identity softwareActivation {
+    base notifications:event-identity;
+    description
+      "Software Activation";
+  }
+
+  identity softwareActivationComplete {
+    base notifications:event-identity;
+    description
+      "Software Activation Complete";
+  }
+
+  identity softwareActivationFailure {
+    base notifications:event-identity;
+    description
+      "Software Activation Failure";
+  }
+
+  identity softwareReversion {
+    base notifications:event-identity;
+    description
+      "System Software Reversion";
+  }
+
+  identity cancelValidationTimerInProgress {
+    base notifications:event-identity;
+    description
+      "Cancel Validation Timer In Progress";
+  }
+
+  identity cancelValidationTimerComplete {
+    base notifications:event-identity;
+    description
+      "Cancel Validation Timer Complete";
+  }
+
+  identity cancelValidationTimerFailed {
+    base notifications:event-identity;
+    description
+      "Cancel Validation Timer Failed";
+  }
+
+  identity uBootFailOver {
+    base notifications:event-identity;
+    description
+      "Failover due to UBoot error";
+  }
+
+  identity softwareFailOver {
+    base notifications:event-identity;
+    description
+      "Failover due to Software error";
+  }
+
+  identity daylightSavingTimeAdjustment {
+    base notifications:event-identity;
+    description
+      "Daylight Saving Time Adjustment";
+  }
+
+  identity dateTimeModified {
+    base notifications:event-identity;
+    description
+      "Date Time Modified";
+  }
+
+  identity sysNtpSynchronized {
+    base notifications:event-identity;
+    description
+      "NTP: System Clock Synchronized";
+  }
+
+  identity sysNtpSwitchOver {
+    base notifications:event-identity;
+    description
+      "NTP Server Switch Over";
+  }
+
+  identity lldpNbrInfoChanged {
+    base notifications:event-identity;
+    description
+      "LLDP: Neighbor Information Changed
+       remoteSysName
+       remoteSysMgmtAddressSubType
+       remoteSysMgmtAddress
+       remotePortIdSubType
+       remotePortId
+       remoteChassisIdSubType
+       remoteChassisId
+       All of the above attributes are sent in event";
+  }
+
+  identity systemRestartCold {
+    base notifications:event-identity;
+    description
+      "Cold System Restart";
+  }
+
+  identity systemRestartWarm {
+    base notifications:event-identity;
+    description
+      "Warm System Restart";
+  }
+
+  identity systemRestartDbInitialization {
+    base notifications:event-identity;
+    description
+      "System Restart - Db initialization";
+  }
+
+  identity systemRestartShfprov {
+    base notifications:event-identity;
+    description
+      "System Restart - SHFPROV";
+  }
+
+  identity copyFileInProgress {
+    base notifications:event-identity;
+    description
+      "Copy File In Progress nn.n% Complete";
+  }
+
+  identity copyFileComplete {
+    base notifications:event-identity;
+    description
+      "Copy File Complete 100% Complete";
+  }
+
+  identity copyFileFailure {
+    base notifications:event-identity;
+    description
+      "Copy File Failure";
+  }
+
+  identity copyFileFailureTransfer {
+    base notifications:event-identity;
+    description
+      "fileTransferFailure - transfer-failed";
+  }
+
+  identity copyFileFailureMd5check {
+    base notifications:event-identity;
+    description
+      "fileTransferFailure -md5check-failed";
+  }
+
+  identity copyFileFailureVerification {
+    base notifications:event-identity;
+    description
+      "fileTransferFailure -verification-failed";
+  }
+
+  identity equipmentPlugin {
+    base notifications:event-identity;
+    description
+      "Equipment Plugged In";
+  }
+
+  identity equipmentPlugout {
+    base notifications:event-identity;
+    description
+      "Equipment Plugged Out";
+  }
+
+  identity entityOperStatusChangeToUp {
+    base notifications:event-identity;
+    description
+      "Operational Status Change to Up";
+  }
+
+  identity entityOperStatusChangeToDown {
+    base notifications:event-identity;
+    description
+      "Operational Status Change to Down ";
+  }
+
+  identity entityOperStatusChangeToTesting {
+    base notifications:event-identity;
+    description
+      "Operational Status Change to Testing";
+  }
+
+  identity entityOperStatusChangeToUnknown {
+    base notifications:event-identity;
+    description
+      "Operational Status Change to Unknown  ";
+  }
+
+  identity entityOperStatusChangeToDormant {
+    base notifications:event-identity;
+    description
+      "Operational Status Change to Dormant";
+  }
+
+  identity entityOperStatusChangeToNotPresent {
+    base notifications:event-identity;
+    description
+      "Operational Status Change to Not Present";
+  }
+
+  identity entityOperStatusChangeToLowerLayerDown {
+    base notifications:event-identity;
+    description
+      "Operational Status Change to Lower Layer Down ";
+  }
+
+  identity otuReceivedTraceChange {
+    base notifications:event-identity;
+    description
+      "OTU Received Trace Change";
+  }
+
+  identity autoLogoffAssociationCancellation {
+    base notifications:event-identity;
+    description
+      "Auto Logoff Association Cancellation";
+  }
+
+  identity autoLogoffSessionTimeout {
+    base notifications:event-identity;
+    description
+      "Auto Logoff due to Session Timeout";
+  }
+
+  identity autoLogoffCableDisconnect {
+    base notifications:event-identity;
+    description
+      "Auto Logoff due to Cable Disconnect";
+  }
+
+  identity autoLogoffPasswordChanged {
+    base notifications:event-identity;
+    description
+      "Auto Logoff due to Password must be Changed";
+  }
+
+  identity ForcedLogoff {
+    base notifications:event-identity;
+    description
+      "Forced Logoff";
+  }
+
+  identity ipNotReachable {
+    base notifications:event-identity;
+    description
+      "IP Not Reachable";
+  }
+
+  identity ipReachable {
+    base notifications:event-identity;
+    description
+      "IP Reachable";
+  }
+
+  identity ipPingRequestTimedOut {
+    base notifications:event-identity;
+    description
+      "IP PING Request Timed Out";
+  }
+
+  identity otdrScanComplete {
+    base notifications:event-identity;
+    description
+      "OTDR Scan Complete";
+  }
+
+  identity otdrScanFailure {
+    base notifications:event-identity;
+    description
+      "OTDR Scan Failure";
+  }
+}

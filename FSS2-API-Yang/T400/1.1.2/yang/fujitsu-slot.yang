@@ -1,0 +1,95 @@
+module fujitsu-slot {
+  namespace "urn:fujitsu:params:xml:ns:yang:equipment:slot";
+  prefix slot;
+
+  import fujitsu-subslot {
+    prefix subslot;
+  }
+  import fujitsu-physical-inventory {
+    prefix physical-inventory;
+  }
+  import fujitsu-entity-states {
+    prefix entity-states;
+  }
+  import fujitsu-performance-monitoring {
+    prefix pm;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains definitions for Slot Equipment.
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2015-04-10 {
+    description
+      "Initial revision.";
+  }
+
+  typedef SlotType {
+    type string;
+    description
+      "A identifier that identifier what kind of cards
+       can be plugged into this slot.";
+  }
+
+  grouping Slot {
+    description
+      "This grouping defines parameters for a slot";
+    leaf slotID {
+      type string;
+      description
+        "A unique slot ID";
+    }
+    uses entity-states:oper-status {
+      when "slotID != '0'";
+      refine "oper-status" {
+        config false;
+      }
+    }
+    uses entity-states:admin-status {
+      when "slotID != '0'";
+      refine "admin-status" {
+        mandatory false;
+        default "down";
+      }
+    }
+    leaf cardType {
+      type string;
+      mandatory true;
+      description
+        "the card type as defined in 'cardData'";
+    }
+    leaf cardMode {
+      type string;
+      description
+        "the card mode as defined in 'cardData'";
+    }
+    container pi {
+      when "../slotID != '0'";
+      uses physical-inventory:PhysicalInventory;
+      config false;
+      description
+        "Physical inventory information of the slot";
+    }
+    uses pm:pm-info;
+    list subslot {
+      when "string-length(../cardType) > 0";
+      description
+        "A list of subslots per slot identified by the 'subslotNumber'";
+      key "subslotID";
+      uses subslot:subslot;
+    }
+  }
+}

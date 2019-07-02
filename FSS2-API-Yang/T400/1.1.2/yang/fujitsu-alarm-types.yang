@@ -1,0 +1,618 @@
+module fujitsu-alarm-types {
+  namespace "urn:fujitsu:params:xml:ns:yang:alarms:alarm-types";
+  prefix al-types;
+
+  import ietf-alarms {
+    prefix al;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains supported alarm types.
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2017-02-06 {
+    description
+      "Adding support for EQPT Log Trigger Alarm";
+  }
+  revision 2016-09-28 {
+    description
+      "Addition of Total OPR POS Alarm.";
+  }
+  revision 2015-05-12 {
+    description
+      "Initial revision.";
+  }
+  revision 2016-11-03 {
+    description
+      "Addition of Total OCN Alarm.";
+  }
+
+  identity equipmentFault {
+    base al:alarm-identity;
+  }
+
+  identity equipmentRemoved {
+    base al:alarm-identity;
+  }
+
+  identity equipmentMismatchAttributes {
+    base al:alarm-identity;
+  }
+
+  identity equipmentWarmup {
+    base al:alarm-identity;
+  }
+
+  identity equipmentLedOn {
+    base al:alarm-identity;
+  }
+
+  identity administrativeDown {
+    base al:alarm-identity;
+  }
+
+  identity administrativeTesting {
+    base al:alarm-identity;
+  }
+
+  identity overTemperatureEquipment {
+    base al:alarm-identity;
+  }
+
+  identity incompatibleSffHardware {
+    base al:alarm-identity;
+  }
+
+  identity configurationStandBy {
+    base al:alarm-identity;
+  }
+
+  identity shelfProvisioningMode {
+    base al:alarm-identity;
+  }
+
+  identity equipmentInterConnectFailure {
+    base al:alarm-identity;
+  }
+
+  identity equipmentMiscabledConnection {
+    base al:alarm-identity;
+  }
+
+  identity fanCoolingFail {
+    base al:alarm-identity;
+  }
+
+  identity equipmentCurrExceededFeed {
+    base al:alarm-identity;
+  }
+
+  identity interConnectFailureBladePiu {
+    base al:alarm-identity;
+  }
+
+  identity lampTest {
+    base al:alarm-identity;
+  }
+
+  identity otdrScanInProgress {
+    base al:alarm-identity;
+  }
+
+  identity equipmentReset {
+    base al:alarm-identity;
+  }
+
+  identity equipmentLogTrigger {
+    base al:alarm-identity;
+  }
+
+  identity databaseCorruption {
+    base al:alarm-identity;
+  }
+
+  identity databaseLockedSoftwareUpgradeInProgress {
+    base al:alarm-identity;
+  }
+
+  identity databaseLockedDbRestoreInProgress {
+    base al:alarm-identity;
+  }
+
+  identity databaseLockedSysInitInProgress {
+    base al:alarm-identity;
+  }
+
+  identity databaseLockedDbAlarmPresent {
+    base al:alarm-identity;
+  }
+
+  identity databaseLockedIlfViolation {
+    base al:alarm-identity;
+  }
+
+  identity databaseLockedShelfProvModePresent {
+    base al:alarm-identity;
+  }
+
+  identity databaseVersionMismatch {
+    base al:alarm-identity;
+  }
+
+  identity databaseSystemSignatureMismatch {
+    base al:alarm-identity;
+  }
+
+  identity softwareVersionMismatch {
+    base al:alarm-identity;
+  }
+
+  identity softwareStageInProgress {
+    base al:alarm-identity;
+  }
+
+  identity firmwareVersionMismatch {
+    base al:alarm-identity;
+  }
+
+  identity firmwareInitInProgress {
+    base al:alarm-identity;
+  }
+
+  identity firmwareBackwardCompatibleLimited {
+    base al:alarm-identity;
+  }
+
+  identity firmwareBackwardCompatibleAll {
+    base al:alarm-identity;
+  }
+
+  identity firmwareActivation {
+    base al:alarm-identity;
+  }
+
+  identity firmwareDownloadOrActivationFailure {
+    base al:alarm-identity;
+  }
+
+  identity incompatibleFirmware {
+    base al:alarm-identity;
+  }
+
+  identity incompatibleHardware {
+    base al:alarm-identity;
+  }
+
+  identity noFirmware {
+    base al:alarm-identity;
+  }
+
+  identity ilfViolation {
+    base al:alarm-identity;
+  }
+
+  identity ilfViolationCritical {
+    base al:alarm-identity;
+  }
+
+  identity ilfViolationMajor {
+    base al:alarm-identity;
+  }
+
+  identity softwareReset {
+    base al:alarm-identity;
+  }
+
+  identity sysNtpNotSynchronized {
+    base al:alarm-identity;
+  }
+
+  identity lldpFail {
+    base al:alarm-identity;
+  }
+
+  identity interConnectFailure {
+    base al:alarm-identity;
+  }
+
+  identity sysNameChanged {
+    base al:alarm-identity;
+  }
+
+  identity certificateNotInstalled {
+    base al:alarm-identity;
+  }
+
+  identity generalCommunicationChannel0Failure {
+    base al:alarm-identity;
+  }
+
+  identity powerProblem {
+    base al:alarm-identity;
+  }
+
+  identity powerProblemA {
+    base al:alarm-identity;
+  }
+
+  identity powerProblemB {
+    base al:alarm-identity;
+  }
+
+  identity opticalPowerReceive {
+    base al:alarm-identity;
+  }
+
+  identity opticalPowerTransmit {
+    base al:alarm-identity;
+  }
+
+  identity lossOfSignal {
+    base al:alarm-identity;
+  }
+
+  identity lossOfFrame {
+    base al:alarm-identity;
+  }
+
+  identity lossOfMultiframe {
+    base al:alarm-identity;
+  }
+
+  identity backwardDefectIndication {
+    base al:alarm-identity;
+  }
+
+  identity forwardDefectIndication {
+    base al:alarm-identity;
+  }
+
+  identity signalDegrade {
+    base al:alarm-identity;
+  }
+
+  identity trailTraceMismatch {
+    base al:alarm-identity;
+  }
+
+  identity backwardIncomingAlignmentError {
+    base al:alarm-identity;
+  }
+
+  identity incomingAlignmentError {
+    base al:alarm-identity;
+  }
+
+  identity alarmIndicationSignal {
+    base al:alarm-identity;
+  }
+
+  identity openConnectionIndication {
+    base al:alarm-identity;
+  }
+
+  identity locked {
+    base al:alarm-identity;
+  }
+
+  identity lossofTandemConnection {
+    base al:alarm-identity;
+  }
+
+  identity payloadMismatch {
+    base al:alarm-identity;
+  }
+
+  identity clientSignalFailDefect {
+    base al:alarm-identity;
+  }
+
+  identity multiplexStructureIdentifierMismatch {
+    base al:alarm-identity;
+  }
+
+  identity lossOfOmfIndication {
+    base al:alarm-identity;
+  }
+
+  identity lossOfFrameAndLossOfMultiframe {
+    base al:alarm-identity;
+  }
+
+  identity cnOutOfRange {
+    base al:alarm-identity;
+  }
+
+  identity cnLossOfSynchronization {
+    base al:alarm-identity;
+  }
+
+  identity highBER {
+    base al:alarm-identity;
+  }
+
+  identity localFault {
+    base al:alarm-identity;
+  }
+
+  identity remoteFault {
+    base al:alarm-identity;
+  }
+
+  identity lossOfAlignment {
+    base al:alarm-identity;
+  }
+
+  identity lossOfSynchronization {
+    base al:alarm-identity;
+  }
+
+  identity lossOfFECAlignment {
+    base al:alarm-identity;
+  }
+
+  identity remoteLANFault {
+    base al:alarm-identity;
+  }
+
+  identity lanTransmitLocalFault {
+    base al:alarm-identity;
+  }
+
+  identity lanTransmitRemoteFault {
+    base al:alarm-identity;
+  }
+
+  identity lanTransmitOff {
+    base al:alarm-identity;
+  }
+
+  identity facilityLoopbackActive {
+    base al:alarm-identity;
+  }
+
+  identity facilityLoopback2Active {
+    base al:alarm-identity;
+  }
+
+  identity terminalLoopbackActive {
+    base al:alarm-identity;
+  }
+
+  identity facilityTestsignalActive {
+    base al:alarm-identity;
+  }
+
+  identity terminalTestsignalActive {
+    base al:alarm-identity;
+  }
+
+  identity linkDown {
+    base al:alarm-identity;
+  }
+
+  identity alarmIndicationSignalLine {
+    base al:alarm-identity;
+  }
+
+  identity remoteFailureIndicationLine {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalFailLine {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalDegradeLine {
+    base al:alarm-identity;
+  }
+
+  identity alarmIndicationSignalGeneric {
+    base al:alarm-identity;
+  }
+
+  identity autoPowerReduction {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecification {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecificationHigh {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecificationHighL1 {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecificationHighL2 {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecificationHighL3 {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecificationHighL4 {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecificationLow {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecificationLowL1 {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecificationLowL2 {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecificationLowL3 {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecificationLowL4 {
+    base al:alarm-identity;
+  }
+
+  identity totalpowerOutOfSpecificationHigh {
+    base al:alarm-identity;
+  }
+
+  identity totalpowerOutOfSpecificationLow {
+    base al:alarm-identity;
+  }
+
+  identity fanFilterShouldBeReplaced {
+    base al:alarm-identity;
+  }
+
+  identity fanFilterShouldBeCleaned {
+    base al:alarm-identity;
+  }
+
+  identity equipmentOverTemperature {
+    base al:alarm-identity;
+  }
+
+  identity portLossOfLight {
+    base al:alarm-identity;
+  }
+
+  identity thresholdCrossingAlertSpanlossVariationTooLow {
+    base al:alarm-identity;
+  }
+
+  identity thresholdCrossingAlertSpanlossVariationTooHigh {
+    base al:alarm-identity;
+  }
+
+  identity thresholdCrossingAlertOscOpticalReceivePowerTooHigh {
+    base al:alarm-identity;
+  }
+
+  identity thresholdCrossingAlertOscOpticalReceivePowerTooLow {
+    base al:alarm-identity;
+  }
+
+  identity thresholdCrossingAlertOscOpticalTransmitPowerTooHigh {
+    base al:alarm-identity;
+  }
+
+  identity thresholdCrossingAlertOscOpticalTransmitPowerTooLow {
+    base al:alarm-identity;
+  }
+
+  identity thresholdCrossingAlertOpticalReceivePowerTooHigh {
+    base al:alarm-identity;
+  }
+
+  identity thresholdCrossingAlertOpticalReceivePowerTooLow {
+    base al:alarm-identity;
+  }
+
+  identity thresholdCrossingAlertOpticalTransmitPowerTooHigh {
+    base al:alarm-identity;
+  }
+
+  identity thresholdCrossingAlertOpticalTransmitPowerTooLow {
+    base al:alarm-identity;
+  }
+
+  identity postBlockAutoLaserShutdown {
+    base al:alarm-identity;
+  }
+
+  identity postBlockAutoPowerReduction {
+    base al:alarm-identity;
+  }
+
+  identity postBlockManualLaserShutdown {
+    base al:alarm-identity;
+  }
+
+  identity preBlockSpanAdjustmentInProgress {
+    base al:alarm-identity;
+  }
+
+  identity postBlockSpanAdjustmentInProgress {
+    base al:alarm-identity;
+  }
+
+  identity postBlockAutoShutoffDisabled {
+    base al:alarm-identity;
+  }
+
+  identity payloadMissingIndication {
+    base al:alarm-identity;
+  }
+
+  identity manualOverrideActive {
+    base al:alarm-identity;
+  }
+
+  identity unequippedIndication {
+    base al:alarm-identity;
+  }
+
+  identity reflectionTooHigh {
+    base al:alarm-identity;
+  }
+
+  identity oscPowerOutOfSpecificationHigh {
+    base al:alarm-identity;
+  }
+
+  identity oscPowerOutOfSpecificationLow {
+    base al:alarm-identity;
+  }
+
+  identity oscControlFailure {
+    base al:alarm-identity;
+  }
+
+  identity modeMismatch {
+    base al:alarm-identity;
+  }
+
+  identity omsPowerOutOfSpecificationHigh {
+    base al:alarm-identity;
+  }
+
+  identity omsPowerOutOfSpecificationLow {
+    base al:alarm-identity;
+  }
+
+  identity otsSpanlossPowerOutOfSpecificationHigh {
+    base al:alarm-identity;
+  }
+
+  identity otsSpanlossPowerOutOfSpecificationLow {
+    base al:alarm-identity;
+  }
+
+  identity DipSessionActive {
+    base al:alarm-identity;
+  }
+
+  identity PPPFailure {
+    base al:alarm-identity;
+  }
+}

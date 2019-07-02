@@ -1,0 +1,234 @@
+module fujitsu-otn {
+  namespace "urn:fujitsu:params:xml:ns:yang:otn";
+  prefix otn;
+
+  import fujitsu-notifications {
+    prefix notifications;
+  }
+  import fujitsu-notification-types {
+    prefix notification-types;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains YANG definitions 
+     for the OTU Interfaces of an Optical White Box (OWB).
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2015-08-13 {
+    description
+      "Initial revision.";
+  }
+
+  typedef itu-otn-tti-sapi {
+    type string {
+      length "0..15";
+    }
+    description
+      "Source Access Point Identifier";
+    default "";
+  }
+
+  typedef itu-otn-tti-dapi {
+    type string {
+      length "0..15";
+    }
+    description
+      "Destination Access Point Identifier";
+    default "";
+  }
+
+  typedef itu-otn-tti-op-spec {
+    type string {
+      length "0..32";
+    }
+    description
+      "Operator Spec";
+    default "";
+  }
+
+  typedef ansi-otn-tti {
+    type string {
+      length "0..62";
+    }
+    description
+      "Trail Trace Identifier";
+    default "";
+  }
+
+  typedef itu-tim-det-mode {
+    type enumeration {
+      enum "off" {
+        value 0;
+        description
+          "TIM detection off";
+      }
+      enum "sapi-only" {
+        value 1;
+        description
+          "TIM detection sapi only";
+      }
+      enum "dapi-only" {
+        value 2;
+        description
+          "TIM detection dapi only";
+      }
+      enum "op-spec-only" {
+        value 3;
+        description
+          "TIM detection op-spec only";
+      }
+      enum "sapi-and-dapi" {
+        value 4;
+        description
+          "TIM detection sapi and dapi";
+      }
+      enum "sapi-and-op-spec" {
+        value 5;
+        description
+          "TIM detection sapi and op-spec";
+      }
+      enum "dapi-and-op-spec" {
+        value 6;
+        description
+          "TIM detection dapi and op-spec";
+      }
+      enum "all" {
+        value 7;
+        description
+          "TIM detection all (sapi, dapi, op-spec)";
+      }
+    }
+    default "off";
+    description
+      "TIM detection mode";
+  }
+
+  grouping otn-tti-itu {
+    leaf sapi {
+      type itu-otn-tti-sapi;
+      description
+        "Source Access Point Identifier";
+    }
+    leaf dapi {
+      type itu-otn-tti-dapi;
+      description
+        "Destination Access Point Identifier";
+    }
+    leaf op-spec {
+      type itu-otn-tti-op-spec;
+      description
+        "TTI Operator Spec";
+    }
+  }
+
+  grouping otn-tti-ansi {
+    leaf tti {
+      type ansi-otn-tti;
+      description
+        "Trail Trace Identifier";
+    }
+  }
+
+  grouping tti-choice {
+    choice standard {
+      default "itu";
+      case itu {
+        container tti-itu {
+          container tx-tti {
+            uses otn-tti-itu;
+            description
+              "Transmitted Trail Trace Identifier";
+          }
+          container rx-tti {
+            uses otn-tti-itu;
+            config false;
+            description
+              "Received Trail Trace Identifier";
+          }
+          container exp-tti {
+            uses otn-tti-itu;
+            description
+              "Expected Trail Trace Identifier";
+          }
+          leaf tim-det-mode {
+            type itu-tim-det-mode;
+          }
+          description
+            "ITU-T Trail Trace Identifer (SAPI, DAPI, OperatorSpecific)";
+        }
+      }
+      case ansi {
+        container tti-ansi {
+          container tx-tti {
+            uses otn-tti-ansi;
+            description
+              "Transmitted Trail Trace Identifier";
+          }
+          container rx-tti {
+            uses otn-tti-ansi;
+            config false;
+            description
+              "Received Trail Trace Identifier";
+          }
+          container exp-tti {
+            uses otn-tti-ansi;
+            description
+              "Expected Trail Trace Identifier";
+          }
+          description
+            "ANSI Trail Trace Identifer";
+        }
+      }
+      description
+        "choice between ANSI Trail Trace Identifier and 
+         ITU-T Trail Trace Identifer (SAPI, DAPI, OperatorSpecific)";
+    }
+  }
+
+  augment "/notifications:event-notification" {
+    container tti {
+      when
+        "/notifications:event-notification/notifications:event-type-id =
+         'notification-types:otuReceivedTraceChange'";
+      description
+        "OTN Received Trace Change";
+      container current-tti {
+        choice standard {
+          case itu {
+            uses otn-tti-itu;
+          }
+          case ansi {
+            uses otn-tti-ansi;
+          }
+        }
+        description
+          "Current received Trail Trace Identifier";
+      }
+      container previous-tti {
+        choice standard {
+          case itu {
+            uses otn-tti-itu;
+          }
+          case ansi {
+            uses otn-tti-ansi;
+          }
+        }
+        description
+          "Previous received Trail Trace Identifier";
+      }
+    }
+  }
+}

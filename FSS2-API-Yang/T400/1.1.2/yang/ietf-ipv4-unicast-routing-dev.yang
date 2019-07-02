@@ -1,0 +1,35 @@
+module ietf-ipv4-unicast-routing-dev {
+
+  namespace "urn:fujitsu:params:xml:ns:yang:ietf-ipv4-unicast-routing-dev";
+
+  prefix "v4ur-dev";
+
+  import ietf-routing {
+      prefix rt;
+  }
+
+  import ietf-ipv4-unicast-routing {
+    prefix "v4ur";
+  }
+
+  // Support up to 32 ipv4 static routes per requirement of L100/T200 Release 1
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/"
+        + "rt:routing-protocol/rt:static-routes/v4ur:ipv4/v4ur:route" {
+    deviate add {
+      max-elements 32;
+    }
+  }
+
+  deviation "/rt:fib-route/rt:input/rt:destination-address/v4ur:address"  {
+    deviate not-supported;
+  }
+
+  deviation "/rt:fib-route/rt:output/rt:route/v4ur:destination-prefix" {
+    deviate not-supported;
+  }
+
+  deviation "/rt:fib-route/rt:output/rt:route/rt:next-hop/rt:next-hop-options/rt:simple-next-hop/v4ur:next-hop-address" {
+    deviate not-supported;
+  }
+
+}

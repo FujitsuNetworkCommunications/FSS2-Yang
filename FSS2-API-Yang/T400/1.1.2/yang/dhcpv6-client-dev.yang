@@ -1,0 +1,43 @@
+module dhcpv6-client-dev {
+  namespace "urn:fujitsu:params:xml:ns:yang:dhcpv6-client-dev";
+  prefix dhcpv6-dvn;
+
+  import dhcpv6-client {
+    prefix dhcpv6;
+  }
+    
+  organization "Fujitsu Ltd.";
+
+  contact
+  "Fujitsu Ltd.
+
+  Address: 2801 Telecom Parkway
+  Richardson, Texas 75082
+
+  Tel: +1-800-USE-FTAC (1-800-873-3822)
+  Email: ftac@fnc.fujitsu.com
+  Web: www.fujitsu.com/us/services/telecom";
+
+  description
+    "This model is used to remove specific features in the ietf-dhcpv6
+    module that are not supported at this time.
+    Copyright (c) 2016 Fujitsu Ltd.
+    All rights reserved. ";
+
+  revision 2016-03-10;
+
+
+  deviation /dhcpv6:serverv6 {
+    deviate not-supported;
+  }
+
+  deviation /dhcpv6:relayv6 {
+    deviate not-supported;
+  }
+
+  deviation /dhcpv6:clientv6/dhcpv6:client-if {
+    deviate not-supported;
+  }
+}
+
+

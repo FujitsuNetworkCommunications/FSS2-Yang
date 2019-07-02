@@ -1,0 +1,349 @@
+module fujitsu-threshold-crossover-types {
+  namespace "urn:fujitsu:params:xml:ns:yang:notifications:threshold-crossover-types";
+  prefix threshold-crossover-types;
+
+  import fujitsu-notifications {
+    prefix notifications;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains supported alarm types.
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  identity tCAOpticalReceivePowerTooLow {
+    base notifications:event-identity;
+    description
+      "Optical Receive Power Too Low";
+  }
+
+  identity tCAOpticalReceivePowerTooHigh {
+    base notifications:event-identity;
+    description
+      "Optical Receive Power Too High";
+  }
+
+  identity tCATotalOpticalReceivePowerTooLow {
+    base notifications:event-identity;
+    description
+      "Total Optical Receive Power Too Low";
+  }
+
+  identity tCATotalOpticalReceivePowerTooHigh {
+    base notifications:event-identity;
+    description
+      "Total Optical Receive Power Too High";
+  }
+
+  identity tCAOpticalTransmitPowerTooLow {
+    base notifications:event-identity;
+    description
+      "Optical Transmit Power Too Low";
+  }
+
+  identity tCAOpticalTransmitPowerTooHigh {
+    base notifications:event-identity;
+    description
+      "Optical Transmit Power Too High";
+  }
+
+  identity tCALaserBiasCurrentTooHigh {
+    base notifications:event-identity;
+    description
+      "Laser Bias Current Too High";
+  }
+
+  identity tCASpanlossVariationTooLow {
+    base notifications:event-identity;
+    description
+      "Span Loss Variation Too Low(PreAMP)";
+  }
+
+  identity tCASpanlossVariationTooHigh {
+    base notifications:event-identity;
+    description
+      "Span Loss Variation Too High(PreAMP)";
+  }
+
+  identity tCAOpticalReceivePowerOscTooLow {
+    base notifications:event-identity;
+    description
+      "Optical Receive Power Too Low (OSC)";
+  }
+
+  identity tCAOpticalReceivePowerOscTooHigh {
+    base notifications:event-identity;
+    description
+      "Optical Receive Power Too High (OSC)";
+  }
+
+  identity tCAOpticalTransmitPowerOscTooLow {
+    base notifications:event-identity;
+    description
+      "Optical Transmit Power Too Low (OSC)";
+  }
+
+  identity tCAOpticalTransmitPowerOscTooHigh {
+    base notifications:event-identity;
+    description
+      "Optical Transmit Power Too High (OSC)";
+  }
+
+  identity tCAOpticalReceivePowerLane1TooLow {
+    base notifications:event-identity;
+    description
+      "Optical Receive Power Lane1 Too Low";
+  }
+
+  identity tCAOpticalReceivePowerLane1TooHigh {
+    base notifications:event-identity;
+    description
+      "Optical Receive Power Lane1 Too High";
+  }
+
+  identity tCAOpticalTransmitPowerLane1TooLow {
+    base notifications:event-identity;
+    description
+      "Optical Transmit Power Lane1 Too Low";
+  }
+
+  identity tCAOpticalTransmitPowerLane1TooHigh {
+    base notifications:event-identity;
+    description
+      "Optical Transmit Power Lane1 Too High";
+  }
+
+  identity tCALaserBiasCurrentLane1TooHigh {
+    base notifications:event-identity;
+    description
+      "Laser Bias Current Lane1 Too High";
+  }
+
+  identity tCAOpticalReceivePowerLane2TooLow {
+    base notifications:event-identity;
+    description
+      "Optical Receive Power Lane2 Too Low";
+  }
+
+  identity tCAOpticalReceivePowerLane2TooHigh {
+    base notifications:event-identity;
+    description
+      "Optical Receive Power Lane2 Too High";
+  }
+
+  identity tCAOpticalTransmitPowerLane2TooLow {
+    base notifications:event-identity;
+    description
+      "Optical Transmit Power Lane2 Too Low";
+  }
+
+  identity tCAOpticalTransmitPowerLane2TooHigh {
+    base notifications:event-identity;
+    description
+      "Optical Transmit Power Lane2 Too High";
+  }
+
+  identity tCALaserBiasCurrentLane2TooHigh {
+    base notifications:event-identity;
+    description
+      "Laser Bias Current Lane2 Too High";
+  }
+
+  identity tCAOpticalReceivePowerLane3TooLow {
+    base notifications:event-identity;
+    description
+      "Optical Receive Power Lane3 Too Low";
+  }
+
+  identity tCAOpticalReceivePowerLane3TooHigh {
+    base notifications:event-identity;
+    description
+      "Optical Receive Power Lane3 Too High";
+  }
+
+  identity tCAOpticalTransmitPowerLane3TooLow {
+    base notifications:event-identity;
+    description
+      "Optical Transmit Power Lane3 Too Low";
+  }
+
+  identity tCAOpticalTransmitPowerLane3TooHigh {
+    base notifications:event-identity;
+    description
+      "Optical Transmit Power Lane2 Too High";
+  }
+
+  identity tCALaserBiasCurrentLane3TooHigh {
+    base notifications:event-identity;
+    description
+      "Laser Bias Current Lane3 Too High";
+  }
+
+  identity tCAOpticalReceivePowerLane4TooLow {
+    base notifications:event-identity;
+    description
+      "Optical Receive Power Lane4 Too Low";
+  }
+
+  identity tCAOpticalReceivePowerLane4TooHigh {
+    base notifications:event-identity;
+    description
+      "Optical Receive Power Lane4 Too High";
+  }
+
+  identity tCAOpticalTransmitPowerLane4TooLow {
+    base notifications:event-identity;
+    description
+      "Optical Transmit Power Lane4 Too Low";
+  }
+
+  identity tCAOpticalTransmitPowerLane4TooHigh {
+    base notifications:event-identity;
+    description
+      "Optical Transmit Power Lane4 Too High";
+  }
+
+  identity tCALaserBiasCurrentLane4TooHigh {
+    base notifications:event-identity;
+    description
+      "Laser Bias Current Lane4 Too High";
+  }
+
+  identity tCAFECCorrectedCodewords {
+    base notifications:event-identity;
+    description
+      "FEC Corrected Codewords Exceeded Threshold";
+  }
+
+  identity tCAFECUncorrectedCodewords {
+    base notifications:event-identity;
+    description
+      "FEC Uncorrected Codewords Exceeded Threshold";
+  }
+
+  identity tCAFECCorrectedSymbols {
+    base notifications:event-identity;
+    description
+      "FEC Corrected Sybols Exceeded Threshold";
+  }
+
+  identity tCACodingViolations {
+    base notifications:event-identity;
+    description
+      "Coding Violations";
+  }
+
+  identity tCAErroredSeconds {
+    base notifications:event-identity;
+    description
+      "Errored Seconds";
+  }
+
+  identity tCASeverelyErroredSeconds {
+    base notifications:event-identity;
+    description
+      "Severely Errored Seconds";
+  }
+
+  identity tCAFECUncorrectedBlocks {
+    base notifications:event-identity;
+    description
+      "FEC Uncorrected Blocks";
+  }
+
+  identity tCAFECCorrectedBits {
+    base notifications:event-identity;
+    description
+      "FEC Corrected Bits";
+  }
+
+  identity tCASDFECCorrectedBits {
+    base notifications:event-identity;
+    description
+      "SD-FEC Corrected Bits";
+  }
+
+  identity tCABackgroundBlockErrors {
+    base notifications:event-identity;
+    description
+      "Background Block Errors";
+  }
+
+  identity tCADelayMeasurement {
+    base notifications:event-identity;
+    description
+      "Delay Measurement";
+  }
+
+  identity tCAUnavailableSeconds {
+    base notifications:event-identity;
+    description
+      "Unavailable Seconds";
+  }
+
+  identity tCAErroredBlocks {
+    base notifications:event-identity;
+    description
+      "Errored Blocks";
+  }
+
+  identity tCACodingViolationSection {
+    base notifications:event-identity;
+    description
+      "Coding Violation Section";
+  }
+
+  identity tCAErroredSecondSection {
+    base notifications:event-identity;
+    description
+      "Errored Seconds Section";
+  }
+
+  identity tCASeverelyErroredSecondSection {
+    base notifications:event-identity;
+    description
+      "Severely Errored Seconds Section";
+  }
+
+  identity tCACodingViolationLine {
+    base notifications:event-identity;
+    description
+      "Coding Violations Line";
+  }
+
+  identity tCAErroredSecondLine {
+    base notifications:event-identity;
+    description
+      "Errored Seconds Line";
+  }
+
+  identity tCASeverelyErroredSecondLine {
+    base notifications:event-identity;
+    description
+      "Severely Errored Seconds Line";
+  }
+
+  identity tCAUnavailableSecondLine {
+    base notifications:event-identity;
+    description
+      "Unavailable Seconds Line";
+  }
+
+  identity tCAseverelyErroredFramingSecondSection {
+    base notifications:event-identity;
+    description
+      "Severely Errored Frame Seconds Section";
+  }
+}

@@ -1,0 +1,255 @@
+module fujitsu-equipment-dev.prod {
+    namespace "urn:fujitsu:params:xml:ns:yang:equipment-dev.prod";
+    prefix fujitsu-equipment-dev.prod;
+
+    import tailf-common {
+        prefix tailf;
+    }
+
+    import fujitsu-equipment {
+        prefix eqpt;
+    }
+    
+   
+    import fujitsu-pm-types {
+        prefix pm-types;
+    }
+    
+    organization
+       "Fujitsu Ltd.";
+
+    contact
+       "Fujitsu Ltd.
+
+        Address: 2801 Telecom Parkway
+                 Richardson, Texas 75082
+
+        Tel: +1-800-USE-FTAC (1-800-873-3822)
+        Email: ftac@fnc.fujitsu.com
+        Web: www.fujitsu.com/us/services/telecom";
+
+    description
+       "This module contains the eqpt releated deviations,
+
+        Copyright (c) 2015 Fujitsu Ltd.
+        All rights reserved. ";
+
+    revision 2017-01-25 {
+        description
+        "Added deviation for subport pm-th-high & low";
+    }
+
+    revision 2017-01-06 {
+        description
+        "Added deviation for num-lanes";
+    }
+
+    revision 2016-11-03 {
+        description
+        "Added shelfId 200";
+    }
+
+    revision 2016-09-21 {
+        description
+        " Disabled E1RX and E1TX in Normal shelf mode";
+    }
+
+    revision 2016-09-20 {
+        description
+        " Enabled LMP/LCN port in REGEN";
+    }
+
+    revision 2016-09-15 {
+        description
+        " Enabled E1RX and E1TX in T300 ";
+    }
+
+    revision 2016-09-12 {
+        description
+        "Enabled E2 port on T100 NORMAL mode";
+    }
+
+    revision 2016-09-02 {
+        description
+        "pm threshold data type change.";
+    }
+
+    revision 2016-05-16 {
+        description
+        "Initial revision.";
+    }
+
+   revision 2016-11-04 {
+        description
+        "Added T200 card check to support REGEN mode";
+   }
+
+
+
+    // Restrict cardType to allowed slot(s) in meta-data
+    deviation "/eqpt:eqpt/eqpt:shelf/eqpt:slot" {
+        deviate add {
+                        }
+        } 
+
+    // Slot 0 cardType must equal the Shelf type
+    deviation "/eqpt:eqpt/eqpt:shelf/eqpt:slot" {
+        deviate add {
+            must "(current()/slotID != '0') or " + 
+                 "((current()/slotID = '0') and (current()/cardType = current()/../type))" {
+                  tailf:dependency 'slotID';
+                  tailf:dependency 'cardType';
+                  error-message "slot 0 cardType must be same as shelf type";
+            }
+        }
+    }
+
+    // Deviation to restrict ShelfID
+    deviation "/eqpt:eqpt/eqpt:shelf/eqpt:shelfId" {
+        deviate replace {
+            type string {
+                length "1..3";
+                pattern "[1-3]*[1-9]|[1-4]0|200" {
+                  error-message "Shelf number should be 1-40 or 200";
+                }
+            }
+        }
+    }
+
+    // Port deviations
+    // Only allow E1RX an E1TX port creation when shelf-mode is REGEN.
+    // Only allow pluggable type of EDGERCV when in REGEN mode (T2x0)
+    // Only allow pluggable type of EDGEBI when in NORMAL mode (T2x0)
+    // Do not allow Client ports (pluggable types CFP4/QSFP28) to be provisioned
+    //   in REGEN mode.
+    deviation "/eqpt:eqpt/eqpt:shelf/eqpt:slot/eqpt:subslot/eqpt:port" {
+        deviate add {
+                  must "(((current()/../../../type = 'BDT3-T300') or (current()/../../../type = 'BDT2-MXC1')) and " +
+                  "(((current()/portID = 'E1RX')  or (current()/portID = 'E1TX') or " +
+				  "(current()/portID = 'LMP') or (current()/portID = 'LCN1') or (current()/portID = 'LCN2') ) and " +
+                  "(current()/../../../shelf-mode = 'REGEN'))) or " +
+				  "((current()/../../../shelf-mode != 'REGEN') and " +
+				  "((current()/portID != 'E1RX')  and (current()/portID != 'E1TX')))"  {
+                error-message "E1RX/TX Port only allowed when shelf-mode is REGEN, " +
+				               "E1 Port is allowed for NORMAL mode";
+            }
+
+
+            //No product check needed.  EDGERCV/EDGEBI only allowed on T200 E1 from XML
+            must "(current()/pluggableInterfaceType != 'EDGERCV') or " +
+                 "((current()/pluggableInterfaceType = 'EDGERCV') and " +
+                  "(current()/../../../shelf-mode = 'REGEN'))" {
+                error-message "Port pluggableInterfaceType must be EDGERCV when shelf-mode is REGEN";
+            }
+            must "(current()/pluggableInterfaceType != 'EDGEBI') or " +
+                 "((current()/pluggableInterfaceType = 'EDGEBI') and " +
+                  "(current()/../../../shelf-mode = 'NORMAL'))" {
+                error-message "Port pluggableInterfaceType must be EDGEBI when shelf-mode is NORMAL";
+            }
+            // Do not allow Client ports to be provisioned in REGEN mode
+            must "(current()/../../../shelf-mode != 'REGEN') or " +
+                 "((current()/../../../shelf-mode = 'REGEN') and " +
+                  "(current()/pluggableInterfaceType != 'QSFP28' and " +
+                   "current()/pluggableInterfaceType != 'CFP4'))" {
+                error-message "Port Type not supported in REGEN shelf-mode";
+            }
+        }
+
+    }
+
+    // Deviation to deny testing mode on all the ports
+    deviation "/eqpt:eqpt/eqpt:shelf/eqpt:slot/eqpt:subslot/eqpt:port/eqpt:admin-status" {
+        deviate add {
+            must "(current() != 'testing')" {
+                error-message " testing mode admin-status is not supported on any ports";
+            }
+        }
+    }
+
+    deviation "/eqpt:eqpt/eqpt:shelf/eqpt:pm" {
+        deviate not-supported;
+    }
+
+    deviation "/eqpt:eqpt/eqpt:shelf/eqpt:slot/eqpt:pm" {
+        deviate not-supported;
+    }
+
+    deviation "/eqpt:eqpt/eqpt:shelf/eqpt:slot/eqpt:subslot/eqpt:pm" {
+        deviate not-supported;
+    }
+
+    deviation "/eqpt:eqpt/eqpt:shelf/eqpt:slot/eqpt:subslot/eqpt:port/eqpt:subport/eqpt:subPortID" {
+        deviate add {
+            must "(current()/../../../../../type != 'BDT4-T400') or " +
+                "(current()/../../../../../type = 'BDT4-T400') and " +
+                "(number(current()) > 0) and (number(current()) < 5)" {
+                    error-message "Only Subports 1,2,3 and 4 are supported";
+                }
+        }
+    }
+
+    deviation "/eqpt:eqpt/eqpt:shelf/eqpt:slot/eqpt:subslot/eqpt:port/eqpt:subport/eqpt:admin-status" {
+        deviate add {
+            must "(current() = 'down' or current() = 'testing') or " +
+                "(current() = 'up' and ../../admin-status = 'up')" {
+                    error-message "Subport admin-status cannot be up when admin-status of port is not up";
+                }
+        }
+    }
+
+
+    // Deviation the PM value data type
+    deviation "/eqpt:eqpt/eqpt:shelf/eqpt:slot/eqpt:subslot/eqpt:port/eqpt:pm/eqpt:pm-threshold/eqpt:pm-th-metered/eqpt:pm-th-low" {
+        deviate replace {
+            type decimal64 {
+              fraction-digits 2;
+            }
+        }
+    }
+
+    deviation "/eqpt:eqpt/eqpt:shelf/eqpt:slot/eqpt:subslot/eqpt:port/eqpt:pm/eqpt:pm-threshold/eqpt:pm-th-metered/eqpt:pm-th-high" {
+        deviate replace {
+            type decimal64 {
+              fraction-digits 2;
+            }
+        }
+    }
+
+    deviation "/eqpt:eqpt/eqpt:shelf/eqpt:slot/eqpt:subslot/eqpt:port/eqpt:subport/eqpt:pm/eqpt:pm-threshold/eqpt:pm-th-metered/eqpt:pm-th-low" {
+        deviate replace {
+            type decimal64 {
+              fraction-digits 2;
+            }
+        }
+    }
+
+    deviation "/eqpt:eqpt/eqpt:shelf/eqpt:slot/eqpt:subslot/eqpt:port/eqpt:subport/eqpt:pm/eqpt:pm-threshold/eqpt:pm-th-metered/eqpt:pm-th-high" {
+        deviate replace {
+            type decimal64 {
+              fraction-digits 2;
+            }
+        }
+    }
+
+    deviation "/eqpt:eqpt/eqpt:shelf/eqpt:slot/eqpt:subslot/eqpt:port/eqpt:pm/eqpt:pm-threshold/eqpt:pm-type" {
+        deviate replace {
+            type enumeration {
+               enum metered {
+                   value 1;
+             description "Metered PM type";
+            }
+          }
+        }
+    }
+
+    deviation "/eqpt:eqpt/eqpt:shelf/eqpt:slot/eqpt:subslot/eqpt:port/eqpt:pm/eqpt:pm-threshold/eqpt:pm-th-binned" {
+        deviate not-supported;
+    }
+
+    deviation "/eqpt:eqpt/eqpt:shelf/eqpt:slot/eqpt:subslot/eqpt:port/eqpt:num-lanes" {
+        deviate add {
+            default 4;
+        }
+    }
+  
+}

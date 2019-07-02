@@ -1,0 +1,491 @@
+module fujitsu-performance-monitoring {
+  namespace "urn:fujitsu:params:xml:ns:yang:perfmon";
+  prefix perfmon;
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+  import fujitsu-notifications {
+    prefix notifications;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains a collection of YANG definitions for
+     Performance Monitoring management.
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2015-05-07 {
+    description
+      "Initial revision.";
+  }
+  revision 2016-12-07 {
+    description
+      "Corrected pm-validity description.";
+  }
+
+  identity performance-monitor-identity {
+    description
+      "Base identity for PM types. A unique identification of the PM
+         identifier, not including the resource. A string-based qualifier
+         can be used in addition to the identity in order to have different
+         PM types based on information not known at design-time. Standards
+         and vendors can define sub-identities to clearly identify specific
+         PM types.";
+  }
+
+  typedef pm-identity {
+    type identityref {
+      base perfmon:performance-monitor-identity;
+    }
+    description
+      "PM name";
+  }
+
+  typedef pm-location {
+    type enumeration {
+      enum "nearEnd" {
+        value 0;
+        description
+          "Near-end location";
+      }
+      enum "farEnd" {
+        value 1;
+        description
+          "Far-end location";
+      }
+    }
+    description
+      "PM location";
+  }
+
+  typedef pm-direction {
+    type enumeration {
+      enum "transmit" {
+        value 0;
+        description
+          "Transmit direction";
+      }
+      enum "receive" {
+        value 1;
+        description
+          "Receive direction";
+      }
+      enum "na" {
+        value 2;
+        description
+          "Direction not applicable";
+      }
+    }
+    description
+      "PM direction";
+  }
+
+  typedef pm-type {
+    type enumeration {
+      enum "cumulative" {
+        value 0;
+        description
+          "Cumulative PM type";
+      }
+      enum "metered" {
+        value 1;
+        description
+          "Metered PM type";
+      }
+      enum "binned" {
+        value 2;
+        description
+          "Binned PM type";
+      }
+    }
+    description
+      "PM type";
+  }
+
+  typedef pm-data-type {
+    type union {
+      type uint64;
+      type int64;
+      type decimal64 {
+        fraction-digits 2;
+      }
+      type decimal64 {
+        fraction-digits 17;
+      }
+    }
+  }
+
+  typedef pm-time-period {
+    type enumeration {
+      enum "cumulative" {
+        value 0;
+        description
+          "cumulative";
+      }
+      enum "15-min" {
+        value 1;
+        description
+          "15 minutes period";
+      }
+      enum "1-day" {
+        value 2;
+        description
+          "1 day period";
+      }
+      enum "1-week" {
+        value 3;
+        description
+          "1 week period";
+      }
+      enum "1-month" {
+        value 4;
+        description
+          "1 month period";
+      }
+    }
+  }
+
+  typedef pm-validity {
+    type enumeration {
+      enum "false" {
+        value 0;
+        description
+          "PM is not valid";
+      }
+      enum "true" {
+        value 1;
+        description
+          "PM is valid";
+      }
+    }
+  }
+
+  typedef pm-index {
+    type uint32;
+    description
+      "Index for PM history";
+  }
+
+  typedef pm-history {
+    type enumeration {
+      enum "current" {
+        value 0;
+        description
+          "Current PM time-period";
+      }
+      enum "all" {
+        value 1;
+        description
+          "All PM time-periods including current";
+      }
+    }
+  }
+
+  grouping pm-id {
+    leaf pm-name {
+      type pm-identity;
+    }
+    leaf pm-location {
+      type pm-location;
+    }
+    leaf pm-direction {
+      type pm-direction;
+    }
+  }
+
+  grouping pm-data-type {
+    container data-type {
+      leaf type {
+        type string {
+          pattern "uint64|int64|decimal64";
+        }
+      }
+      leaf fraction-digits {
+        when "../type = 'decimal64'";
+        type uint8 {
+          range "2 | 17";
+        }
+      }
+    }
+  }
+
+  grouping pm-th-metered {
+    container pm-th-metered {
+      when "../pm-type = 'metered'";
+      leaf pm-th-type {
+        type enumeration {
+          enum "auto" {
+            description
+              "HW autoprovisioned";
+          }
+          enum "user" {
+            description
+              "User-provisioned";
+          }
+        }
+        default "auto";
+      }
+      leaf pm-th-low {
+        when "../pm-th-type = 'user'";
+        mandatory true;
+        type pm-data-type;
+      }
+      leaf pm-th-high {
+        when "../pm-th-type = 'user'";
+        mandatory true;
+        type pm-data-type;
+      }
+    }
+  }
+
+  grouping pm-th-binned {
+    container pm-th-binned {
+      when "../pm-type = 'binned'";
+      list pm-time-periods {
+        key "pm-time-period";
+        leaf pm-time-period {
+          type pm-time-period;
+        }
+        leaf pm-value {
+          mandatory true;
+          type pm-data-type;
+        }
+      }
+    }
+  }
+
+  grouping pm-threshold {
+    list pm-threshold {
+      description
+        "List of PMs thresholds for the parent entity.";
+      key "pm-name pm-location pm-direction";
+      uses pm-id;
+      leaf pm-type {
+        type pm-type;
+      }
+      uses pm-th-metered;
+      uses pm-th-binned;
+    }
+  }
+
+  grouping pm-oper-data-record {
+    uses pm-id;
+    leaf pm-type {
+      type pm-type;
+    }
+    list pm-time-period-index {
+      key "pm-time-period pm-index";
+      ordered-by user;
+      leaf pm-time-period {
+        type pm-time-period;
+      }
+      leaf pm-index {
+        type pm-index;
+      }
+      leaf pm-value {
+        type pm-data-type;
+        description
+          "PM value";
+      }
+      leaf pm-validity {
+        type pm-validity;
+      }
+      leaf pm-start-time {
+        type yang:date-and-time;
+      }
+    }
+  }
+
+  grouping pm-oper-data {
+    list pm-oper-data {
+      uses pm-oper-data-record;
+      key "pm-name pm-location pm-direction";
+      ordered-by user;
+      config false;
+    }
+  }
+
+  grouping pm-oper-range-record {
+    uses pm-id;
+    leaf pm-alarm-low {
+      type pm-data-type;
+      description
+        "PM Alarm Detect Low";
+    }
+    leaf pm-alarm-high {
+      type pm-data-type;
+      description
+        "PM Alarm Detect High";
+    }
+    leaf pm-capability-min {
+      type pm-data-type;
+      description
+        "PM Operating Range Low";
+    }
+    leaf pm-capability-max {
+      type pm-data-type;
+      description
+        "PM Operating Range High";
+    }
+    leaf pm-warning-low {
+      type pm-data-type;
+      description
+        "PM Threshold Low";
+    }
+    leaf pm-warning-high {
+      type pm-data-type;
+      description
+        "PM Threshold High";
+    }
+  }
+
+  grouping pm-oper-range {
+    list pm-oper-range {
+      uses pm-oper-range-record;
+      key "pm-name pm-location pm-direction";
+      ordered-by user;
+      config false;
+    }
+  }
+
+  grouping pm-info {
+    container pm {
+      description
+        "Performance Monitoring Info";
+      uses pm-threshold;
+      uses pm-oper-range;
+    }
+  }
+
+  container pm-equipment {
+    description
+      "Top container for all equipment performance monitoring entities.";
+    config false;
+    list shelf {
+      description
+        "List of shelf entities to store performance monitoring operational data";
+      key "shelfId";
+      leaf shelfId {
+        description
+          "Shelf Identifier";
+        type string;
+      }
+      uses pm-oper-data;
+      list slot {
+        description
+          "List of slot entities to store performance monitoring operational data";
+        key "slotId";
+        leaf slotId {
+          description
+            "Slot Identifier";
+          type string;
+        }
+        uses pm-oper-data;
+        list subslot {
+          description
+            "List of subslot entities to store performance monitoring operational data";
+          key "subslotId";
+          leaf subslotId {
+            description
+              "Subslot Identifier";
+            type string;
+          }
+          uses pm-oper-data;
+          list port {
+            description
+              "List of port entities to store performance monitoring operational data";
+            key "portId";
+            leaf portId {
+              description
+                "Port Identifier";
+              type string;
+            }
+            uses pm-oper-data;
+            list subport {
+              description
+                "List of subport entities to store performance monitoring operational data";
+              key "subportId";
+              leaf subportId {
+                description
+                  "Subport Identifier";
+                type string;
+              }
+              uses pm-oper-data;
+            }
+          }
+        }
+      }
+    }
+  }
+  container pm-interfaces {
+    description
+      "Top container for all interface performance monitoring entities.";
+    config false;
+    list interface {
+      description
+        "List of interface entities to store performance monitoring operational data";
+      key "name";
+      leaf name {
+        description
+          "Interface name";
+        type string;
+      }
+      uses pm-oper-data;
+    }
+  }
+  rpc init-pm {
+    description
+      "Command to initialize PM data";
+    input {
+      leaf id {
+        type string;
+        mandatory true;
+        description
+          "Entity Identifier";
+      }
+      leaf time-period {
+        type pm-time-period;
+        default "15-min";
+      }
+      leaf index {
+        type pm-history;
+        default "current";
+      }
+    }
+    output {
+      leaf status {
+        type string;
+      }
+    }
+  }
+  notification threshold-crossover-notification {
+    description
+      "This notification is used to report a threshold cross-over event.";
+    uses notifications:common-event-parameters;
+    leaf pm-value {
+      type pm-data-type;
+      description
+        "Monitored performance value";
+      mandatory true;
+    }
+    leaf pm-threshold-level {
+      type pm-data-type;
+      description
+        "Performance monitor threshold level";
+      mandatory true;
+    }
+  }
+}

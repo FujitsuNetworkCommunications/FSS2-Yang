@@ -1,0 +1,68 @@
+module fujitsu-telemetry {
+  namespace "urn:fujitsu:params:xml:ns:yang:telemetry";
+  prefix telemetry;
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains definitions for configuration of telemetry feature 
+     Copyright (c) 2016 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2017-01-13 {
+    description
+      "Updated yang to invoke script from yang directly";
+  }
+  revision 2016-10-07 {
+    description
+      "Initial version";
+  }
+
+  rpc telemetry {
+    description
+      "RPC to load and start telemetry";
+    input {
+      leaf action {
+        type enumeration {
+          enum "configure" {
+            value 1;
+          }
+          enum "delete" {
+            value 2;
+          }
+        }
+        mandatory true;
+        description
+          "telemetry action configure / delete";
+      }
+      leaf config-file {
+        type string;
+        description
+          "provide the configuration file";
+      }
+    }
+    output {
+      leaf status {
+        type string;
+        mandatory true;
+        description
+          "Successful or Failed";
+      }
+      leaf status-message {
+        type string;
+        mandatory true;
+        description
+          "Detailed reason for success / failure";
+      }
+    }
+  }
+}

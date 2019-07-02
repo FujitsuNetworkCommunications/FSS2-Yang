@@ -1,0 +1,235 @@
+module fujitsu-swdl {
+  namespace "urn:fujitsu:params:xml:ns:yang:fujitsu-swdl";
+  prefix fujitsu-swdl;
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+
+  organization
+    "Fujitsu Limited ";
+  contact
+    "Fujitsu Limited
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains definitions for System Management.
+     
+     Copyright (c) 2015 Fujitsu Limited
+     All rights reserved. ";
+
+  revision 2015-09-28 {
+    description
+      "Initial revision.";
+  }
+
+  typedef swBankType {
+    type enumeration {
+      enum "ACTIVE" {
+        value 0;
+        description
+          "Active Bank";
+      }
+      enum "STAGE" {
+        value 1;
+        description
+          "Staging Bank";
+      }
+      enum "BACKUP" {
+        value 2;
+        description
+          "Backup Bank";
+      }
+    }
+    description
+      "SW Banks";
+  }
+
+  grouping sw-bank {
+    leaf bankType {
+      type swBankType;
+      description
+        "sw bank type ";
+    }
+    leaf gissue {
+      type string;
+      description
+        "Gissue of the SW in this bank";
+    }
+    leaf build-detail {
+      type string;
+      description
+        "detailed build information";
+    }
+    leaf validation-timer {
+      type string;
+      description
+        "value of validation timer in hh-mm-ss";
+    }
+    leaf activation-date-time {
+      type yang:date-and-time;
+      description
+        "activation date and time: The date load was activated";
+    }
+  }
+
+  rpc sw-unpack {
+    description
+      "SW unpack  - copies the SW from destination dir to repository.
+       This command is only run at NE if repository is on the NE";
+    input {
+      leaf filename {
+        type string {
+          length "10..255";
+        }
+        description
+          "Path and TAR.GZIP file name which has the load";
+      }
+    }
+    output {
+      leaf status {
+        type string {
+          length "4..255";
+        }
+        description
+          "response of the command";
+      }
+    }
+  }
+  rpc sw-stage {
+    description
+      "SW stage - copies the SW from repo to staging bank";
+    input {
+      leaf filename {
+        type string {
+          length "10..255";
+        }
+        description
+          "file name which has the load";
+      }
+    }
+    output {
+      leaf status {
+        type string {
+          length "4..255";
+        }
+        description
+          "response of the command";
+      }
+    }
+  }
+  rpc sw-activate {
+    description
+      "Activate new load";
+    input {
+      leaf gissue {
+        type string;
+        description
+          " GISSUE of the new load which is being activated";
+      }
+      leaf validationTimer {
+        type string;
+        default "01-00-00";
+        description
+          "validation timer hh-mm-ss";
+      }
+    }
+    output {
+      leaf status {
+        type string {
+          length "4..255";
+        }
+        description
+          "response of the command";
+      }
+    }
+  }
+  rpc cancel-validation-timer {
+    description
+      "Cancel validation timer which user provisioned as part of activate command";
+    input {
+      leaf accept {
+        type boolean;
+        default "true";
+        description
+          " TRUE means  validation timer is cancelled and new load is accepted";
+      }
+    }
+    output {
+      leaf status {
+        type string {
+          length "4..255";
+        }
+        description
+          "response of the command";
+      }
+    }
+  }
+  list sw-version {
+    key "bankType";
+    config false;
+    uses sw-bank;
+  }
+  rpc show-file {
+    description
+      "Show one or more files in the specified directory.";
+    input {
+      leaf filename {
+        type string {
+          length "1..255";
+        }
+        description
+          "Specify file(s) to be listed (* is allowed as wild-card). ";
+      }
+    }
+    output {
+      leaf-list status {
+        type string {
+          length "1..max";
+        }
+        description
+          "File display per request (single file or all files). ";
+      }
+    }
+  }
+  rpc delete-file {
+    description
+      "Delete one or more files in the specified directory.";
+    input {
+      choice delete-options {
+        leaf admin-level {
+          type empty;
+          description
+            "Warning: Level-6 and Level-4 users can delete any file or directory owned by any users of Level 1-6.";
+        }
+        leaf syslog {
+          type empty;
+          description
+            "Deletes the file of path /var/log/syslog-local.";
+        }
+      }
+      leaf filename {
+        type string {
+          length "1..255";
+        }
+        mandatory true;
+        description
+          "Specify file(s) to be deleted (* is allowed as wild-card).";
+      }
+    }
+    output {
+      leaf status {
+        type string {
+          length "1..max";
+        }
+        description
+          "Response of command";
+      }
+    }
+  }
+}

@@ -1,0 +1,68 @@
+module fujitsu-ains-keywords {
+  namespace "urn:fujitsu:params:xml:ns:yang:ains-keywords";
+  prefix ains;
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains AINS keyword definitions.
+     
+     Copyright (c) 2016 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2016-07-20 {
+    description
+      "Initial revision.";
+  }
+
+  typedef ains-state {
+    type enumeration {
+      enum "disabled" {
+        value 1;
+        description
+          "Automatic inservice disabled";
+      }
+      enum "enabled" {
+        value 2;
+        description
+          "Automatic inservice enabled";
+      }
+    }
+    description
+      "Automatic inservice state.
+       
+       If enabled, will automatically transition inservice.";
+  }
+
+  typedef vstimer {
+    type string {
+      pattern "((([0-3][0-9]|4[0-7])-([0-5][0-9]))|48-00)";
+    }
+    description
+      "Minutes for which error-free traffic must exist";
+  }
+
+  grouping ains-prov-keywords {
+    leaf ains {
+      type ains-state;
+      mandatory false;
+      default "disabled";
+    }
+    leaf vstimer {
+      type vstimer;
+    }
+    leaf ACTVST {
+      type string;
+      config false;
+    }
+  }
+}

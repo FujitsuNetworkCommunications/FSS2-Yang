@@ -1,0 +1,141 @@
+module iputil {
+  namespace "urn:ietf:params:xml:ns:yang:fnc-iputil";
+  prefix iputil;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  organization
+       "Fujitsu Ltd";
+
+  contact
+       "Fujitsu Ltd.
+
+        Address: 2801 Telecom Parkway
+                 Richardson, Texas 75082
+
+        Tel: +1-800-USE-FTAC (1-800-873-3822)
+        Email: ftac@fnc.fujitsu.com
+        Web: www.fujitsu.com/us/services/telecom";
+
+  description
+       "This module contains the ping, ping6, traceroute, and traceroute6 utilities.
+
+        Copyright (c) 2015 Fujitsu Network Communications, inc.
+        All rights reserved. ";
+
+  revision 2015-04-10 {
+       description
+         "Initial revision.";
+  }
+
+
+  rpc iputil-ping {
+    tailf:info "ping utility";
+    input {
+      leaf options {
+        type string;
+      }
+      leaf count {
+        type int32;
+        default "3";
+      }
+    }
+    output {
+      leaf header {
+        type string;
+      }
+      leaf error {
+        type string;
+      }
+      list response {
+        leaf data {
+          type string;
+        }
+      }
+      container statistics {
+        leaf packet {
+          type string;
+        }
+        leaf time {
+          type string;
+        }
+      }
+    }
+  }
+
+  rpc iputil-ping6 {
+    tailf:info "ping6 utility";
+    input {
+      leaf options {
+        type string;
+      }
+    }
+    output {
+      leaf header {
+        type string;
+      }
+      leaf error {
+        type string;
+      }
+      list response {
+        leaf data {
+          type string;
+        }
+      }
+      container statistics {
+        leaf packet {
+          type string;
+        }
+        leaf time {
+          type string;
+        }
+      }
+    }
+  }
+
+  rpc iputil-traceroute {
+    tailf:info "traceroute utility";
+    input {
+      leaf options {
+        type string;
+      }
+    }
+    output {
+      leaf header {
+        type string;
+      }
+      leaf error {
+        type string;
+      }
+      list response {
+        leaf trace {
+          type string;
+        }
+      }
+    }
+  }
+
+  rpc iputil-traceroute6 {
+    tailf:info "traceroute6 utility";
+    input {
+      leaf options {
+        type string;
+      }
+    }
+    output {
+      leaf header {
+        type string;
+      }
+      leaf error {
+        type string;
+      }
+      list response {
+        leaf trace {
+          type string;
+        }
+      }
+    }
+  }
+}

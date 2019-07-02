@@ -1,0 +1,26 @@
+module ietf-routing-dev {
+    namespace "urn:fujitsu:params:xml:ns:yang:ietf-routing-dev";
+    prefix ietf-rt-dev;
+
+    import ietf-routing {
+        prefix rt;
+    } 
+
+    // Support a single routing instance (i.e. only static routes)
+    deviation "/rt:routing/rt:routing-instance" {
+      deviate add {
+        max-elements 1;
+      }
+    }
+
+    // can run 1 static route protocol and 1 ospf route protocol per instance
+    deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol" {
+      deviate add {
+        max-elements 2;
+      }
+    }
+
+    deviation "/rt:fib-route" {
+      deviate not-supported;
+    }
+}
