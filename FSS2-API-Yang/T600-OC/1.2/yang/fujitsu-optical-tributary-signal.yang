@@ -1,0 +1,518 @@
+module fujitsu-optical-tributary-signal {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:interface:otsi";
+  prefix otsi;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+  import fujitsu-state-timer {
+    prefix st;
+  }
+  import fujitsu-entity-states {
+    prefix entity-states;
+  }
+  import fujitsu-if-type {
+    prefix fjift;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains YANG definitions 
+     for the Optical Transport Interfaces.
+     
+     Copyright (c) 2015 Fujitsu Network Communications, inc.
+     All rights reserved. ";
+
+  revision 2018-09-19 {
+    description
+      "Added sdfec2 fec attribute.";
+  }
+  revision 2018-06-13 {
+    description
+      "Added sdfec5 and sdfec6 fec attributes.";
+  }
+  revision 2018-04-09 {
+    description
+      "Accomodating OtsiV2 attributes.";
+  }
+  revision 2016-10-17 {
+    description
+      "1. Added Frequency range for center-frequency and center-frequency-rx.
+       2. Renamed NLC Parameters";
+  }
+  revision 2015-04-10 {
+    description
+      "Initial revision.";
+  }
+
+  grouping otsi-attributes {
+    description
+      "Optical Tributary Signal attributes (OTSI)";
+    uses entity-states:oper-status;
+    uses entity-states:admin-status {
+      refine "admin-status" {
+        mandatory false;
+        default "down";
+      }
+    }
+    leaf act-laser {
+      type enumeration {
+        enum "normal" {
+          value 0;
+        }
+        enum "shutdown" {
+          value 1;
+        }
+        enum "none" {
+          value 2;
+        }
+      }
+    }
+    leaf center-frequency {
+      type decimal64 {
+        fraction-digits 5;
+        range "0 | 191.35000..196.10000" {
+          description
+            "Valid range 191.35000 - 196.10000.";
+        }
+      }
+      units "THz";
+      description
+        "Frequency of the transmit optical channel.";
+    }
+    leaf lambda {
+      type decimal64 {
+        fraction-digits 2;
+      }
+      units "nm";
+      description
+        "Lambda corresponding to transmit frequency.";
+    }
+    leaf center-frequency-rx {
+      type decimal64 {
+        fraction-digits 5;
+        range "0 | 191.35000..196.10000" {
+          description
+            "Valid range 191.35000 - 196.10000.";
+        }
+      }
+      units "THz";
+      description
+        "Frequency of the receive optical channel.";
+    }
+    leaf lambda-rx {
+      type decimal64 {
+        fraction-digits 2;
+      }
+      units "nm";
+      description
+        "Lambda corresponding to receive frequency.";
+    }
+    leaf circuit-id {
+      type string {
+        length "0..45";
+      }
+      description
+        "Circuit identifier/user label.";
+    }
+    leaf slot-width {
+      type decimal64 {
+        fraction-digits 2;
+      }
+      units "GHz";
+      description
+        "Channel slot width in GHz.";
+    }
+    leaf param-A {
+      type boolean;
+      description
+        "";
+    }
+    leaf param-B {
+      type boolean;
+      description
+        "";
+    }
+    leaf param-C {
+      type uint32;
+      description
+        "";
+    }
+    leaf param-D {
+      type uint32;
+      description
+        "";
+    }
+    leaf param-E {
+      type uint32;
+      description
+        "";
+    }
+    leaf param-F {
+      type uint32;
+      description
+        "";
+    }
+    leaf param-G {
+      type uint32;
+      description
+        "";
+    }
+    leaf param-H {
+      type uint32;
+      description
+        "";
+    }
+    leaf param-I {
+      type uint32;
+      description
+        "";
+    }
+    leaf param-J {
+      type decimal64 {
+        fraction-digits 4;
+      }
+      description
+        "";
+    }
+    leaf param-K {
+      type decimal64 {
+        fraction-digits 4;
+      }
+      description
+        "";
+    }
+    leaf param-L {
+      type decimal64 {
+        fraction-digits 4;
+      }
+      description
+        "";
+    }
+    leaf param-M {
+      type uint32;
+      description
+        "";
+    }
+  }
+
+  identity otucn-nw-rate-identity {
+    description
+      "A unique rate identification of the OTUCn.";
+  }
+
+  identity R600G {
+    base otucn-nw-rate-identity;
+    description
+      "Identity for 600G NW Rate.";
+  }
+
+  identity R500G {
+    base otucn-nw-rate-identity;
+    description
+      "Identity for 500G NW Rate.";
+  }
+
+  identity R400G {
+    base otucn-nw-rate-identity;
+    description
+      "Identity for 400G NW Rate.";
+  }
+
+  identity R300G {
+    base otucn-nw-rate-identity;
+    description
+      "Identity for 300G NW Rate.";
+  }
+
+  identity R200G {
+    base otucn-nw-rate-identity;
+    description
+      "Identity for 200G NW Rate.";
+  }
+
+  identity R100G {
+    base otucn-nw-rate-identity;
+    description
+      "Identity for 100G NW Rate.";
+  }
+
+  grouping otsiv2-attributes {
+    description
+      "Optical Tributary Signal V2 attributes (OTSIV2)";
+    leaf ais-pt {
+      type enumeration {
+        enum "ais-shutdown" {
+          value 1;
+        }
+        enum "ais-none" {
+          value 2;
+        }
+      }
+      description
+        "Alarm transfer setting for Alarm Indication Signal.";
+    }
+    leaf transmit-power {
+      type decimal64 {
+        fraction-digits 2;
+        range "-5.00..1.00";
+      }
+      units "dBm";
+      description
+        "Transmit power setting.";
+    }
+    leaf otsi-rate {
+      type identityref {
+        base otucn-nw-rate-identity;
+      }
+      description
+        "Network rate.";
+    }
+    leaf modulation-format {
+      type enumeration {
+        enum "bpsk" {
+          value 1;
+          description
+            "Binary phase-shift keying.";
+        }
+        enum "dc-dp-bpsk" {
+          value 2;
+          description
+            "DC dual-polarization binary phase-shift keying.";
+        }
+        enum "qpsk" {
+          value 3;
+          description
+            "Quadrature phase-shift keying.";
+        }
+        enum "dp-qpsk" {
+          value 4;
+          description
+            "Dual-polarization binary phase-shift keying.";
+        }
+        enum "qam16" {
+          value 5;
+          description
+            "Quadrature amplitude modulation 16.";
+        }
+        enum "dp-qam16" {
+          value 6;
+          description
+            "Dual-polarization quadrature amplitude modulation 16.";
+        }
+        enum "dp-qam32" {
+          value 7;
+          description
+            "Dual-polarization quadrature amplitude modulation 32.";
+        }
+        enum "dp-qam64" {
+          value 8;
+          description
+            "Dual-polarization quadrature amplitude modulation 64.";
+        }
+        enum "dc-dp-qam16" {
+          value 9;
+          description
+            "DC dual-polarization quadrature amplitude modulation 16.";
+        }
+        enum "qam8" {
+          value 10;
+          description
+            "Quadrature amplitude modulation 8.";
+        }
+        enum "dp-qam8" {
+          value 11;
+          description
+            "Dual-polarization quadrature amplitude modulation 8.";
+        }
+        enum "dc-dp-qam8" {
+          value 12;
+          description
+            "DC dual-polarization quadrature amplitude modulation 8.";
+        }
+        enum "8psk" {
+          value 13;
+          description
+            "Phase shift keying with 8 states.";
+        }
+        enum "8psk-2" {
+          value 14;
+          description
+            "Phase shift keying with 8 states - 2.";
+        }
+      }
+      description
+        "Modulation format.";
+    }
+    leaf fec {
+      type enumeration {
+        enum "hpdfec1" {
+          value 1;
+          description
+            "25% Soft Decision FEC.";
+        }
+        enum "hpdfec2" {
+          value 2;
+          description
+            "20% Soft Decision FEC.";
+        }
+        enum "sdfec3" {
+          value 3;
+          description
+            "Soft Decision FEC 3.";
+        }
+        enum "sdfec4" {
+          value 4;
+          description
+            "Soft Decision FEC 4.";
+        }
+        enum "sdfec5" {
+          value 5;
+          description
+            "Soft Decision FEC 5.";
+        }
+        enum "sdfec6" {
+          value 6;
+          description
+            "Soft Decision FEC 6.";
+        }
+        enum "sdfec2" {
+          value 7;
+          description
+            "Soft Decision FEC 2.";
+        }
+      }
+      description
+        "FEC mode.";
+    }
+    leaf roadm-type {
+      type enumeration {
+        enum "CD" {
+          value 1;
+          description
+            "Colourless Directionless  degree is applicable.";
+        }
+        enum "AWG" {
+          value 2;
+          description
+            "Arrayed Wave Guide/DIRECT degree is applicable.";
+        }
+      }
+      default "CD";
+      description
+        "Setting of ROADM type.";
+    }
+    leaf confmode-type {
+      type enumeration {
+        enum "100GONLY" {
+          value 1;
+          description
+            "100GONLY if the ROADM systems degree, to which this PIU is connected, carries only 100G wavelengths.";
+        }
+        enum "10GMIX" {
+          value 2;
+          description
+            "10GMIX if the ROADM systems degree, to which this PIU is connected, carries 10G wavelengths along with 100G wavelengths.";
+        }
+      }
+      default "100GONLY";
+      description
+        "Config Mode is a setting to get the best optical reach.";
+    }
+    leaf nyquist {
+      type enumeration {
+        enum "ON" {
+          value 1;
+        }
+        enum "OFF" {
+          value 2;
+        }
+      }
+      description
+        "Current status of Nyquist filter mode.";
+    }
+    leaf direction {
+      type enumeration {
+        enum "uni-rx" {
+          value 1;
+          description
+            "Unidirectional receive only.";
+        }
+        enum "uni-tx" {
+          value 2;
+          description
+            "Unidirectional transmit only.";
+        }
+        enum "bi" {
+          value 3;
+          description
+            "Bidirectional.";
+        }
+      }
+      description
+        "Otsi Direction.";
+    }
+  }
+
+  augment "/if:interfaces/if:interface" {
+    container otsi {
+      when "(../if:type = 'fjift:fujitsuOtsi') or (../if:type = 'fjift:fujitsuOtsiV2')";
+      presence "Attribute Nodes for Optical Transport Signal (otsi)";
+      description
+        "Optical Tributary Signal attributes (OTSI) Models the optical channel interfaces for an Optical White Box.
+         Otsi Types:
+         fujitsuOtsi    - expected supporting entity is otsig
+         fujitsuOtsiV2  - expected supporting entity is port.
+        ";
+      uses st:state-timer {
+        refine "actual-vstimer" {
+          config false;
+        }
+      }
+      uses otsi-attributes {
+        refine "oper-status" {
+          config false;
+        }
+        refine "lambda" {
+          config false;
+        }
+        refine "lambda-rx" {
+          config false;
+        }
+        refine "act-laser" {
+          config false;
+        }
+      }
+      uses otsiv2-attributes {
+        refine "nyquist" {
+          config false;
+        }
+      }
+    }
+  }
+  notification otsi-notif {
+    leaf name {
+      type leafref {
+        path "/if:interfaces/if:interface/if:name";
+      }
+      description
+        "Otsi interface name for Notifications.";
+    }
+    container otsi {
+      uses st:state-timer;
+      uses otsi-attributes;
+      uses otsiv2-attributes;
+    }
+  }
+}

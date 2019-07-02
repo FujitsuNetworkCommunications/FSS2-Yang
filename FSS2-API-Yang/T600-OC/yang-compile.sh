@@ -14,7 +14,7 @@ set -xe
 product=T600-OC
 product_dir=FSS2-API-Yang/${product}
 # append product version to versions
-versions="1.1"
+versions="1.1 1.2"
 
 yang_compile() {
     yang_dir=$1

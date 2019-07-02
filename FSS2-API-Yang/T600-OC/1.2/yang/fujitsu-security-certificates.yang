@@ -1,0 +1,177 @@
+module fujitsu-security-certificates {
+  namespace "urn:fujitsu:params:xml:ns:yang:security-certificates";
+  prefix secuCert;
+
+  import fujitsu-user-security {
+    prefix secu;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains definitions of security certificates.
+     Copyright (c) 2016 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2018-08-30 {
+    description
+      "Changed the description of certificate-id-type.";
+  }
+  revision 2018-05-14 {
+    description
+      "Added typedef certificate-id-type and ca-name-type.
+       Added description for ca-certificate-id.";
+  }
+  revision 2018-04-17 {
+    description
+      "Added rpc reinstall-ca-certificate for GNMI.";
+  }
+  revision 2018-04-06 {
+    description
+      "ca-profile list added for GNMI.";
+  }
+
+  typedef certificate-id-type {
+    type string {
+      length "3..250";
+      pattern "(([a-zA-Z]([a-zA-Z0-9_.-]*)([a-zA-Z0-9])))" {
+        error-message
+          "The certificate-id must start with an alphabet and
+           end with a letter or digit. Interior characters are only
+           alphabets, digits, minus, underscore and dot. It
+           should not end as .pem and should not be the keyword 'default'.";
+      }
+    }
+    description
+      "<certificate-id> must start with an alphabet and
+       end with a letter or digit. Interior characters are only
+       alphabets, digits, minus, underscore and dot. It
+       should not end as .pem and should not be the keyword 'default'.";
+  }
+
+  typedef ca-name-type {
+    type string {
+      length "3..250";
+      pattern "(([a-zA-Z]([a-zA-Z0-9_.-]*)([a-zA-Z0-9])))" {
+        error-message
+          "The ca-name must start with a letter and
+           end with a letter or digit. Interior characters are only
+           alphabets, digits, minus, underscore and dot. It
+           should not end as .crt";
+      }
+    }
+    description
+      "<ca-name> must start with a letter and
+       end with a letter or digit. Interior characters are only
+       alphabets, digits, minus, underscore and dot. It
+       should not end as .crt";
+  }
+
+  augment "/secu:security" {
+    list certificates {
+      description
+        "A list of certificates for this system.";
+      key "certificate-id";
+      max-elements "20";
+      leaf certificate-id {
+        type certificate-id-type;
+      }
+      leaf file-path {
+        type string;
+        mandatory true;
+        description
+          "The complete path to the .pem formatted certificate";
+      }
+      leaf information {
+        type string;
+        config false;
+        description
+          "information about the <cert-id>";
+      }
+    }
+    list ca-profile {
+      description
+        "A list of certificate authority profiles for this system.";
+      key "ca-name";
+      max-elements "20";
+      leaf ca-name {
+        type ca-name-type;
+      }
+      leaf ca-certificate-id {
+        type leafref {
+          path "/secu:security/secuCert:ca-profile/ca-name";
+        }
+        mandatory true;
+        description
+          "<ca-certificate-id> should be same as ca-name.";
+      }
+      leaf file-path {
+        type string;
+        mandatory true;
+        description
+          "The complete path to the .crt formatted certificate";
+      }
+      leaf information {
+        type string;
+        config false;
+        description
+          "information about the <ca-cert-id>";
+      }
+    }
+    container system-generated-certificate {
+      leaf information {
+        type string;
+        config false;
+        description
+          "information about the system-generated-certificate";
+      }
+    }
+  }
+  rpc reinstall-certificate {
+    description
+      "Reinstall the certificate.";
+    input {
+      leaf certificate-id {
+        type leafref {
+          path "/secu:security/secuCert:certificates/secuCert:certificate-id";
+        }
+        mandatory true;
+        description
+          "ID of the certificate from security table";
+      }
+    }
+    output {
+      leaf status {
+        type string;
+      }
+    }
+  }
+  rpc reinstall-ca-certificate {
+    description
+      "Reinstall the ca-certificate.";
+    input {
+      leaf ca-certificate-id {
+        type leafref {
+          path "/secu:security/secuCert:ca-profile/secuCert:ca-certificate-id";
+        }
+        mandatory true;
+        description
+          "ID of the ca-certificate from security table";
+      }
+    }
+    output {
+      leaf status {
+        type string;
+      }
+    }
+  }
+}

@@ -1,0 +1,51 @@
+module fujitsu-oc-terminal-device-maps {
+  namespace "urn:fujitsu:params:xml:ns:yang:fj-oc-opt-term-maps";
+  prefix fj-oc-opt-term-maps;
+
+  import openconfig-terminal-device-shadow {
+    prefix oc-opt-term-shadow;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "YANG definitions for mapping openconfig terminal device optical channel key index
+     to Fujitsu interface key name.
+     
+     Copyright (c) 2018 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2018-08-29 {
+    description
+      "Augmented terminal device logical channel with leaf aid
+       which maps to Fujitsu interface name";
+  }
+
+  augment "/oc-opt-term-shadow:terminal-device/oc-opt-term-shadow:logical-channels/oc-opt-term-shadow:channel" {
+    leaf aid {
+      type string;
+      description
+        "AID string that maps to Fujitsu API interface name";
+    }
+  }
+  augment "/oc-opt-term-shadow:terminal-device/oc-opt-term-shadow:logical-channels" {
+    leaf aid-map-complete {
+      type boolean;
+      default "true";
+      description
+        "Flag to indicate no AID map generation pending in transform";
+      must "current() = 'true'" {
+        error-message "Invalid logical channel association, check logical-channel-assignments or ingress!";
+      }
+    }
+  }
+}

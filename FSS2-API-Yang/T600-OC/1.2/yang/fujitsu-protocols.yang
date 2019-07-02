@@ -1,0 +1,81 @@
+module fujitsu-protocols {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:protocols";
+  prefix fjproto;
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains YANG definitions 
+     for protocols involved.
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2016-04-01 {
+    description
+      "Initial revision.";
+  }
+  revision 2018-06-07 {
+    description
+      "Protocol-name typedef to enum for auto-permitted protocols list.";
+  }
+
+  identity protocol-type {
+    description
+      "Base identity from which specific protocol types are
+       derived.";
+  }
+
+  container protocols {
+    description
+      "configuration of protocols instances. ";
+    list protocol {
+      key "name";
+      description
+        "Protocol instance";
+      leaf name {
+        type string;
+        description
+          "Name of the protocol instance";
+      }
+      leaf type {
+        type identityref {
+          base protocol-type;
+        }
+        mandatory true;
+        description
+          "The type of the protocol like NAT,LLDP etc.";
+      }
+    }
+  }
+
+  typedef auto-permitted-protocol {
+    type enumeration {
+      enum "icmp" {
+        value 1;
+        description
+          "ICMP protocol";
+      }
+      enum "ospf" {
+        value 2;
+        description
+          "Ospf Protocol";
+      }
+      enum "dhcp" {
+        value 3;
+        description
+          "Dhcp protocol";
+      }
+    }
+  }
+}

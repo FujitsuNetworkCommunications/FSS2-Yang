@@ -1,0 +1,455 @@
+module fujitsu-otn-odu-interfaces-dev.prod {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:interface:odu-deviation";
+  prefix odu-deviation;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+  import fujitsu-otn-odu-interfaces {
+    prefix odu;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains YANG deviations
+     for the ODU Interfaces for T3x0.
+     
+     Copyright (c) 2015 Fujitsu Network Communications, inc.
+     All rights reserved. ";
+
+  revision 2019-02-28 {
+    description
+      "Removed deviation for pm-th-metered";
+  }
+  revision 2019-01-31 {
+    description
+      "Removed default value setting of tcm monitoring mode";
+  }
+  revision 2018-12-10 {
+    description
+      "enum values corrected for TCM tim-det-mode and default value added for TCM tim-act-enabled";
+  }
+  revision 2018-11-29 {
+    description
+      "enum values corrected for tim-det-mode and not-supported deviation removed for tim-act-enabled";
+  }
+  revision 2018-10-29 {
+    description
+      "config property is included in deviate replace instead of deviate add";
+  }
+  revision 2018-08-13 {
+    description
+      "Supporting F200 attributes - oduflex-rate, auto-rx, auto-tx, tx-tti/rx-tti/exp-tti op-spec, parent-odu-allocation";
+  }
+  revision 2018-07-17 {
+    description
+      "New attribute Tim-act-enabled default and not-supported for TCM.";
+  }
+  revision 2018-04-20 {
+    description
+      "OLEAF attribute oduflex-rate masking in Tseries";
+  }
+  revision 2017-10-05 {
+    description
+      "OLEAF attributes masking in Tseries";
+  }
+  revision 2017-05-29 {
+    description
+      "AINS,vstimer and ACTVST are supported";
+  }
+  revision 2017-05-22 {
+    description
+      " removing actual-vstimer";
+  }
+  revision 2017-04-17 {
+    description
+      "Enabling fac and term testsignal for T3x0";
+  }
+  revision 2017-02-16 {
+    description
+      "pm-value does not supports decimal values for interfaces";
+  }
+  revision 2016-12-01 {
+    description
+      "Modified the default value and precondition for exp-payload-type,";
+  }
+  revision 2016-11-12 {
+    description
+      "Modified the default value for exp-payload-type";
+  }
+  revision 2016-10-25 {
+    description
+      "Adding default values for
+       monitoring-mode,exp-payload-type,payload-typ";
+  }
+  revision 2016-10-13 {
+    description
+      "MSI supported so removed deviate not supported";
+  }
+  revision 2016-09-19 {
+    description
+      "added restriction for rx-tti (op-spec)
+       added default for tx-clock-source";
+  }
+  revision 2016-09-12 {
+    description
+      "added restriction for tti-ansi, tim-det-mode  and op-spec (exp-tti and tx-tti) for tcm";
+  }
+  revision 2016-09-07 {
+    description
+      "removed monitoring mode default, handled in hook";
+  }
+  revision 2016-09-02 {
+    description
+      "Removed defaults - handled in hook";
+  }
+  revision 2016-09-01 {
+    description
+      "added restriction for tti-ansi, tim-det-mode  and op-spec (exp-tti and tx-tti)";
+  }
+  revision 2016-07-27 {
+    description
+      "Changes to support Testsignal.";
+  }
+  revision 2015-08-13 {
+    description
+      "Initial revision.";
+  }
+
+  identity ODU4 {
+    base odu:odu-rate-identity;
+    description
+      "Identity for an ODU4";
+  }
+
+  identity ODU2 {
+    base odu:odu-rate-identity;
+    description
+      "Identity for an ODU2";
+  }
+
+  identity ODU2e {
+    base odu:odu-rate-identity;
+    description
+      "Identity for an ODU2e";
+  }
+
+  deviation "/if:interfaces/if:interface/odu:odu/odu:tx-clock-source" {
+    deviate replace {
+      config false;
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:direction" {
+    deviate replace {
+      config false;
+    }
+    deviate add {
+      default "bi";
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:circuit-id" {
+    deviate add {
+      default "";
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:auto-rx" {
+    deviate add {
+      default "false";
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:auto-tx" {
+    deviate add {
+      default "false";
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:tcm/odu:auto-rx" {
+    deviate add {
+      default "false";
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:tcm/odu:auto-tx" {
+    deviate add {
+      default "false";
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:monitoring-mode" {
+    deviate add {
+      default "not-terminated";
+    }
+  }
+  deviation "/if:interfaces/if:interface/if:enabled" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/if:link-up-down-trap-enable" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:actual-vstimer" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:tx-ftfl" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:rx-ftfl" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:tcm/odu:extension" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:tcm/odu:degthr" {
+    description
+      "DEGTHR:Degraded defect one-second Errored Block Count threshold
+       DEGTHR specifies the exponent part X of 10^X [%] ranging -3 to +2.";
+    deviate replace {
+      type int16 {
+        range "-3..2";
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:tcm/odu:proactive-DM" {
+    deviate add {
+      default "false";
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:tcm/odu:ltc-act-enabled" {
+    deviate add {
+      default "false";
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:opu/odu:payload-type" {
+    deviate replace {
+      type string {
+        length "2";
+        pattern "[0-9a-fA-F]*|NA";
+      }
+    }
+    deviate add {
+      default "NA";
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:opu/odu:exp-payload-type" {
+    deviate replace {
+      type string {
+        length "2";
+        pattern "[0-9a-fA-F]*|NA";
+      }
+    }
+    deviate add {
+      default "NA";
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:list-gcc" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:ais-pt" {
+    deviate add {
+      default "ais";
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:proactive-DM" {
+    deviate add {
+      default "false";
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:gcc0-pass-through" {
+    deviate add {
+      default "false";
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:degthr" {
+    description
+      "DEGTHR:Degraded defect one-second Errored Block Count threshold
+       DEGTHR specifies the exponent part X of 10^X [%] ranging -3 to +2.";
+    deviate replace {
+      type int16 {
+        range "-3..2";
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:testPattern" {
+    deviate replace {
+      type enumeration {
+        enum "PRBS31" {
+          value 1;
+          description
+            "PRBS31 with standard mapping per G.709";
+        }
+      }
+    }
+    deviate add {
+      default "PRBS31";
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:pm/odu:pm-threshold/odu:pm-type" {
+    deviate replace {
+      type enumeration {
+        enum "metered" {
+          value 1;
+          description
+            "Metered PM type";
+        }
+        enum "binned" {
+          value 2;
+          description
+            "Binned PM type";
+        }
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:pm/odu:pm-threshold/odu:pm-th-binned/odu:pm-time-periods/odu:pm-time-period" {
+    deviate replace {
+      type enumeration {
+        enum "15-min" {
+          value 1;
+          description
+            "15 minutes period";
+        }
+        enum "1-day" {
+          value 2;
+          description
+            "1 day period";
+        }
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:tcm/odu:pm/odu:pm-threshold/odu:pm-type" {
+    deviate replace {
+      type enumeration {
+        enum "metered" {
+          value 1;
+          description
+            "Metered PM type";
+        }
+        enum "binned" {
+          value 2;
+          description
+            "Binned PM type";
+        }
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:tcm/odu:pm/odu:pm-threshold/odu:pm-th-binned/odu:pm-time-periods/odu:pm-time-period" {
+    deviate replace {
+      type enumeration {
+        enum "15-min" {
+          value 1;
+          description
+            "15 minutes period";
+        }
+        enum "1-day" {
+          value 2;
+          description
+            "1 day period";
+        }
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:standard/odu:itu/odu:tti-itu/odu:tim-act-enabled" {
+    deviate add {
+      default "false";
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:tcm/odu:standard/odu:itu/odu:tti-itu/odu:tim-act-enabled" {
+    deviate add {
+      default "false";
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:standard/odu:itu/odu:tti-itu/odu:tim-det-mode" {
+    deviate replace {
+      type enumeration {
+        enum "off" {
+          value 0;
+          description
+            "TIM detection off";
+        }
+        enum "sapi-only" {
+          value 1;
+          description
+            "TIM detection sapi only";
+        }
+        enum "dapi-only" {
+          value 2;
+          description
+            "TIM detection dapi only";
+        }
+        enum "op-spec-only" {
+          value 3;
+          description
+            "TIM detection op-spec only";
+        }
+        enum "sapi-and-dapi" {
+          value 4;
+          description
+            "TIM detection sapi and dapi";
+        }
+        enum "all" {
+          value 7;
+          description
+            "TIM detection all";
+        }
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:tcm/odu:standard/odu:itu/odu:tti-itu/odu:tim-det-mode" {
+    deviate replace {
+      type enumeration {
+        enum "off" {
+          value 0;
+          description
+            "TIM detection off";
+        }
+        enum "sapi-only" {
+          value 1;
+          description
+            "TIM detection sapi only";
+        }
+        enum "dapi-only" {
+          value 2;
+          description
+            "TIM detection dapi only";
+        }
+        enum "op-spec-only" {
+          value 3;
+          description
+            "TIM detection op-spec only";
+        }
+        enum "sapi-and-dapi" {
+          value 4;
+          description
+            "TIM detection sapi and dapi";
+        }
+        enum "all" {
+          value 7;
+          description
+            "TIM detection all";
+        }
+      }
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:pm/odu:pm-threshold/odu:pm-th-binned/odu:pm-time-periods/odu:pm-value" {
+    deviate replace {
+      type uint64;
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:tcm/odu:pm/odu:pm-threshold/odu:pm-th-binned/odu:pm-time-periods/odu:pm-value" {
+    deviate replace {
+      type uint64;
+    }
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:standard/odu:ansi/odu:tti-ansi" {
+    deviate not-supported;
+  }
+  deviation "/if:interfaces/if:interface/odu:odu/odu:tcm/odu:standard/odu:ansi/odu:tti-ansi" {
+    deviate not-supported;
+  }
+}

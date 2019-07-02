@@ -1,0 +1,138 @@
+module openconfig-terminal-device-dev {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:openconfig-terminal-device-dev";
+  prefix oc-opt-term-dev;
+
+  import openconfig-platform {
+    prefix oc-platform;
+  }
+  import openconfig-terminal-device {
+    prefix oc-opt-term;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains YANG annotations for OpenConfig terminal devices.
+     Copyright (c) 2018 Fujitsu Ltd.
+     All rights reserved.";
+
+  revision 2018-09-10 {
+    description
+      "Making Transceiver unique across different channels";
+  }
+  revision 2018-07-06 {
+    description
+      "Specify not-supported attribute for terminal-device operational mode.";
+  }
+  revision 2018-06-22 {
+    description
+      "Specify not-supported attributes.";
+  }
+  revision 2018-06-18 {
+    description
+      "Initial revision.";
+  }
+
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:otn/oc-opt-term:state/oc-opt-term:rdi-msg" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:otn/oc-opt-term:state/oc-opt-term:code-violations" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:otn/oc-opt-term:state/oc-opt-term:fec-uncorrectable-words" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:otn/oc-opt-term:state/oc-opt-term:fec-corrected-bytes" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:otn/oc-opt-term:state/oc-opt-term:pre-fec-ber/oc-opt-term:avg" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:otn/oc-opt-term:state/oc-opt-term:pre-fec-ber/oc-opt-term:min" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:otn/oc-opt-term:state/oc-opt-term:pre-fec-ber/oc-opt-term:max" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:otn/oc-opt-term:state/oc-opt-term:post-fec-ber" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:otn/oc-opt-term:state/oc-opt-term:q-value" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:otn/oc-opt-term:state/oc-opt-term:esnr" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:ethernet/oc-opt-term:state/oc-opt-term:in-mac-control-frames" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:ethernet/oc-opt-term:state/oc-opt-term:in-mac-pause-frames" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:ethernet/oc-opt-term:state/oc-opt-term:in-8021q-frames" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:ethernet/oc-opt-term:state/oc-opt-term:out-mac-control-frames" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:ethernet/oc-opt-term:state/oc-opt-term:out-mac-pause-frames" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:ethernet/oc-opt-term:state/oc-opt-term:out-8021q-frames" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:ingress/oc-opt-term:config/oc-opt-term:physical-channel" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:ingress/oc-opt-term:state/oc-opt-term:physical-channel" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:logical-channel-assignments/oc-opt-term:assignment/oc-opt-term:config/oc-opt-term:allocation" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:logical-channel-assignments/oc-opt-term:assignment/oc-opt-term:state/oc-opt-term:allocation" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:operational-modes/oc-opt-term:mode/oc-opt-term:config" {
+    deviate not-supported;
+  }
+  deviation "/oc-platform:components/oc-platform:component/oc-opt-term:optical-channel/oc-opt-term:config/oc-opt-term:line-port" {
+    deviate not-supported;
+  }
+  deviation "/oc-platform:components/oc-platform:component/oc-opt-term:optical-channel/oc-opt-term:state/oc-opt-term:line-port" {
+    deviate not-supported;
+  }
+  deviation "/oc-platform:components/oc-platform:component/oc-opt-term:optical-channel/oc-opt-term:state/oc-opt-term:group-id" {
+    deviate not-supported;
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:config/oc-opt-term:trib-protocol" {
+    deviate add {
+      mandatory true;
+    }
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:config/oc-opt-term:rate-class" {
+    deviate add {
+      mandatory true;
+    }
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel/oc-opt-term:config/oc-opt-term:logical-channel-type" {
+    deviate add {
+      mandatory true;
+    }
+  }
+  deviation "/oc-opt-term:terminal-device/oc-opt-term:logical-channels/oc-opt-term:channel" {
+    deviate add {
+      unique "oc-opt-term:ingress/oc-opt-term:config/oc-opt-term:transceiver";
+    }
+  }
+}

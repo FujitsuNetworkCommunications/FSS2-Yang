@@ -1,0 +1,59 @@
+module openconfig-platform-dev {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:platform-dev";
+  prefix oc-platform-dev;
+
+  import openconfig-platform {
+    prefix oc-platform;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains YANG deviations for OpenConfig platform components.
+     Copyright (c) 2018 Fujitsu Ltd.
+     All rights reserved.";
+
+  revision 2018-10-10 {
+    description
+      "Added the deviations for chassis, port/state and cpu/state.";
+  }
+  revision 2018-06-19 {
+    description
+      "Initial revision.";
+  }
+
+  deviation "/oc-platform:components/oc-platform:component/oc-platform:properties" {
+    deviate not-supported;
+  }
+  deviation "/oc-platform:components/oc-platform:component/oc-platform:fabric" {
+    deviate not-supported;
+  }
+  deviation "/oc-platform:components/oc-platform:component/oc-platform:storage" {
+    deviate not-supported;
+  }
+  deviation "/oc-platform:components/oc-platform:component/oc-platform:integrated-circuit" {
+    deviate not-supported;
+  }
+  deviation "/oc-platform:components/oc-platform:component/oc-platform:backplane" {
+    deviate not-supported;
+  }
+  deviation "/oc-platform:components/oc-platform:component/oc-platform:chassis" {
+    deviate not-supported;
+  }
+  deviation "/oc-platform:components/oc-platform:component/oc-platform:port/oc-platform:state" {
+    deviate not-supported;
+  }
+  deviation "/oc-platform:components/oc-platform:component/oc-platform:cpu/oc-platform:state" {
+    deviate not-supported;
+  }
+}

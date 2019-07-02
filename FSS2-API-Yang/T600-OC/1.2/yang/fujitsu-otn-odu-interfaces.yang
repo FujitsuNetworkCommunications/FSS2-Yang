@@ -1,0 +1,984 @@
+module fujitsu-otn-odu-interfaces {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:interface:odu";
+  prefix odu;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+  import fujitsu-entity-states {
+    prefix entity-states;
+  }
+  import fujitsu-entity-maintenance-testsignal {
+    prefix fujitsu-testsignal;
+  }
+  import fujitsu-gcc {
+    prefix fujitsuGcc;
+  }
+  import fujitsu-otn {
+    prefix otn;
+  }
+  import fujitsu-performance-monitoring-typedefs {
+    prefix pmtypedefs;
+  }
+  import fujitsu-ains-keywords {
+    prefix ains;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains YANG definitions 
+     for the ODU Interfaces of
+     an Optical White Box (OWB).
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2018-02-02 {
+    description
+      "Adding TCM list to keep track of ALL Associated TCM from HO and LO ODU";
+  }
+  revision 2018-01-24 {
+    description
+      "Added new values for CBR service";
+  }
+  revision 2018-01-09 {
+    description
+      "Added BDI Cross Coupling ID";
+  }
+  revision 2017-12-13 {
+    description
+      "gfpnumts/cbrservice mandatory";
+  }
+  revision 2017-12-08 {
+    description
+      "Added hidden nodes for ts/tpn validation";
+  }
+  revision 2017-10-31 {
+    description
+      "Changed trib-port to uint16 type";
+  }
+  revision 2017-10-18 {
+    description
+      "Removed leafref for pg-name and XCON name";
+  }
+  revision 2017-10-11 {
+    description
+      "Modified SNCP hidden nodes and added XCON hidden nodes";
+  }
+  revision 2017-10-03 {
+    description
+      "Hidden Nodes for SNCP and Xcon";
+  }
+  revision 2017-09-22 {
+    description
+      "compilation fix and cbr names changed";
+  }
+  revision 2017-09-20 {
+    description
+      "Removed the Odu-function attribute";
+  }
+  revision 2017-09-07 {
+    description
+      "oleaf related attributes";
+  }
+  revision 2017-07-17 {
+    description
+      "Added parent-odu-allocation for odu container.
+       Grouping parent-odu-allocation attributes only
+       for easy reuse by other module like smr";
+  }
+  revision 2017-05-02 {
+    description
+      " Added AINS for odu container";
+  }
+  revision 2016-10-14 {
+    description
+      "Removed range from degthr description string";
+  }
+  revision 2016-10-10 {
+    description
+      "Removed when condition from opu container";
+  }
+  revision 2016-07-22 {
+    description
+      "pm thershold configure support.";
+  }
+  revision 2015-08-13 {
+    description
+      "Initial revision.";
+  }
+
+  feature bdi-cross-coupling {
+    description
+      "This feature iss used for activating
+       BDI-Cross-Couplig";
+  }
+
+  identity odu-rate-identity {
+    description
+      "A unique rate identification of the ODUk.";
+  }
+
+  identity ODU4 {
+    base odu-rate-identity;
+    description
+      "Identity for an ODU4";
+  }
+
+  identity ODU3 {
+    base odu-rate-identity;
+    description
+      "Identity for an ODU3";
+  }
+
+  identity ODU2 {
+    base odu-rate-identity;
+    description
+      "Identity for an ODU2";
+  }
+
+  identity ODU2e {
+    base odu-rate-identity;
+    description
+      "Identity for an ODU2e";
+  }
+
+  identity ODU1 {
+    base odu-rate-identity;
+    description
+      "Identity for an ODU1";
+  }
+
+  identity ODU0 {
+    base odu-rate-identity;
+    description
+      "Identity for an ODU0";
+  }
+
+  identity ODUflexCBR {
+    base odu-rate-identity;
+    description
+      "Identity for an ODUflex CBR";
+  }
+
+  identity ODUflexGFP {
+    base odu-rate-identity;
+    description
+      "Identity for an ODUflexGFP";
+  }
+
+  identity ODUflex {
+    base odu-rate-identity;
+    description
+      "Identity for an ODUflex";
+  }
+
+  identity odu-cbr-identity {
+    description
+      "A unique cbr identification of the ODUk.";
+  }
+
+  identity CBR-IBSDR {
+    base odu-cbr-identity;
+    description
+      "Identity for CBR-IBSDR";
+  }
+
+  identity CBR-IBDDR {
+    base odu-cbr-identity;
+    description
+      "Identity for CBR-IBDDR";
+  }
+
+  identity CBR-IBQDR {
+    base odu-cbr-identity;
+    description
+      "Identity for CBR-IBQDR";
+  }
+
+  identity CBR-FC400 {
+    base odu-cbr-identity;
+    description
+      "Identity for CBR-FC400";
+  }
+
+  identity CBR-FC800 {
+    base odu-cbr-identity;
+    description
+      "Identity for CBR-FC800";
+  }
+
+  identity CBR-3GSDI {
+    base odu-cbr-identity;
+    description
+      "Identity for CBR-3GSDI";
+  }
+
+  identity CBR-3GSDI1 {
+    base odu-cbr-identity;
+    description
+      "Identity for CBR-3GSDI1";
+  }
+
+  identity CBR-CPRI4 {
+    base odu-cbr-identity;
+    description
+      "Identity for CBR-CPRI4";
+  }
+
+  identity CBR-CPRI5 {
+    base odu-cbr-identity;
+    description
+      "Identity for CBR-CPRI5";
+  }
+
+  identity CBR-CPRI6 {
+    base odu-cbr-identity;
+    description
+      "Identity for CBR-CPRI6";
+  }
+
+  identity CBR-FC1600 {
+    base odu-cbr-identity;
+    description
+      "Identity for CBR-FC1600";
+  }
+
+  identity CBR-FC3200 {
+    base odu-cbr-identity;
+    description
+      "Identity for CBR-FC3200";
+  }
+
+  identity odtu-type-identity {
+    description
+      "A unique identification for the MSI odtu type.";
+  }
+
+  identity ODTU4.ts-Allocated {
+    base odtu-type-identity;
+    description
+      "OPU4 MSI - ODTU4.ts, TS is occupied/allocated";
+  }
+
+  identity ODTU01 {
+    base odtu-type-identity;
+    description
+      "ODTU01 MSI type";
+  }
+
+  identity ODTU12 {
+    base odtu-type-identity;
+    description
+      "ODTU12 MSI type";
+  }
+
+  identity ODTU13 {
+    base odtu-type-identity;
+    description
+      "ODTU13 MSI type";
+  }
+
+  identity ODTU23 {
+    base odtu-type-identity;
+    description
+      "ODTU23 MSI type";
+  }
+
+  identity ODTU2.ts {
+    base odtu-type-identity;
+    description
+      "ODTU2.ts MSI type";
+  }
+
+  identity ODTU3.ts {
+    base odtu-type-identity;
+    description
+      "ODTU3.ts MSI type";
+  }
+
+  identity unallocated {
+    base odtu-type-identity;
+    description
+      "Unallocated MSI type";
+  }
+
+  identity otn-monitoring-layer-identity {
+    description
+      "An identification for OTN monitoring layer.";
+  }
+
+  identity otn-section-layer {
+    base otn-monitoring-layer-identity;
+    description
+      "Identity for section layer.";
+  }
+
+  identity otn-path-layer {
+    base otn-monitoring-layer-identity;
+    description
+      "Identity for path layer.";
+  }
+
+  identity otn-tandem-connection-layer-1 {
+    base otn-monitoring-layer-identity;
+    description
+      "Identity for tandem connection layer 1.";
+  }
+
+  identity otn-tandem-connection-layer-2 {
+    base otn-monitoring-layer-identity;
+    description
+      "Identity for tandem connection layer 2.";
+  }
+
+  identity otn-tandem-connection-layer-3 {
+    base otn-monitoring-layer-identity;
+    description
+      "Identity for tandem connection layer 3.";
+  }
+
+  identity otn-tandem-connection-layer-4 {
+    base otn-monitoring-layer-identity;
+    description
+      "Identity for tandem connection layer 4.";
+  }
+
+  identity otn-tandem-connection-layer-5 {
+    base otn-monitoring-layer-identity;
+    description
+      "Identity for tandem connection layer 5.";
+  }
+
+  identity otn-tandem-connection-layer-6 {
+    base otn-monitoring-layer-identity;
+    description
+      "Identity for tandem connection layer 6.";
+  }
+
+  grouping block-base-ber-threshold {
+    leaf degthr {
+      type int16 {
+        range "-9..2";
+      }
+      default "0";
+      description
+        "DEGTHR:Degraded defect one-second Errored Block Count threshold
+         DEGTHR specifies the exponent part X of 10^X [%].";
+    }
+    leaf degm {
+      type int8 {
+        range "2..10";
+      }
+      default "10";
+      description
+        "DEGM:Degraded defect consecutive one-second monitoring intervals";
+    }
+  }
+
+  grouping ftfl {
+    leaf fw-op-id {
+      type string {
+        length "0..9";
+      }
+      description
+        "Forward Operator Indentifier sub field of the backward and forward fields
+         in the FTFL message";
+    }
+    leaf fw-op-spec {
+      type string {
+        length "0..118";
+      }
+      description
+        "Forward Operator Specific sub field of the backward and forward fields
+         in the FTFL message";
+    }
+    leaf bw-op-id {
+      type string {
+        length "0..9";
+      }
+      description
+        "Backward Operator Indentifier sub field of the backward and forward fields
+         in the FTFL message";
+    }
+    leaf bw-op-spec {
+      type string {
+        length "0..118";
+      }
+      description
+        "Backward Operator Specific sub field of the backward and forward fields
+         in the FTFL message";
+    }
+  }
+
+  grouping ftfl-ft {
+    leaf fw-flt-typ {
+      type uint8 {
+        range "0..255";
+      }
+      description
+        "Forward Fault Type sub field of the backward and forward fields
+         in the FTFL message";
+    }
+    leaf bw-flt-typ {
+      type uint8 {
+        range "0..255";
+      }
+      description
+        "Backward Fault Type sub field of the backward and forward fields
+         in the FTFL message";
+    }
+  }
+
+  typedef trib-resource-type {
+    type uint16 {
+      range "1..80";
+    }
+  }
+
+  grouping msi-entry {
+    leaf trib-slot {
+      type uint16;
+      description
+        "tributary slot (TS)";
+    }
+    leaf odtu-type {
+      type identityref {
+        base odtu-type-identity;
+      }
+      description
+        "ODTU type, part of the MSI (Multiplex Structure Identifier)";
+    }
+    leaf trib-port {
+      type uint16;
+      description
+        "Tributary Port Number (0-based), part of the MSI";
+    }
+  }
+
+  grouping odu-attributes {
+    description
+      "ODU attributes";
+    leaf rate {
+      type identityref {
+        base odu-rate-identity;
+      }
+      description
+        "rate identity of the ODU. 'identityref' is used
+         to allow to extend for future higher rates";
+    }
+    leaf oduflexcbr-service {
+      when "../rate = 'odu:ODUflexCBR'";
+      type identityref {
+        base odu-cbr-identity;
+      }
+      mandatory true;
+      description
+        "cbr service identity of ODUflex. 'identityref' is used
+         to allow to extend";
+    }
+    leaf oduflex-gfp-num-ts {
+      when "../rate = 'odu:ODUflexGFP'";
+      type uint8 {
+        range "1..80";
+      }
+      mandatory true;
+      description
+        "No of timeslots allowed when ODUflex-gfp";
+    }
+    leaf oduflex-rate {
+      config false;
+      type decimal64 {
+        fraction-digits 3;
+      }
+      description
+        "ODUflex client rate";
+    }
+    uses entity-states:oper-status;
+    uses entity-states:admin-status {
+      refine "admin-status" {
+        mandatory false;
+        default "down";
+      }
+    }
+    leaf circuit-id {
+      type string {
+        length "0..45";
+      }
+      description
+        "circuit identifier/user label";
+    }
+    leaf direction {
+      type enumeration {
+        enum "uni-rx" {
+          value 0;
+          description
+            "unidirectional receive only";
+        }
+        enum "uni-tx" {
+          value 1;
+          description
+            "unidirectional transmit only";
+        }
+        enum "bi" {
+          value 2;
+          description
+            "bidirectional";
+        }
+      }
+      description
+        "direction of interface";
+    }
+    leaf tx-clock-source {
+      type enumeration {
+        enum "through" {
+          value 0;
+          description
+            "Timing is passed through";
+        }
+        enum "internal" {
+          value 1;
+          description
+            "Timed from freerunning internal oscillator";
+        }
+        enum "system" {
+          value 2;
+          description
+            "Timed from system active clock reference";
+        }
+      }
+      description
+        "Transmit Clock - Specifies souce of ODU transit timing";
+    }
+    leaf ais-pt {
+      type enumeration {
+        enum "ais" {
+          value 0;
+          description
+            "use AIS-ODU for escalation";
+        }
+        enum "csf" {
+          value 1;
+          description
+            "use CSF-OPU for escalation";
+        }
+      }
+      description
+        "alarm escalation setting";
+    }
+    container tx-ftfl {
+      uses ftfl;
+      description
+        "Transmit Fault Type Fault Location (FTFL)";
+    }
+    container rx-ftfl {
+      uses ftfl;
+      uses ftfl-ft;
+      description
+        "Receive Fault Type Fault Location (FTFL)";
+    }
+    leaf monitoring-mode {
+      type enumeration {
+        enum "not-terminated" {
+          description
+            "Not Terminated: no detection or generation.
+             Overhead is passed through the interface transparently in receive direction";
+        }
+        enum "terminated" {
+          description
+            "Terminated: detection and generation enabled.
+             Overhead is erased (replaced with all zeros) in receive direction";
+        }
+        enum "monitored" {
+          description
+            "Monitored: detection enabled.
+             Overhead is passed through the interface transparently in receive direction";
+        }
+      }
+      description
+        "Monitoring mode of the ODU Overhead";
+    }
+    leaf auto-rx {
+      type boolean;
+      description
+        "enable/disable generation of transient condition when
+         the value of the TTI changes.";
+    }
+    leaf auto-tx {
+      type boolean;
+      description
+        "enable/disable automatic population of outgoing TTI";
+    }
+    uses otn:tti-choice;
+    uses block-base-ber-threshold;
+    leaf proactive-DM {
+      type boolean;
+      description
+        "enable/disable proactive Delay Measurement";
+    }
+    leaf gcc0-pass-through {
+      type boolean;
+      description
+        "If this attribute is set to false, GCC0 bytes are terminated.
+         If set to true, GCC0 bytes are tunneled; if traffic is looped back
+         GCC0 bytes will also be looped back.";
+    }
+    list tcm {
+      key "layer tcm-direction";
+      uses tcm-attributes;
+      max-elements "6";
+      description
+        "Tandem Connection Management";
+      uses pmtypedefs:pm-info;
+    }
+    uses opu;
+    container parent-odu-allocation {
+      presence "Attributes for LO-ODU Allocation in its parent OPU";
+      uses parent-odu-allocation-attributes;
+    }
+    uses pmtypedefs:pm-info;
+    uses pg-attributes;
+    list allTcmList {
+      key "oduIfName tcmLayer tcmDirn";
+      leaf oduIfName {
+        type string;
+      }
+      leaf tcmLayer {
+        type uint8;
+      }
+      leaf tcmDirn {
+        type uint8;
+      }
+    }
+  }
+
+  grouping opu {
+    container opu {
+      description
+        "Optical Channel Payload Unit (OPU)";
+      leaf payload-type {
+        type string {
+          length "2";
+          pattern "[0-9a-fA-F]*";
+        }
+        description
+          "Payload Type";
+      }
+      leaf rx-payload-type {
+        type string {
+          length "2";
+          pattern "[0-9a-fA-F]*";
+        }
+        description
+          "Received Payload Type";
+      }
+      leaf exp-payload-type {
+        type string {
+          length "2";
+          pattern "[0-9a-fA-F]*";
+        }
+        description
+          "Expected Payload Type";
+      }
+      container msi {
+        when "../payload-type = '20' or ../payload-type = '21'";
+        list tx-msi {
+          key "trib-slot";
+          uses msi-entry;
+          description
+            "Transmit MSI";
+        }
+        list rx-msi {
+          key "trib-slot";
+          uses msi-entry;
+          description
+            "Receive MSI";
+        }
+        list exp-msi {
+          key "trib-slot";
+          uses msi-entry;
+          description
+            "Expected MSI";
+        }
+      }
+    }
+  }
+
+  grouping parent-odu-allocation-attributes {
+    description
+      "Allocation of the LO-ODU in its parent OPU";
+    leaf trib-port-number {
+      type trib-resource-type;
+      description
+        "Tributary port number in parent OPU MSI";
+      mandatory true;
+    }
+    leaf-list trib-slots {
+      min-elements 1;
+      max-elements "80";
+      type trib-resource-type;
+      description
+        "Trib slots occupied in parent OPU MSI";
+    }
+  }
+
+  grouping tcm-attributes {
+    description
+      "Tandem Connection Monitoring (TCM) attributes";
+    leaf layer {
+      type uint8 {
+        range "1..6";
+      }
+      description
+        "TCM layer";
+    }
+    leaf extension {
+      type enumeration {
+        enum "normal";
+        enum "erase";
+        enum "passthrough";
+      }
+      description
+        "TCM extension";
+    }
+    leaf monitoring-mode {
+      type enumeration {
+        enum "not-terminated" {
+          description
+            "Not Terminated: no detection or generation.
+             Overhead is passed through the interface transparently in receive direction 
+             unless extension is set for erase";
+        }
+        enum "terminated" {
+          description
+            "Terminated: detection and generation enabled.
+             Overhead is erased (replaced with all zeros) in receive direction, unless
+             extension is set to passthrough";
+        }
+        enum "monitored" {
+          description
+            "Monitored: detection enabled.
+             Overhead is passed through the interface transparently in receive direction 
+             unless extension is set for erase";
+        }
+      }
+      description
+        "Monitoring mode of the TCM layer";
+    }
+    leaf ltc-act-enabled {
+      type boolean;
+      description
+        "enable/disable alarm transfer on detection of LTC";
+    }
+    leaf auto-rx {
+      type boolean;
+      description
+        "enable/disable generation of transient condition when
+         the value of the TTI changes.";
+    }
+    leaf auto-tx {
+      type boolean;
+      description
+        "enable/disable automatic population of outgoing TTI";
+    }
+    uses otn:tti-choice;
+    uses block-base-ber-threshold;
+    leaf proactive-DM {
+      type boolean;
+      description
+        "enable/disable proactive Delay Measurement";
+    }
+    leaf tcm-direction {
+      type enumeration {
+        enum "up-tcm" {
+          description
+            "TCM termination direction faces the switch fabric.";
+        }
+        enum "down-tcm" {
+          description
+            "TCM termination direction faces the facility";
+        }
+      }
+      description
+        "Direction of TCM.";
+    }
+  }
+
+  grouping xcon-id {
+    description
+      "XCON ID Reference";
+    leaf xcon-name {
+      type string;
+    }
+  }
+
+  grouping pg-attributes {
+    description
+      "Hidden attributes for PG and XCON";
+    leaf lpg-name {
+      type string;
+      description
+        "SNCP Line PG Name";
+    }
+    leaf ppg-name {
+      type string;
+      description
+        "SNCP Path PG Name";
+    }
+    list from-xcon-name {
+      key "xcon-name";
+      uses xcon-id;
+    }
+    list to-xcon-name {
+      key "xcon-name";
+      uses xcon-id;
+    }
+    leaf-list trib-slots-hidden {
+      max-elements "80";
+      type trib-resource-type;
+      description
+        "Trib slots occupied in parent OPU MSIdden";
+    }
+    leaf-list trib-ports-hidden {
+      max-elements "80";
+      type trib-resource-type;
+      description
+        "Trib port occupied in parent OPU MSIdden";
+    }
+    leaf bdi-cross-coupling-id {
+      if-feature "bdi-cross-coupling";
+      type uint32;
+      description
+        "BDI Cross Coupling ID.";
+    }
+  }
+
+  augment "/if:interfaces/if:interface" {
+    container odu {
+      when "../if:type = 'ianaift:otnOdu'";
+      presence "Attribute Nodes for Optical Data Unit (ODU)";
+      description
+        "Optical Channel Data Unit (ODU)";
+      uses ains:ains-prov-keywords;
+      leaf actual-vstimer {
+        config false;
+        type string {
+          pattern "([0-4][0-8])-([0-5][0-9])";
+        }
+        description
+          "The amount of time a valid state timer has been running uninterrupted.
+           This timer is in the format <hh>-<mm>.";
+      }
+      uses fujitsu-testsignal:maint-testsignal;
+      uses odu-attributes {
+        refine "oper-status" {
+          config false;
+        }
+        refine "opu/rx-payload-type" {
+          config false;
+        }
+        refine "opu/msi/tx-msi" {
+          config false;
+        }
+        refine "opu/msi/rx-msi" {
+          config false;
+        }
+        refine "opu/msi/exp-msi" {
+          config false;
+        }
+        refine "rx-ftfl" {
+          config false;
+        }
+      }
+      list list-gcc {
+        key "gccType";
+        description
+          " List of GCCs (GCC1, GCC2, GCC12) ";
+        uses fujitsuGcc:gcc-group;
+      }
+    }
+  }
+  notification odu-notif {
+    leaf name {
+      type leafref {
+        path "/if:interfaces/if:interface/if:name";
+      }
+    }
+    container odu {
+      uses ains:ains-prov-keywords;
+      leaf actual-vstimer {
+        config false;
+        type string {
+          pattern "([0-4][0-8])-([0-5][0-9])";
+        }
+        description
+          "The amount of time a valid state timer has been running uninterrupted.
+           This timer is in the format <hh>-<mm>.";
+      }
+      uses odu-attributes;
+    }
+  }
+
+  grouping rpc-response-status {
+    leaf status {
+      type enumeration {
+        enum "Successful" {
+          value 1;
+        }
+        enum "Failed" {
+          value 2;
+        }
+        enum "In-progress" {
+          value 3;
+        }
+      }
+      mandatory true;
+      description
+        "Successful, Failed or In-progress";
+    }
+    leaf status-message {
+      type string;
+      description
+        "Gives a more detailed status.";
+    }
+  }
+
+  rpc operate-dm {
+    description
+      "on-demand delay measurement.";
+    input {
+      leaf name {
+        type leafref {
+          path "/if:interfaces/if:interface/if:name";
+        }
+        description
+          "interface name";
+      }
+      leaf layer-measured {
+        type identityref {
+          base otn-monitoring-layer-identity;
+        }
+        description
+          "target layer for measurement";
+      }
+    }
+    output {
+      leaf dm-value {
+        type uint32;
+        description
+          "response of command: measured delay value is responded.";
+      }
+    }
+  }
+}

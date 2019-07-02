@@ -1,0 +1,132 @@
+module fujitsu-dns-resolver {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:dnsresolver";
+  prefix dnsresolver;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module is used to control dns remove speciific user security defaults and systemwide
+     leafs based on security features that are not supported on a specific product. 
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved.
+     
+     The content of the this yang model was mostly taken from the
+     ietf-system.yang module, 
+     http://www.netconfcentral.org/modules/ietf-system
+     The copyright statement from this file is included here:
+     
+     Copyright (c) 2014 IETF Trust and the persons identified as
+     authors of the code.  All rights reserved.
+     
+     Redistribution and use in source and binary forms, with or
+     without modification, is permitted pursuant to, and subject
+     to the license terms contained in, the Simplified BSD License
+     set forth in Section 4.c of the IETF Trust's Legal Provisions
+     Relating to IETF Documents
+     (http://trustee.ietf.org/license-info).
+     
+     This version of this YANG module is part of RFC 7317; see
+     the RFC itself for full legal notices.";
+
+  revision 2015-08-26;
+
+  container dns-resolver {
+    description
+      "Configuration of the DNS resolver.";
+    leaf-list search {
+      type inet:domain-name;
+      ordered-by user;
+      description
+        "An ordered list of domains to search when resolving
+         a host name.";
+    }
+    list server {
+      key "name";
+      unique "address";
+      ordered-by user;
+      max-elements "2";
+      description
+        "List of the DNS servers that the resolver should query.
+         When the resolver is invoked by a calling application, it
+         sends the query to the first name server in this list.  If
+         no response has been received within 'timeout' seconds,
+           the resolver continues with the next server in the list.
+             If no response is received from any server, the resolver
+             continues with the first server again.  When the resolver
+             has traversed the list 'attempts' times without receiving
+             any response, it gives up and returns an error to the
+             calling application.
+             Implementations MAY limit the number of entries in this
+             list.";
+      leaf name {
+        type string;
+        description
+          "An arbitrary name for the DNS server.";
+      }
+      leaf address {
+        type inet:ip-address;
+        mandatory true;
+        description
+          "The address of the DNS server.";
+      }
+      leaf port {
+        type inet:port-number;
+        default "53";
+        description
+          "The UDP and TCP port number of the DNS server.";
+      }
+    }
+    container options {
+      description
+        "Resolver options.  The set of available options has been
+         limited to those that are generally available across
+         different resolver implementations and generally useful.";
+      leaf timeout {
+        type uint8 {
+          range "1..30";
+        }
+        units "seconds";
+        default "5";
+        description
+          "The amount of time the resolver will wait for a
+           response from each remote name server before
+           retrying the query via a different name server.";
+      }
+      leaf attempts {
+        type uint8 {
+          range "1..5";
+        }
+        default "2";
+        description
+          "The number of times the resolver will send a query to
+           all of its name servers before giving up and returning
+           an error to the calling application.";
+      }
+      leaf cache-age-timer {
+        type uint32 {
+          range "1..max";
+        }
+        units "seconds";
+        default "86400";
+        description
+          "The number of seconds (time to live/TTL) resolved entries
+           will live in the DNS cache. After timer expires, the cache
+           will auto-flush stale entries. Default is 24 hours.";
+      }
+    }
+  }
+}

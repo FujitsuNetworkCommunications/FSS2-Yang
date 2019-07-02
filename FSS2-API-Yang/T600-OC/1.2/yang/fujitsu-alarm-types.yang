@@ -1,0 +1,1587 @@
+module fujitsu-alarm-types {
+  namespace "urn:fujitsu:params:xml:ns:yang:alarms:alarm-types";
+  prefix al-types;
+
+  import ietf-alarms {
+    prefix al;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains supported alarm types.
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2019-03-29 {
+    description
+      "Added osnrModeMismatch alarm";
+  }
+  revision 2019-03-18 {
+    description
+      "Added swRepoIncomplete and redundantCfgSwRepoOutOfSync alarms";
+  }
+  revision 2019-03-08 {
+    description
+      "Added databaseOutOfSyncLockRemoved alarm";
+  }
+  revision 2019-02-14 {
+    description
+      "Added databaseLockedRedundantCfgDbOutOfSync alarm";
+  }
+  revision 2019-01-28 {
+    description
+      "Add Rasis Util Debug alarm";
+  }
+  revision 2018-08-02 {
+    description
+      "Added redundancyNotProvisioned alarm for redundancy";
+  }
+  revision 2018-06-01 {
+    description
+      "Added noProtectionSwitchPossible alarm for redundancy";
+  }
+  revision 2018-03-09 {
+    description
+      "Renamed identity names
+       automaticSwitchAwayFromWorkingDueToBDI 
+       to automaticSwitchAwayFromWorkingDueToBD
+       and automaticSwitchAwayFromProtectDueToBDI 
+       to automaticSwitchAwayFromProtectDueToBD";
+  }
+  revision 2018-02-24 {
+    description
+      "Added autoPowerReductionDra alarm for RAMAN";
+  }
+  revision 2018-01-29 {
+    description
+      "Added Y-cable specific alarms";
+  }
+  revision 2017-11-22 {
+    description
+      "Added OCH Provisioned TX Power Out of Device Range alarm";
+  }
+  revision 2017-11-16 {
+    description
+      "Added OLEAF Loss of Clock alarm";
+  }
+  revision 2017-11-14 {
+    description
+      "Added signal Degrade TCM alarms";
+  }
+  revision 2017-11-14 {
+    description
+      "Added Zero Touch Boot alarms";
+  }
+  revision 2017-11-03 {
+    description
+      "Added OLEAF SYNC alarm";
+  }
+  revision 2017-10-10 {
+    description
+      "Add Rasis Util alarm";
+  }
+  revision 2017-10-05 {
+    description
+      "Added the new OLEAF ETH alarms";
+  }
+  revision 2017-09-12 {
+    description
+      "Add a new database alarm";
+  }
+  revision 2017-07-27 {
+    description
+      "Addition of No Secondary Storage Alarm.";
+  }
+  revision 2017-07-21 {
+    description
+      "Added OTN SNCP and SMR alarms";
+  }
+  revision 2017-07-20 {
+    description
+      "Add defaultSysName alarm";
+  }
+  revision 2017-06-09 {
+    description
+      "Add channelPlanMismatch alarm";
+  }
+  revision 2017-05-04 {
+    description
+      "Add invalidUSB alarm";
+  }
+  revision 2017-04-21 {
+    description
+      "Add remoteApsd alarm";
+  }
+  revision 2017-04-11 {
+    description
+      " Support for new sdb alarms";
+  }
+  revision 2017-04-04 {
+    description
+      "Add intRSTPdisabled alarm";
+  }
+  revision 2017-04-01 {
+    description
+      "Renamed tlsSessionFailure to encryptionSessionFailureNN and
+        tlsHandshakeFailure to encryptionHandshakeFailure";
+  }
+  revision 2017-03-30 {
+    description
+      "Support for the STF (Encryption Self Test Failure)
+       and TSE (Traffic Squelched for Encryption) alarms
+       for the Data Encryption feature";
+  }
+  revision 2017-03-24 {
+    description
+      "Add GretFailure alarm";
+  }
+  revision 2017-03-23 {
+    description
+      "Support for bootloaderUpdateInProgress softwareStageFail
+       secondarySoftwareCorruption softwareSyncInProgress Alarms";
+  }
+  revision 2017-03-20 {
+    description
+      "Adding support for TLS session failure alarm
+       and TLS Session Handshake failure alarm";
+  }
+  revision 2017-02-24 {
+    description
+      "Adding support for EQPT FW Log Trigger Alarm";
+  }
+  revision 2017-02-22 {
+    description
+      "Addition of Encryption Frame Authentication Failure Alarm.";
+  }
+  revision 2017-02-06 {
+    description
+      "Adding support for EQPT Log Trigger Alarm";
+  }
+  revision 2016-09-28 {
+    description
+      "Addition of Total OPR POS Alarm.";
+  }
+  revision 2015-05-12 {
+    description
+      "Initial revision.";
+  }
+  revision 2016-11-03 {
+    description
+      "Addition of Total OCN Alarm.";
+  }
+  revision 2017-09-06 {
+    description
+      "Addition of TCM Alarm.";
+  }
+  revision 2018-05-03 {
+    description
+      "Addition of gnmi Certificate Alarms.";
+  }
+
+  identity equipmentFault {
+    base al:alarm-identity;
+  }
+
+  identity equipmentRemoved {
+    base al:alarm-identity;
+  }
+
+  identity equipmentMismatchAttributes {
+    base al:alarm-identity;
+  }
+
+  identity equipmentWarmup {
+    base al:alarm-identity;
+  }
+
+  identity equipmentLedOn {
+    base al:alarm-identity;
+  }
+
+  identity administrativeDown {
+    base al:alarm-identity;
+  }
+
+  identity administrativeTesting {
+    base al:alarm-identity;
+  }
+
+  identity overTemperatureEquipment {
+    base al:alarm-identity;
+  }
+
+  identity incompatibleSffHardware {
+    base al:alarm-identity;
+  }
+
+  identity configurationStandBy {
+    base al:alarm-identity;
+  }
+
+  identity shelfProvisioningMode {
+    base al:alarm-identity;
+  }
+
+  identity equipmentInterConnectFailure {
+    base al:alarm-identity;
+  }
+
+  identity equipmentMiscabledConnection {
+    base al:alarm-identity;
+  }
+
+  identity fanCoolingFail {
+    base al:alarm-identity;
+  }
+
+  identity equipmentCurrExceededFeed {
+    base al:alarm-identity;
+  }
+
+  identity interConnectFailureBladePiu {
+    base al:alarm-identity;
+  }
+
+  identity lampTest {
+    base al:alarm-identity;
+  }
+
+  identity otdrScanInProgress {
+    base al:alarm-identity;
+  }
+
+  identity equipmentReset {
+    base al:alarm-identity;
+  }
+
+  identity equipmentLogTrigger {
+    base al:alarm-identity;
+  }
+
+  identity equipmentFwLogTrigger {
+    base al:alarm-identity;
+  }
+
+  identity equipmentPbcntLogTrigger {
+    base al:alarm-identity;
+  }
+
+  identity encryptionSelfTestFailure {
+    base al:alarm-identity;
+  }
+
+  identity lossOfClock {
+    base al:alarm-identity;
+  }
+
+  identity databaseCorruption {
+    base al:alarm-identity;
+  }
+
+  identity databaseLockedSoftwareUpgradeInProgress {
+    base al:alarm-identity;
+  }
+
+  identity databaseLockedDbRestoreInProgress {
+    base al:alarm-identity;
+  }
+
+  identity databaseLockedSysInitInProgress {
+    base al:alarm-identity;
+  }
+
+  identity databaseLockedDbAlarmPresent {
+    base al:alarm-identity;
+  }
+
+  identity databaseLockedIlfViolation {
+    base al:alarm-identity;
+  }
+
+  identity databaseLockedShelfProvModePresent {
+    base al:alarm-identity;
+  }
+
+  identity databaseVersionMismatch {
+    base al:alarm-identity;
+  }
+
+  identity databaseSystemSignatureMismatch {
+    base al:alarm-identity;
+  }
+
+  identity noSecondaryDatabase {
+    base al:alarm-identity;
+  }
+
+  identity databaseLockedSecondarySoftwareCorruption {
+    base al:alarm-identity;
+  }
+
+  identity databaseLockedSoftwareVersionMismatch {
+    base al:alarm-identity;
+  }
+
+  identity databaseLockedSoftwareNotReady {
+    base al:alarm-identity;
+  }
+
+  identity softwareNotReady {
+    base al:alarm-identity;
+  }
+
+  identity databaseLockedRedundantCfgDbOutOfSync {
+    base al:alarm-identity;
+  }
+
+  identity databaseOutOfSyncLockRemoved {
+    base al:alarm-identity;
+  }
+
+  identity invalidUSB {
+    base al:alarm-identity;
+  }
+
+  identity softwareVersionMismatch {
+    base al:alarm-identity;
+  }
+
+  identity softwareStageInProgress {
+    base al:alarm-identity;
+  }
+
+  identity softwareStageFail {
+    base al:alarm-identity;
+  }
+
+  identity bootloaderUpdateInProgress {
+    base al:alarm-identity;
+  }
+
+  identity secondarySoftwareCorruption {
+    base al:alarm-identity;
+  }
+
+  identity softwareSyncInProgress {
+    base al:alarm-identity;
+  }
+
+  identity noSecondaryStorage {
+    base al:alarm-identity;
+  }
+
+  identity swRepoIncomplete {
+    base al:alarm-identity;
+  }
+
+  identity redundantCfgSwRepoOutOfSync {
+    base al:alarm-identity;
+  }
+
+  identity firmwareVersionMismatch {
+    base al:alarm-identity;
+  }
+
+  identity firmwareInitInProgress {
+    base al:alarm-identity;
+  }
+
+  identity firmwareBackwardCompatibleLimited {
+    base al:alarm-identity;
+  }
+
+  identity firmwareBackwardCompatibleAll {
+    base al:alarm-identity;
+  }
+
+  identity firmwareActivation {
+    base al:alarm-identity;
+  }
+
+  identity firmwareDownloadOrActivationFailure {
+    base al:alarm-identity;
+  }
+
+  identity incompatibleFirmware {
+    base al:alarm-identity;
+  }
+
+  identity incompatibleHardware {
+    base al:alarm-identity;
+  }
+
+  identity noFirmware {
+    base al:alarm-identity;
+  }
+
+  identity rasisUtilCreationInProgress {
+    base al:alarm-identity;
+  }
+
+  identity rasisUtilDebugInProgress {
+    base al:alarm-identity;
+  }
+
+  identity ilfViolation {
+    base al:alarm-identity;
+  }
+
+  identity ilfViolationCritical {
+    base al:alarm-identity;
+  }
+
+  identity ilfViolationMajor {
+    base al:alarm-identity;
+  }
+
+  identity softwareReset {
+    base al:alarm-identity;
+  }
+
+  identity sysNtpNotSynchronized {
+    base al:alarm-identity;
+  }
+
+  identity lldpFail {
+    base al:alarm-identity;
+  }
+
+  identity interConnectFailure {
+    base al:alarm-identity;
+  }
+
+  identity sysNameChanged {
+    base al:alarm-identity;
+  }
+
+  identity intRSTPdisabled {
+    base al:alarm-identity;
+  }
+
+  identity defaultSysName {
+    base al:alarm-identity;
+  }
+
+  identity ztpBootInProgress {
+    base al:alarm-identity;
+  }
+
+  identity ztpBootFailure {
+    base al:alarm-identity;
+  }
+
+  identity certificateNotInstalled {
+    base al:alarm-identity;
+  }
+
+  identity gnmiCertificateNotInstalled {
+    base al:alarm-identity;
+  }
+
+  identity gnmiCertificateValidityExpired {
+    base al:alarm-identity;
+  }
+
+  identity generalCommunicationChannel0Failure {
+    base al:alarm-identity;
+  }
+
+  identity powerProblem {
+    base al:alarm-identity;
+  }
+
+  identity powerProblemA {
+    base al:alarm-identity;
+  }
+
+  identity powerProblemB {
+    base al:alarm-identity;
+  }
+
+  identity opticalPowerReceive {
+    base al:alarm-identity;
+  }
+
+  identity opticalPowerTransmit {
+    base al:alarm-identity;
+  }
+
+  identity lossOfSignal {
+    base al:alarm-identity;
+  }
+
+  identity lossOfFrame {
+    base al:alarm-identity;
+  }
+
+  identity lossOfMultiframe {
+    base al:alarm-identity;
+  }
+
+  identity backwardDefectIndication {
+    base al:alarm-identity;
+  }
+
+  identity forwardDefectIndication {
+    base al:alarm-identity;
+  }
+
+  identity signalDegrade {
+    base al:alarm-identity;
+  }
+
+  identity trailTraceMismatch {
+    base al:alarm-identity;
+  }
+
+  identity backwardIncomingAlignmentError {
+    base al:alarm-identity;
+  }
+
+  identity incomingAlignmentError {
+    base al:alarm-identity;
+  }
+
+  identity alarmIndicationSignal {
+    base al:alarm-identity;
+  }
+
+  identity openConnectionIndication {
+    base al:alarm-identity;
+  }
+
+  identity locked {
+    base al:alarm-identity;
+  }
+
+  identity lossofTandemConnection {
+    base al:alarm-identity;
+  }
+
+  identity payloadMismatch {
+    base al:alarm-identity;
+  }
+
+  identity clientSignalFailDefect {
+    base al:alarm-identity;
+  }
+
+  identity multiplexStructureIdentifierMismatch {
+    base al:alarm-identity;
+  }
+
+  identity lossOfOmfIndication {
+    base al:alarm-identity;
+  }
+
+  identity lossOfFrameAndLossOfMultiframe {
+    base al:alarm-identity;
+  }
+
+  identity cnOutOfRange {
+    base al:alarm-identity;
+  }
+
+  identity cnLossOfSynchronization {
+    base al:alarm-identity;
+  }
+
+  identity frameAuthenticationFailure {
+    base al:alarm-identity;
+  }
+
+  identity trafficSquelchedForEncryption {
+    base al:alarm-identity;
+  }
+
+  identity highBER {
+    base al:alarm-identity;
+  }
+
+  identity localFault {
+    base al:alarm-identity;
+  }
+
+  identity remoteFault {
+    base al:alarm-identity;
+  }
+
+  identity lossOfAlignment {
+    base al:alarm-identity;
+  }
+
+  identity lossOfSynchronization {
+    base al:alarm-identity;
+  }
+
+  identity lossOfFECAlignment {
+    base al:alarm-identity;
+  }
+
+  identity remoteLANFault {
+    base al:alarm-identity;
+  }
+
+  identity lanTransmitLocalFault {
+    base al:alarm-identity;
+  }
+
+  identity lanTransmitRemoteFault {
+    base al:alarm-identity;
+  }
+
+  identity lanTransmitOff {
+    base al:alarm-identity;
+  }
+
+  identity errorCode {
+    base al:alarm-identity;
+  }
+
+  identity lanTransmitErrorCode {
+    base al:alarm-identity;
+  }
+
+  identity decapsulationFailure {
+    base al:alarm-identity;
+  }
+
+  identity decapsulationLossOfFrame {
+    base al:alarm-identity;
+  }
+
+  identity clientManagementFrameForwardDefectIndication {
+    base al:alarm-identity;
+  }
+
+  identity clientManagementFrameLossOfSignal {
+    base al:alarm-identity;
+  }
+
+  identity clientManagementFrameLossOfSync {
+    base al:alarm-identity;
+  }
+
+  identity clientManagementFrameReverseDefectIndication {
+    base al:alarm-identity;
+  }
+
+  identity protocolMiscabledConnection {
+    base al:alarm-identity;
+  }
+
+  identity protocolNeighborFailure {
+    base al:alarm-identity;
+  }
+
+  identity facilityLoopbackActive {
+    base al:alarm-identity;
+  }
+
+  identity facilityLoopback2Active {
+    base al:alarm-identity;
+  }
+
+  identity terminalLoopbackActive {
+    base al:alarm-identity;
+  }
+
+  identity facilityTestsignalActive {
+    base al:alarm-identity;
+  }
+
+  identity terminalTestsignalActive {
+    base al:alarm-identity;
+  }
+
+  identity linkDown {
+    base al:alarm-identity;
+  }
+
+  identity alarmIndicationSignalLine {
+    base al:alarm-identity;
+  }
+
+  identity remoteFailureIndicationLine {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalFailLine {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalDegradeLine {
+    base al:alarm-identity;
+  }
+
+  identity alarmIndicationSignalGeneric {
+    base al:alarm-identity;
+  }
+
+  identity autoPowerReduction {
+    base al:alarm-identity;
+  }
+
+  identity autoPowerReductionDra {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecification {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecificationHigh {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecificationHighL1 {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecificationHighL2 {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecificationHighL3 {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecificationHighL4 {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecificationLow {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecificationLowL1 {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecificationLowL2 {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecificationLowL3 {
+    base al:alarm-identity;
+  }
+
+  identity powerOutOfSpecificationLowL4 {
+    base al:alarm-identity;
+  }
+
+  identity totalpowerOutOfSpecificationHigh {
+    base al:alarm-identity;
+  }
+
+  identity totalpowerOutOfSpecificationLow {
+    base al:alarm-identity;
+  }
+
+  identity encryptionSessionFailure01 {
+    base al:alarm-identity;
+  }
+
+  identity encryptionSessionFailure02 {
+    base al:alarm-identity;
+  }
+
+  identity encryptionSessionFailure03 {
+    base al:alarm-identity;
+  }
+
+  identity encryptionSessionFailure04 {
+    base al:alarm-identity;
+  }
+
+  identity encryptionHandshakeFailure {
+    base al:alarm-identity;
+  }
+
+  identity fanFilterShouldBeReplaced {
+    base al:alarm-identity;
+  }
+
+  identity fanFilterShouldBeCleaned {
+    base al:alarm-identity;
+  }
+
+  identity equipmentOverTemperature {
+    base al:alarm-identity;
+  }
+
+  identity portLossOfLight {
+    base al:alarm-identity;
+  }
+
+  identity thresholdCrossingAlertSpanlossVariationTooLow {
+    base al:alarm-identity;
+  }
+
+  identity thresholdCrossingAlertSpanlossVariationTooHigh {
+    base al:alarm-identity;
+  }
+
+  identity thresholdCrossingAlertOscOpticalReceivePowerTooHigh {
+    base al:alarm-identity;
+  }
+
+  identity thresholdCrossingAlertOscOpticalReceivePowerTooLow {
+    base al:alarm-identity;
+  }
+
+  identity thresholdCrossingAlertOscOpticalTransmitPowerTooHigh {
+    base al:alarm-identity;
+  }
+
+  identity thresholdCrossingAlertOscOpticalTransmitPowerTooLow {
+    base al:alarm-identity;
+  }
+
+  identity thresholdCrossingAlertOpticalReceivePowerTooHigh {
+    base al:alarm-identity;
+  }
+
+  identity thresholdCrossingAlertOpticalReceivePowerTooLow {
+    base al:alarm-identity;
+  }
+
+  identity thresholdCrossingAlertOpticalTransmitPowerTooHigh {
+    base al:alarm-identity;
+  }
+
+  identity thresholdCrossingAlertOpticalTransmitPowerTooLow {
+    base al:alarm-identity;
+  }
+
+  identity postBlockAutoLaserShutdown {
+    base al:alarm-identity;
+  }
+
+  identity postBlockAutoPowerReduction {
+    base al:alarm-identity;
+  }
+
+  identity postBlockManualLaserShutdown {
+    base al:alarm-identity;
+  }
+
+  identity preBlockSpanAdjustmentInProgress {
+    base al:alarm-identity;
+  }
+
+  identity postBlockSpanAdjustmentInProgress {
+    base al:alarm-identity;
+  }
+
+  identity postBlockAutoShutoffDisabled {
+    base al:alarm-identity;
+  }
+
+  identity payloadMissingIndication {
+    base al:alarm-identity;
+  }
+
+  identity manualOverrideActive {
+    base al:alarm-identity;
+  }
+
+  identity unequippedIndication {
+    base al:alarm-identity;
+  }
+
+  identity reflectionTooHigh {
+    base al:alarm-identity;
+  }
+
+  identity oscPowerOutOfSpecificationHigh {
+    base al:alarm-identity;
+  }
+
+  identity oscPowerOutOfSpecificationLow {
+    base al:alarm-identity;
+  }
+
+  identity oscControlFailure {
+    base al:alarm-identity;
+  }
+
+  identity modeMismatch {
+    base al:alarm-identity;
+  }
+
+  identity omsPowerOutOfSpecificationHigh {
+    base al:alarm-identity;
+  }
+
+  identity omsPowerOutOfSpecificationLow {
+    base al:alarm-identity;
+  }
+
+  identity otsSpanlossPowerOutOfSpecificationHigh {
+    base al:alarm-identity;
+  }
+
+  identity otsSpanlossPowerOutOfSpecificationLow {
+    base al:alarm-identity;
+  }
+
+  identity remoteApsd {
+    base al:alarm-identity;
+  }
+
+  identity DipSessionActive {
+    base al:alarm-identity;
+  }
+
+  identity PPPFailure {
+    base al:alarm-identity;
+  }
+
+  identity GretFailure {
+    base al:alarm-identity;
+  }
+
+  identity channelPlanMismatch {
+    base al:alarm-identity;
+  }
+
+  identity provisionedTxPowerOutofDeviceRange {
+    base al:alarm-identity;
+  }
+
+  identity lockoutOfProtection {
+    base al:alarm-identity;
+  }
+
+  identity forcedSwitchAwayFromWorking {
+    base al:alarm-identity;
+  }
+
+  identity forcedSwitchAwayFromProtect {
+    base al:alarm-identity;
+  }
+
+  identity automaticSwitchAwayFromWorkingDueToSF {
+    base al:alarm-identity;
+  }
+
+  identity automaticSwitchAwayFromProtectDueToSF {
+    base al:alarm-identity;
+  }
+
+  identity automaticSwitchAwayFromWorkingDueToSD {
+    base al:alarm-identity;
+  }
+
+  identity automaticSwitchAwayFromProtectDueToSD {
+    base al:alarm-identity;
+  }
+
+  identity automaticSwitchDueToWTR {
+    base al:alarm-identity;
+  }
+
+  identity manualSwitchAwayFromWork {
+    base al:alarm-identity;
+  }
+
+  identity manualSwitchAwayFromProtect {
+    base al:alarm-identity;
+  }
+
+  identity doNotSwitch {
+    base al:alarm-identity;
+  }
+
+  identity automaticSwitchAwayFromWorkingDueToBD {
+    base al:alarm-identity;
+  }
+
+  identity automaticSwitchAwayFromProtectDueToBD {
+    base al:alarm-identity;
+  }
+
+  identity smrDisabled {
+    base al:alarm-identity;
+  }
+
+  identity smrNeighborHelloFailure {
+    base al:alarm-identity;
+  }
+
+  identity smrActivationFailure {
+    base al:alarm-identity;
+  }
+
+  identity alarmIndicationSignalTCM1-up {
+    base al:alarm-identity;
+  }
+
+  identity alarmIndicationSignalTCM2-up {
+    base al:alarm-identity;
+  }
+
+  identity alarmIndicationSignalTCM3-up {
+    base al:alarm-identity;
+  }
+
+  identity alarmIndicationSignalTCM4-up {
+    base al:alarm-identity;
+  }
+
+  identity alarmIndicationSignalTCM5-up {
+    base al:alarm-identity;
+  }
+
+  identity alarmIndicationSignalTCM6-up {
+    base al:alarm-identity;
+  }
+
+  identity alarmIndicationSignalTCM1-down {
+    base al:alarm-identity;
+  }
+
+  identity alarmIndicationSignalTCM2-down {
+    base al:alarm-identity;
+  }
+
+  identity alarmIndicationSignalTCM3-down {
+    base al:alarm-identity;
+  }
+
+  identity alarmIndicationSignalTCM4-down {
+    base al:alarm-identity;
+  }
+
+  identity alarmIndicationSignalTCM5-down {
+    base al:alarm-identity;
+  }
+
+  identity alarmIndicationSignalTCM6-down {
+    base al:alarm-identity;
+  }
+
+  identity backwardDefectIndicationTCM1-up {
+    base al:alarm-identity;
+  }
+
+  identity backwardDefectIndicationTCM2-up {
+    base al:alarm-identity;
+  }
+
+  identity backwardDefectIndicationTCM3-up {
+    base al:alarm-identity;
+  }
+
+  identity backwardDefectIndicationTCM4-up {
+    base al:alarm-identity;
+  }
+
+  identity backwardDefectIndicationTCM5-up {
+    base al:alarm-identity;
+  }
+
+  identity backwardDefectIndicationTCM6-up {
+    base al:alarm-identity;
+  }
+
+  identity backwardDefectIndicationTCM1-down {
+    base al:alarm-identity;
+  }
+
+  identity backwardDefectIndicationTCM2-down {
+    base al:alarm-identity;
+  }
+
+  identity backwardDefectIndicationTCM3-down {
+    base al:alarm-identity;
+  }
+
+  identity backwardDefectIndicationTCM4-down {
+    base al:alarm-identity;
+  }
+
+  identity backwardDefectIndicationTCM5-down {
+    base al:alarm-identity;
+  }
+
+  identity backwardDefectIndicationTCM6-down {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalDegradeLineTCM1-up {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalDegradeLineTCM2-up {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalDegradeLineTCM3-up {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalDegradeLineTCM4-up {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalDegradeLineTCM5-up {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalDegradeLineTCM6-up {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalDegradeLineTCM1-down {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalDegradeLineTCM2-down {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalDegradeLineTCM3-down {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalDegradeLineTCM4-down {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalDegradeLineTCM5-down {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalDegradeLineTCM6-down {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalFailLineTCM1-up {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalFailLineTCM2-up {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalFailLineTCM3-up {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalFailLineTCM4-up {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalFailLineTCM5-up {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalFailLineTCM6-up {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalFailLineTCM1-down {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalFailLineTCM2-down {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalFailLineTCM3-down {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalFailLineTCM4-down {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalFailLineTCM5-down {
+    base al:alarm-identity;
+  }
+
+  identity bitErrorRateSignalFailLineTCM6-down {
+    base al:alarm-identity;
+  }
+
+  identity backwardIncomingAlignmentErrorTCM1-up {
+    base al:alarm-identity;
+  }
+
+  identity backwardIncomingAlignmentErrorTCM2-up {
+    base al:alarm-identity;
+  }
+
+  identity backwardIncomingAlignmentErrorTCM3-up {
+    base al:alarm-identity;
+  }
+
+  identity backwardIncomingAlignmentErrorTCM4-up {
+    base al:alarm-identity;
+  }
+
+  identity backwardIncomingAlignmentErrorTCM5-up {
+    base al:alarm-identity;
+  }
+
+  identity backwardIncomingAlignmentErrorTCM6-up {
+    base al:alarm-identity;
+  }
+
+  identity backwardIncomingAlignmentErrorTCM1-down {
+    base al:alarm-identity;
+  }
+
+  identity backwardIncomingAlignmentErrorTCM2-down {
+    base al:alarm-identity;
+  }
+
+  identity backwardIncomingAlignmentErrorTCM3-down {
+    base al:alarm-identity;
+  }
+
+  identity backwardIncomingAlignmentErrorTCM4-down {
+    base al:alarm-identity;
+  }
+
+  identity backwardIncomingAlignmentErrorTCM5-down {
+    base al:alarm-identity;
+  }
+
+  identity backwardIncomingAlignmentErrorTCM6-down {
+    base al:alarm-identity;
+  }
+
+  identity incomingAlignmentErrorTCM1-up {
+    base al:alarm-identity;
+  }
+
+  identity incomingAlignmentErrorTCM2-up {
+    base al:alarm-identity;
+  }
+
+  identity incomingAlignmentErrorTCM3-up {
+    base al:alarm-identity;
+  }
+
+  identity incomingAlignmentErrorTCM4-up {
+    base al:alarm-identity;
+  }
+
+  identity incomingAlignmentErrorTCM5-up {
+    base al:alarm-identity;
+  }
+
+  identity incomingAlignmentErrorTCM6-up {
+    base al:alarm-identity;
+  }
+
+  identity incomingAlignmentErrorTCM1-down {
+    base al:alarm-identity;
+  }
+
+  identity incomingAlignmentErrorTCM2-down {
+    base al:alarm-identity;
+  }
+
+  identity incomingAlignmentErrorTCM3-down {
+    base al:alarm-identity;
+  }
+
+  identity incomingAlignmentErrorTCM4-down {
+    base al:alarm-identity;
+  }
+
+  identity incomingAlignmentErrorTCM5-down {
+    base al:alarm-identity;
+  }
+
+  identity incomingAlignmentErrorTCM6-down {
+    base al:alarm-identity;
+  }
+
+  identity lossofTandemConnectionTCM1-up {
+    base al:alarm-identity;
+  }
+
+  identity lossofTandemConnectionTCM2-up {
+    base al:alarm-identity;
+  }
+
+  identity lossofTandemConnectionTCM3-up {
+    base al:alarm-identity;
+  }
+
+  identity lossofTandemConnectionTCM4-up {
+    base al:alarm-identity;
+  }
+
+  identity lossofTandemConnectionTCM5-up {
+    base al:alarm-identity;
+  }
+
+  identity lossofTandemConnectionTCM6-up {
+    base al:alarm-identity;
+  }
+
+  identity lossofTandemConnectionTCM1-down {
+    base al:alarm-identity;
+  }
+
+  identity lossofTandemConnectionTCM2-down {
+    base al:alarm-identity;
+  }
+
+  identity lossofTandemConnectionTCM3-down {
+    base al:alarm-identity;
+  }
+
+  identity lossofTandemConnectionTCM4-down {
+    base al:alarm-identity;
+  }
+
+  identity lossofTandemConnectionTCM5-down {
+    base al:alarm-identity;
+  }
+
+  identity lossofTandemConnectionTCM6-down {
+    base al:alarm-identity;
+  }
+
+  identity openConnectionIndicationTCM1-up {
+    base al:alarm-identity;
+  }
+
+  identity openConnectionIndicationTCM2-up {
+    base al:alarm-identity;
+  }
+
+  identity openConnectionIndicationTCM3-up {
+    base al:alarm-identity;
+  }
+
+  identity openConnectionIndicationTCM4-up {
+    base al:alarm-identity;
+  }
+
+  identity openConnectionIndicationTCM5-up {
+    base al:alarm-identity;
+  }
+
+  identity openConnectionIndicationTCM6-up {
+    base al:alarm-identity;
+  }
+
+  identity openConnectionIndicationTCM1-down {
+    base al:alarm-identity;
+  }
+
+  identity openConnectionIndicationTCM2-down {
+    base al:alarm-identity;
+  }
+
+  identity openConnectionIndicationTCM3-down {
+    base al:alarm-identity;
+  }
+
+  identity openConnectionIndicationTCM4-down {
+    base al:alarm-identity;
+  }
+
+  identity openConnectionIndicationTCM5-down {
+    base al:alarm-identity;
+  }
+
+  identity openConnectionIndicationTCM6-down {
+    base al:alarm-identity;
+  }
+
+  identity lockedTCM1-up {
+    base al:alarm-identity;
+  }
+
+  identity lockedTCM2-up {
+    base al:alarm-identity;
+  }
+
+  identity lockedTCM3-up {
+    base al:alarm-identity;
+  }
+
+  identity lockedTCM4-up {
+    base al:alarm-identity;
+  }
+
+  identity lockedTCM5-up {
+    base al:alarm-identity;
+  }
+
+  identity lockedTCM6-up {
+    base al:alarm-identity;
+  }
+
+  identity lockedTCM1-down {
+    base al:alarm-identity;
+  }
+
+  identity lockedTCM2-down {
+    base al:alarm-identity;
+  }
+
+  identity lockedTCM3-down {
+    base al:alarm-identity;
+  }
+
+  identity lockedTCM4-down {
+    base al:alarm-identity;
+  }
+
+  identity lockedTCM5-down {
+    base al:alarm-identity;
+  }
+
+  identity lockedTCM6-down {
+    base al:alarm-identity;
+  }
+
+  identity trailTraceMismatchTCM1-up {
+    base al:alarm-identity;
+  }
+
+  identity trailTraceMismatchTCM2-up {
+    base al:alarm-identity;
+  }
+
+  identity trailTraceMismatchTCM3-up {
+    base al:alarm-identity;
+  }
+
+  identity trailTraceMismatchTCM4-up {
+    base al:alarm-identity;
+  }
+
+  identity trailTraceMismatchTCM5-up {
+    base al:alarm-identity;
+  }
+
+  identity trailTraceMismatchTCM6-up {
+    base al:alarm-identity;
+  }
+
+  identity trailTraceMismatchTCM1-down {
+    base al:alarm-identity;
+  }
+
+  identity trailTraceMismatchTCM2-down {
+    base al:alarm-identity;
+  }
+
+  identity trailTraceMismatchTCM3-down {
+    base al:alarm-identity;
+  }
+
+  identity trailTraceMismatchTCM4-down {
+    base al:alarm-identity;
+  }
+
+  identity trailTraceMismatchTCM5-down {
+    base al:alarm-identity;
+  }
+
+  identity trailTraceMismatchTCM6-down {
+    base al:alarm-identity;
+  }
+
+  identity signalDegradeTCM1-up {
+    base al:alarm-identity;
+  }
+
+  identity signalDegradeTCM2-up {
+    base al:alarm-identity;
+  }
+
+  identity signalDegradeTCM3-up {
+    base al:alarm-identity;
+  }
+
+  identity signalDegradeTCM4-up {
+    base al:alarm-identity;
+  }
+
+  identity signalDegradeTCM5-up {
+    base al:alarm-identity;
+  }
+
+  identity signalDegradeTCM6-up {
+    base al:alarm-identity;
+  }
+
+  identity signalDegradeTCM1-down {
+    base al:alarm-identity;
+  }
+
+  identity signalDegradeTCM2-down {
+    base al:alarm-identity;
+  }
+
+  identity signalDegradeTCM3-down {
+    base al:alarm-identity;
+  }
+
+  identity signalDegradeTCM4-down {
+    base al:alarm-identity;
+  }
+
+  identity signalDegradeTCM5-down {
+    base al:alarm-identity;
+  }
+
+  identity signalDegradeTCM6-down {
+    base al:alarm-identity;
+  }
+
+  identity fastStart {
+    base al:alarm-identity;
+  }
+
+  identity freeRun {
+    base al:alarm-identity;
+  }
+
+  identity holdOver {
+    base al:alarm-identity;
+  }
+
+  identity distShutDwn {
+    base al:alarm-identity;
+  }
+
+  identity ctnEqptMate {
+    base al:alarm-identity;
+  }
+
+  identity noProtectionSwitchPossible {
+    base al:alarm-identity;
+  }
+
+  identity redundancyNotProvisioned {
+    base al:alarm-identity;
+  }
+
+  identity osnrModeMismatch {
+    base al:alarm-identity;
+  }
+}

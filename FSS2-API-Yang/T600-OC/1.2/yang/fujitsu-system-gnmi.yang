@@ -1,0 +1,97 @@
+module fujitsu-system-gnmi {
+  namespace "urn:fujitsu:params:xml:ns:yang:system-gnmi";
+  prefix system-gnmi;
+  yang-version 1.1;
+
+  import fujitsu-system {
+    prefix sys;
+  }
+  import fujitsu-user-security {
+    prefix secu;
+  }
+  import fujitsu-security-certificates {
+    prefix secuCert;
+  }
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains definitions for System Management.
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2018-08-02 {
+    description
+      "Removed the default value in gnmi-protocols";
+  }
+  revision 2018-05-23 {
+    description
+      "Set yang-version as 1.1 and added default value to gnmi-protocols";
+  }
+  revision 2018-05-17 {
+    description
+      "Added gnmi-port leaf for gNMI interface port configuration.";
+  }
+  revision 2018-05-14 {
+    description
+      "Added new leaf gnmi-enabled and added must rule to ensure 
+       that gnmi is enabled only when certificate id is configured.";
+  }
+  revision 2018-04-20 {
+    description
+      "Initial revision. Added container gnmi for gNMI service configurations.";
+  }
+
+  augment "/sys:system/sys:services" {
+    container gnmi {
+      description
+        "gRPC Network Management Interface related configurations";
+      leaf gnmi-enabled {
+        type boolean;
+        default "false";
+        description
+          "Enable/Disable gNMI.";
+        must "(current()='true' and ../gnmi-certificate-id) or current()='false'" {
+          error-message "gnmi-certificate-id should be configured to enable gNMI.";
+        }
+      }
+      leaf gnmi-port {
+        type inet:port-number {
+          range "2000..6021|6023..32767|61001..65535";
+        }
+        default "6030";
+        description
+          "gNMI port to listen on: 2000..6021|6023..32767|61001..65535";
+      }
+      leaf-list gnmi-protocols {
+        type sys:tlsVersion;
+        description
+          "Specifies the SSL/TLS protocol versions to be used by the server.
+           The supported protocol version is tlsv1.2 ";
+        must "count(current()) = 1 and current()[1] = 'tlsv1.2' " {
+          error-message "Only tlsv1.2 protocol version is supported";
+        }
+      }
+      leaf gnmi-certificate-id {
+        type leafref {
+          path "/secu:security/secuCert:certificates/secuCert:certificate-id";
+        }
+        description
+          "ID of the certificate from security table";
+      }
+    }
+  }
+}

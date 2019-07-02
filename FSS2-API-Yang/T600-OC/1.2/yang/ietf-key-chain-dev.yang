@@ -1,0 +1,60 @@
+module ietf-key-chain-dev {
+  namespace "urn:fujitsu:params:xml:ns:yang:keychain-dvn";
+  prefix keychain-dvn;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import ietf-yang-types {
+    prefix yang;
+  }
+  import ietf-key-chain {
+    prefix key-chain;
+  }
+
+  deviation "/key-chain:key-chains/key-chain:key-chain-list/key-chain:key-chain-entry/key-chain:key-id" {
+    deviate replace {
+      type uint64 {
+        range "1..255" {
+          error-message "Configured value is out of range";
+        }
+      }
+    }
+  }
+  deviation "/key-chain:key-chains/key-chain:key-chain-list/key-chain:key-chain-entry/key-chain:key-string/key-chain:key-string-style/key-chain:keystring/key-chain:keystring" {
+    deviate replace {
+      type string {
+        length "1..16" {
+          error-message "Configured string exceeds the maximum length";
+        }
+      }
+    }
+  }
+  deviation "/key-chain:key-chains/key-chain:key-chain-list/key-chain:key-chain-entry/key-chain:key-string/key-chain:key-string-style/key-chain:hexadecimal/key-chain:hexadecimal-string" {
+    deviate not-supported;
+  }
+  deviation "/key-chain:key-chains/key-chain:key-chain-list/key-chain:key-chain-entry/key-chain:lifetime" {
+    deviate not-supported;
+  }
+  deviation "/key-chain:key-chains/key-chain:key-chain-list/key-chain:accept-tolerance" {
+    deviate not-supported;
+  }
+  deviation "/key-chain:key-chains/key-chain:key-chain-list/key-chain:key-chain-entry/key-chain:crypto-algorithm/key-chain:algorithm/key-chain:hmac-sha-1-12" {
+    deviate not-supported;
+  }
+  deviation "/key-chain:key-chains/key-chain:key-chain-list/key-chain:key-chain-entry/key-chain:crypto-algorithm/key-chain:algorithm/key-chain:sha-1" {
+    deviate not-supported;
+  }
+  deviation "/key-chain:key-chains/key-chain:key-chain-list/key-chain:key-chain-entry/key-chain:crypto-algorithm/key-chain:algorithm/key-chain:hmac-sha-1" {
+    deviate not-supported;
+  }
+  deviation "/key-chain:key-chains/key-chain:key-chain-list/key-chain:key-chain-entry/key-chain:crypto-algorithm/key-chain:algorithm/key-chain:hmac-sha-256" {
+    deviate not-supported;
+  }
+  deviation "/key-chain:key-chains/key-chain:key-chain-list/key-chain:key-chain-entry/key-chain:crypto-algorithm/key-chain:algorithm/key-chain:hmac-sha-384" {
+    deviate not-supported;
+  }
+  deviation "/key-chain:key-chains/key-chain:key-chain-list/key-chain:key-chain-entry/key-chain:crypto-algorithm/key-chain:algorithm/key-chain:hmac-sha-512" {
+    deviate not-supported;
+  }
+}
