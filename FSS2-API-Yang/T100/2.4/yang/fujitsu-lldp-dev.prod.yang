@@ -1,0 +1,34 @@
+module fujitsu-lldp-dev.prod {
+    namespace "urn:fujitsu:params:xml:ns:yang:fujitsu-lldp-dev.prod";
+    prefix fujitsu-lldp-dev.prod;
+
+    import fujitsu-protocols {
+        prefix fjproto;
+    }
+
+    import fujitsu-lldp {
+        prefix lldp;
+    }
+
+    revision 2017-02-15 {
+        description
+        "revision - add default value for adminStatus";
+    }
+
+    //deviation to allow only rxonly
+    deviation "/fjproto:protocols/fjproto:protocol/lldp:lldp-instance/lldp:port/lldp:adminStatus" {
+        deviate replace {
+            type enumeration {
+              enum "disable" {
+                value 0;  
+                description "Disable Transmit and Receive LLDP frames on specific interface";
+              }
+              enum "rxonly" {
+                value 3;  
+                description "Enable only Receive LLDP frames on specific interface";
+              }
+            }
+         default "rxonly";
+       }
+    }
+}

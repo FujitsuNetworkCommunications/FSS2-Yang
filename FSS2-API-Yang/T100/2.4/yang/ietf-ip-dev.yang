@@ -1,0 +1,154 @@
+module ietf-ip-dev {
+
+    namespace "urn:fujitsu:params:xml:ns:yang:ietf-ip-dev";
+    prefix ietf-ip-dev;
+
+    import ietf-interfaces {
+        prefix if;
+    } 
+
+    import ietf-ip {
+        prefix ip;
+    }
+  
+    organization
+      "Fujitsu Ltd.";
+
+    contact
+      "Fujitsu Ltd.
+
+      Address: 2801 Telecom Parkway
+      Richardson, Texas 75082
+
+      Tel: +1-800-USE-FTAC (1-800-873-3822)
+      Email: ftac@fnc.fujitsu.com
+      Web: www.fujitsu.com/us/services/telecom";
+
+    description
+      "This file contains the deviations
+      for the ietf ip yang model.
+
+        Copyright (c) 2016 Fujitsu Ltd.
+          All rights reserved. ";
+
+    //revision 2017-06-01 {
+    //  description
+    //    "Deviated prefix length leaf to enable addition of call point inside
+    //    choice";
+    //}
+
+    revision 2017-04-19 {
+      description
+        "Added support for SC-E1/2";
+    }
+
+    revision 2017-04-10 {
+      description
+        "Added support for E2 ports for ip numbered interfaces";
+    }
+
+    revision 2017-03-06 {
+      description
+        "OSC interface specific validations are made generic to support E-SC-E2 interface";
+    }
+
+    // As the tailf-common:validate cannot be annotated into a choice, but we
+    // need to validate the "choice subnet" for contiguous netmask in 1FINITY.
+    // So we use the deviation to take out the subnet, then use extension to
+    // to define the subnet with tailf-common:validate added directly.
+    deviation "/if:interfaces/if:interface/ip:ipv4/ip:address/ip:subnet/ip:netmask" {
+      deviate not-supported;
+    }
+
+    //deviation "/if:interfaces/if:interface/ip:ipv4/ip:address/ip:subnet/ip:prefix-length" {
+    //  deviate not-supported;
+    //}
+
+    // With the implementation of using Linux cmd "ip addr show" to obtain the
+    // prefix-length under /if:interfaces-state/if:interface/ip:ipv4/ip:address
+    // in mDCI (and we do not the non-contiguous netmask in 1FINITY products),
+    // we only show the retrieved prefix-length for simplification (also align
+    // with ipv6). So we use the deviation below to take out out the ip:subnet
+    // here, and add the prefix-length back in the extention file.
+    deviation "/if:interfaces-state/if:interface/ip:ipv4/ip:address/ip:subnet" {
+      deviate not-supported;
+    }
+
+    deviation "/if:interfaces/if:interface/ip:ipv4/ip:enabled" {
+      deviate replace {
+        type boolean;
+        default false;
+      }
+      description "Default ipv4 as disabled";
+    }
+
+    deviation "/if:interfaces/if:interface/ip:ipv6/ip:enabled" {
+      deviate replace {
+        type boolean;
+        default false;
+      }
+      description "Default ipv6 as disabled";
+    }
+
+    deviation "/if:interfaces/if:interface/ip:ipv4/ip:mtu" {
+      deviate replace {
+        type uint16 {
+          range "68..1500";
+        }
+      }
+      deviate add {
+        default 1500;
+      }
+    }
+
+    deviation "/if:interfaces/if:interface/ip:ipv6/ip:mtu" {
+      deviate replace {
+        type uint32 {
+          range "1280..1500";
+        }
+      }
+      deviate add {
+        default 1500;
+      }
+    }
+
+    deviation "/if:interfaces/if:interface/ip:ipv6/ip:address" {
+      deviate add {
+        max-elements 1;
+      }
+    }
+
+    deviation "/if:interfaces/if:interface/ip:ipv4/ip:address" {
+      deviate add {
+        //min-elements 1;
+        //Updating it to accomodate NEM
+        max-elements 20;
+        // Idea is to prevent a dotted ip to be assigned to the E-SC-E/SC-E type interfaces.
+        must "not ( re-match( /if:interfaces/if:interface" +
+             "[if:name=current()/../../if:name]/if:name, 'ip-.*(SC-E.*|E1:.*|E[1-2].[1-2]:.*|C.*.0)')) " {
+            error-message "Dotted IP address cannot be assigned unnumbered " +
+                          "or point-to-point IP interface";
+        }
+      }
+    }
+
+    deviation "/if:interfaces/if:interface/ip:ipv4/ip:neighbor" {
+        deviate not-supported;
+    }
+
+    deviation "/if:interfaces/if:interface/ip:ipv6/ip:neighbor" {
+        deviate not-supported;
+    }
+
+    deviation "/if:interfaces/if:interface/ip:ipv6/ip:dup-addr-detect-transmits" {
+        deviate not-supported;
+    }
+
+    deviation "/if:interfaces/if:interface/ip:ipv6/ip:autoconf" {
+        deviate not-supported;
+    }
+
+    deviation "/if:interfaces-state/if:interface/ip:ipv6/ip:neighbor/ip:is-router" {
+        deviate not-supported;
+    }
+}

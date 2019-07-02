@@ -1,0 +1,258 @@
+module tailf-aaa {
+  namespace "http://tail-f.com/ns/aaa/1.1";
+  prefix aaa;
+
+  import ietf-netconf-acm {
+    prefix nacm;
+  }
+  import iana-crypt-hash {
+    prefix ianach;
+  }
+
+  organization
+    "Tail-f Systems";
+  description
+    "This module defines the Tail-f AAA data model.";
+
+  revision 2015-06-16 {
+    description
+      "Released as part of ConfD-6.0 / NSO-4.0.
+       
+       Added /aaa/authentication/users/user/change-password action.";
+  }
+  revision 2014-08-29 {
+    description
+      "Released as part of ConfD-5.2.1 / NCS-3.2.1.
+       
+       Removed max-elements restriction on /aaa/authentication/users/user.";
+  }
+  revision 2014-06-30 {
+    description
+      "Released as part of ConfD-5.2 / NCS-3.2.
+       
+       Changed passwdStr typedef to use ianach:crypt-hash instead of
+       tailf:md5-digest-string.";
+  }
+  revision 2013-03-07 {
+    description
+      "Released as part of ConfD-4.2.
+       
+       Added nacm:default-deny-all extension for /aaa and /user, and
+       nacm:default-deny-write extension for /alias and /session.";
+  }
+  revision 2012-11-08 {
+    description
+      "Released as part of ConfD-4.1.
+       
+       Removed /aaa/authentication/groups and /aaa/authorization,
+       since this functionality is modeled in
+       ietf-netconf-acm.yang as augmented by tailf-acm.yang.";
+  }
+  revision 2011-09-22 {
+    description
+      "Released as part of ConfD-3.7.";
+  }
+  revision 2010-06-17 {
+    description
+      "Released as part of ConfD-3.3.";
+  }
+  revision 2010-04-22 {
+    description
+      "Released as part of ConfD-3.2.1.";
+  }
+  revision 2010-03-18 {
+    description
+      "Released as part of ConfD-3.2.";
+  }
+
+  typedef history {
+    type uint64 {
+      range "0 .. 8192";
+    }
+  }
+
+  typedef idle-timeout {
+    type uint64 {
+      range "0 .. 8192";
+    }
+  }
+
+  typedef display-level {
+    type uint64 {
+      range "1 .. 64";
+    }
+  }
+
+  typedef passwdStr {
+    type ianach:crypt-hash;
+  }
+
+  typedef levelInt {
+    type int32 {
+      range "0 .. 15";
+    }
+  }
+
+  typedef modeStr {
+    type union {
+      type string;
+      type builtinModes;
+    }
+  }
+
+  typedef builtinModes {
+    type enumeration {
+      enum "exec";
+      enum "configure";
+    }
+  }
+
+  grouping session-params {
+    leaf complete-on-space {
+      type boolean;
+    }
+    leaf ignore-leading-space {
+      type boolean;
+    }
+    leaf idle-timeout {
+      type idle-timeout;
+    }
+    leaf paginate {
+      type boolean;
+    }
+    leaf history {
+      type history;
+    }
+    leaf autowizard {
+      type boolean;
+    }
+    leaf show-defaults {
+      type boolean;
+    }
+    leaf display-level {
+      type display-level;
+    }
+    leaf prompt1 {
+      type string;
+    }
+    leaf prompt2 {
+      type string;
+    }
+    leaf devtools {
+      type boolean;
+    }
+  }
+
+  container aaa {
+    nacm:default-deny-all;
+    container authentication {
+      container users {
+        list user {
+          key "name";
+          leaf name {
+            type string;
+          }
+          leaf uid {
+            type int32;
+            mandatory true;
+          }
+          leaf gid {
+            type int32;
+            mandatory true;
+          }
+          leaf password {
+            type passwdStr;
+            mandatory true;
+          }
+          leaf ssh_keydir {
+            type string;
+            mandatory true;
+          }
+          leaf homedir {
+            type string;
+            mandatory true;
+          }
+        }
+      }
+    }
+    container ios {
+      presence "";
+      list level {
+        key "nr";
+        min-elements 2;
+        leaf nr {
+          type levelInt;
+        }
+        leaf secret {
+          type passwdStr;
+        }
+        leaf password {
+          type passwdStr;
+        }
+        leaf prompt {
+          type string;
+          default "\\h# ";
+        }
+      }
+      list privilege {
+        key "mode";
+        leaf mode {
+          type modeStr;
+        }
+        list level {
+          key "nr";
+          min-elements 1;
+          max-elements "15";
+          leaf nr {
+            type levelInt;
+          }
+          list command {
+            key "name";
+            leaf name {
+              type string;
+            }
+          }
+        }
+      }
+    }
+  }
+  list alias {
+    nacm:default-deny-write;
+    key "name";
+    leaf name {
+      type string;
+    }
+    leaf expansion {
+      type string;
+      mandatory true;
+    }
+  }
+  container session {
+    nacm:default-deny-write;
+    uses session-params;
+    presence "";
+  }
+  list user {
+    nacm:default-deny-all;
+    key "name";
+    leaf name {
+      type string;
+    }
+    leaf description {
+      type string;
+    }
+    list alias {
+      key "name";
+      leaf name {
+        type string;
+      }
+      leaf expansion {
+        type string;
+        mandatory true;
+      }
+    }
+    container session {
+      uses session-params;
+    }
+  }
+}

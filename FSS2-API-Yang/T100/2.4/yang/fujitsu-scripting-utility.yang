@@ -1,0 +1,82 @@
+module fujitsu-scripting-utility {
+  namespace "urn:fujitsu:params:xml:ns:yang:script-util";
+  prefix script-util;
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains definitions for scripting utility yang objects.
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2017-09-22 {
+    description
+      "Initial revision.";
+  }
+
+  rpc execute-script {
+    description
+      "For executing scripts from user interfaces";
+    input {
+      choice script-type {
+        leaf cli-script {
+          description
+            "Script type is cli";
+          type empty;
+        }
+        leaf json-script {
+          description
+            "Script type is json";
+          type empty;
+        }
+        leaf netconf-script {
+          description
+            "Script type is netconf";
+          type empty;
+        }
+      }
+      leaf script-name {
+        type string;
+        mandatory true;
+        description
+          "Name of the script file to execute";
+      }
+      leaf parameter {
+        type string;
+        description
+          "Optional parameters to be supplied to the script.
+           Ex: server=localhost;port=8080";
+      }
+    }
+    output {
+      leaf status {
+        type enumeration {
+          enum "Successful" {
+            value 1;
+          }
+          enum "Failed" {
+            value 2;
+          }
+        }
+        mandatory true;
+        description
+          "Successful or Failed";
+      }
+      leaf status-message {
+        type string;
+        description
+          "Output from the script execution, as string";
+      }
+    }
+  }
+}

@@ -1,0 +1,351 @@
+
+//
+// This is T200-specific customization for fujitsu-optical-tributary-signal.yang
+//
+
+module fujitsu-optical-tributary-signal-dev.prod {
+    namespace "urn:fujitsu:params:xml:ns:yang:interface:optical-tributary-signal-deviation";
+    prefix otsi-deviation;
+
+    import ietf-interfaces {
+        prefix if;
+    }
+
+    import fujitsu-optical-tributary-signal {
+        prefix otsi;
+    }
+  
+    revision 2018-05-10 {
+        description
+        "Setting default values ";
+    }
+    revision 2018-05-02 {
+        description
+        "slot-width default value is removed";
+    }
+    revision 2018-04-26 {
+        description
+        "Deviations for OtsiV2 attributes modulation-format ,otsi-rate";
+    }
+    revision 2018-04-13 {
+        description
+        "Updated Deviations for OtsiV2 interface type attributes";
+    }
+    revision 2016-09-10 {
+        description
+        "Changed the default value and range of npcc-averaging-length to 10 and 0..10";
+    }
+
+    revision 2016-09-13 {
+        description
+        "Added default value for circuit-id";
+    }
+
+    revision 2016-10-17 {
+        description
+        "1. Renamed NLC parameter names
+         2. Removed the range value from center-frequency and center-frequency-rx";
+    }
+
+    // not-supported nodes
+    // need confirmation with Fred-san if we can simply remove this.
+    deviation "/if:interfaces/if:interface/if:enabled" {
+        deviate not-supported; 
+    }
+    // need confirmation with Fred-san if we can simply remove this.
+    deviation "/if:interfaces/if:interface/if:link-up-down-trap-enable" {
+        deviate not-supported; 
+    }
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:vstimer" {
+        deviate not-supported; 
+        description "For T200, OTSi does not support this Attribute";
+    }
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:actual-vstimer" {
+        deviate not-supported; 
+        description "For T200, OTSi does not support this Attribute";
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:center-frequency" {
+        deviate add {
+            default '0';
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:center-frequency-rx" {
+        deviate add {
+            default '0';
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:circuit-id" {
+        deviate add {
+            default "";
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-A" {
+        deviate add {
+           default "true";
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-B" {
+        deviate add {
+           default "true";
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-C" {
+        deviate replace {
+            type uint32 {
+               range "1..127" {
+                    description "Valid range 1 - 127";
+                }
+            }
+        }
+        deviate add {
+            default '14';
+        }
+   }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-D" {
+       deviate replace {
+            type uint32 {
+                range "0..31" {
+                    description "Valid range 0 - 31";
+                }
+            }
+        }
+        deviate add {
+            default '30';
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-E" {
+        deviate replace {
+            type uint32 {
+                range "0..10" {
+                    description "Valid range 0 - 10";
+                }
+            }
+        }
+        deviate add {
+            default '10';
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-F" {
+        deviate replace {
+            type uint32 {
+                range "0..127" {
+                    description "Valid range 0 - 127";
+                }
+            }
+        }
+        deviate add {
+            default '0';
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-G" {
+        deviate replace {
+            type uint32 {
+                range "0..127" {
+                    description "Valid range 0 - 127";
+                }
+            }
+        }
+        deviate add {
+            default '0';
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-H" {
+        deviate replace {
+            type uint32 {
+                range "9..509" {
+                    description "Valid range 9 - 509";
+                }
+            }
+        }
+        deviate add {
+            default '509';
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-I" {
+        deviate replace {
+            type uint32 {
+                range "9..509" {
+                    description "Valid range 9 - 509";
+                }
+            }
+        }
+        deviate add {
+            default '509';
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-J" {
+        deviate replace {
+            type decimal64 {
+                fraction-digits 4;
+                range "-8192.0000..8191.9375" {
+                    description "Valid range -8192.0000 - 8191.9375";
+                }
+            }
+        }
+        deviate add {
+            default '0';
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-K" {
+        deviate replace {
+            type decimal64 {
+                fraction-digits 4;
+                range "-2048.0000..2047.9375" {
+                    description "Valid range -2048.0000 - 2047.9375";
+                }
+            }
+        }
+        deviate add {
+            default '0';
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-L" {
+        deviate replace {
+            type decimal64 {
+                fraction-digits 4;
+                range "-2048.0000..2047.9375" {
+                    description "Valid range -2048.0000 - 2047.9375";
+                }
+            }
+        }
+        deviate add {
+            default '0';
+        }
+    }
+	
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:param-M" {
+       deviate replace {
+            type uint32 {
+                range "0..763" {
+                    description "Valid range 0 - 763";
+                }
+            }
+        }
+        deviate add {
+            default '0';
+        }
+    }
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:direction" {
+       deviate replace {
+            type enumeration {
+                enum bi {
+                    value "3";
+                    description "bidirectional";
+                }
+            }
+       }
+       deviate add {
+         default 'bi';
+       }
+    }
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:nyquist" {
+       deviate replace {
+            type enumeration {
+                enum ON {
+                    value "1";
+                }
+            }
+       }
+    }
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:confmode-type" {
+       deviate replace {
+            type enumeration {
+                enum 100GONLY {
+                    value "1";
+                    description "100GONLY if the ROADM systems degree, to which this PIU is connected, carries only 100G wavelengths.";
+                }
+            }
+       }
+    }
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:roadm-type" {
+       deviate replace {
+            type enumeration {
+                enum CD {
+                    value "1";
+                    description "Colourless Directionless  degree is applicable.";
+                }
+             }
+       }
+    }
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:ais-pt" {
+       deviate replace {
+            type enumeration {
+               enum ais-none {
+                  value "2";
+               }
+            }
+       }
+       deviate add {
+         default 'ais-none';
+       }
+    }
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:fec" {
+       deviate replace {
+            type enumeration {
+                    enum sdfec3 {
+                      value "3";
+                      description "Soft Decision FEC 3";
+                    }
+                    enum sdfec4 {
+                      value "4";
+                      description "Soft Decision FEC 4";
+                    }
+            }
+       }
+    }
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:modulation-format" {
+       deviate replace {
+            type enumeration {
+                    enum dp-qam16 {
+                        value "6";
+                        description "dual-polarization quadrature amplitude modulation 16";  
+                    }
+                    enum dp-qam32 {
+                        value "7";
+                        description "dual-polarization quadrature amplitude modulation 32";  
+                    }
+                    enum dp-qam64 {
+                        value "8";
+                        description "dual-polarization quadrature amplitude modulation 64";  
+                    }
+                    enum 8psk{
+                        value "13";
+                        description "phase shift keying with 8 states";
+                    }
+                    enum 8psk-2{
+                        value "14";
+                        description "phase shift keying with 8 states - 2";
+                    }
+            }
+        }
+      deviate add {
+        mandatory true;
+      }
+    }
+
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:otsi-rate" {
+      deviate add {
+        mandatory true;
+      }
+    }
+    deviation "/if:interfaces/if:interface/otsi:otsi/otsi:transmit-power" {
+      deviate add {
+        default '0';
+      }
+    }
+}

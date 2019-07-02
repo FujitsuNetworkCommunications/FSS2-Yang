@@ -1,0 +1,45 @@
+module fujitsu-routing {
+  namespace "urn:fujitsu:params:xml:ns:yang:ietf-routing-ext";
+  prefix fujitsu-routing;
+
+  import ietf-routing {
+    prefix rt;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+     Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This file contains the extensions 
+     for the ietf routing yang model.
+     
+      Copyright (c) 2016 Fujitsu Ltd.
+        All rights reserved. ";
+
+  revision 2018-01-22 {
+    description
+      "Changed filename, module name, and prefix";
+  }
+  revision 2017-02-21 {
+    description
+      "Support to have outgoing interfaces as leaf-list";
+  }
+
+  augment "/rt:routing-state/rt:routing-instance/rt:ribs/rt:rib/rt:routes/rt:route/rt:next-hop/rt:next-hop-options/rt:simple-next-hop" {
+    leaf-list outgoing-interface {
+      type leafref {
+        path "/rt:routing-state/rt:routing-instance/rt:interfaces/rt:interface";
+      }
+      description
+        "List of the outgoing interfaces.";
+    }
+  }
+}

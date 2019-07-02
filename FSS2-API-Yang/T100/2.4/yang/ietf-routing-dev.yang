@@ -1,0 +1,57 @@
+module ietf-routing-dev {
+    namespace "urn:fujitsu:params:xml:ns:yang:ietf-routing-dev";
+    prefix ietf-rt-dev;
+
+    import ietf-routing {
+        prefix rt;
+    } 
+
+    organization
+      "Fujitsu Ltd.";
+
+    contact
+      "Fujitsu Ltd.
+
+      Address: 2801 Telecom Parkway
+      Richardson, Texas 75082
+
+      Tel: +1-800-USE-FTAC (1-800-873-3822)
+      Email: ftac@fnc.fujitsu.com
+      Web: www.fujitsu.com/us/services/telecom";
+
+    description
+      "This file contains the deviations 
+      for the ietf routing yang model.
+
+        Copyright (c) 2016 Fujitsu Ltd.
+          All rights reserved. ";
+
+    revision 2017-02-21 {
+        description
+        "Added deviation for outgoing-interface field";
+    }
+
+    // Support a single routing instance (i.e. only static routes)
+    deviation "/rt:routing/rt:routing-instance" {
+      deviate add {
+        max-elements 1;
+      }
+    }
+
+    // can run 1 static route protocol and 1 ospf route protocol per instance
+    deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol" {
+      deviate add {
+        max-elements 2;
+      }
+    }
+
+    deviation "/rt:fib-route" {
+      deviate not-supported;
+    }
+
+    deviation "/rt:routing-state/rt:routing-instance/rt:ribs/rt:rib/rt:routes/"
+      + "rt:route/rt:next-hop/rt:next-hop-options/rt:simple-next-hop/"
+      + "rt:outgoing-interface" {
+      deviate not-supported;
+    }
+}

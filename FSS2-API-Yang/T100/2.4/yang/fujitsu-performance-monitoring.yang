@@ -1,0 +1,197 @@
+module fujitsu-performance-monitoring {
+  namespace "urn:fujitsu:params:xml:ns:yang:perfmon";
+  prefix perfmon;
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+  import fujitsu-notifications {
+    prefix notifications;
+  }
+  import fujitsu-performance-monitoring-typedefs {
+    prefix pmtypedefs;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains a collection of YANG definitions for
+     Performance Monitoring management.
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2018-01-11 {
+    description
+      "Added container pm-protections.";
+  }
+  revision 2017-12-05 {
+    description
+      "Added restriction for Shelf and Slot value.";
+  }
+  revision 2017-02-08 {
+    description
+      "Moved typedefs to a separate file.";
+  }
+  revision 2016-12-07 {
+    description
+      "Corrected pm-validity description.";
+  }
+  revision 2015-05-07 {
+    description
+      "Initial revision.";
+  }
+
+  container pm-equipment {
+    description
+      "Top container for all equipment performance monitoring entities.";
+    config false;
+    list shelf {
+      description
+        "List of shelf entities to store performance monitoring operational data";
+      key "shelfId";
+      leaf shelfId {
+        description
+          "Shelf Identifier";
+        type string {
+          pattern "[0-9]+";
+        }
+      }
+      uses pmtypedefs:pm-oper-data;
+      list slot {
+        description
+          "List of slot entities to store performance monitoring operational data";
+        key "slotId";
+        leaf slotId {
+          description
+            "Slot Identifier";
+          type string {
+            pattern "[0-9]+";
+          }
+        }
+        uses pmtypedefs:pm-oper-data;
+        list subslot {
+          description
+            "List of subslot entities to store performance monitoring operational data";
+          key "subslotId";
+          leaf subslotId {
+            description
+              "Subslot Identifier";
+            type string;
+          }
+          uses pmtypedefs:pm-oper-data;
+          list port {
+            description
+              "List of port entities to store performance monitoring operational data";
+            key "portId";
+            leaf portId {
+              description
+                "Port Identifier";
+              type string;
+            }
+            uses pmtypedefs:pm-oper-data;
+            list subport {
+              description
+                "List of subport entities to store performance monitoring operational data";
+              key "subportId";
+              leaf subportId {
+                description
+                  "Subport Identifier";
+                type string;
+              }
+              uses pmtypedefs:pm-oper-data;
+            }
+          }
+        }
+      }
+    }
+  }
+  container pm-interfaces {
+    description
+      "Top container for all interface performance monitoring entities.";
+    config false;
+    list interface {
+      description
+        "List of interface entities to store performance monitoring operational data";
+      key "name";
+      leaf name {
+        description
+          "Interface name";
+        type string;
+      }
+      uses pmtypedefs:pm-oper-data;
+    }
+  }
+  container pm-protections {
+    description
+      "Top container for all protection performance monitoring entities.";
+    config false;
+    list protection {
+      description
+        "List of protection entities to store performance monitoring operational data";
+      key "pg-type name";
+      leaf pg-type {
+        description
+          "Protection group type";
+        type pmtypedefs:pm-pg-type;
+      }
+      leaf name {
+        description
+          "Protection name";
+        type instance-identifier;
+      }
+      uses pmtypedefs:pm-oper-data;
+    }
+  }
+  rpc init-pm {
+    description
+      "Command to initialize PM data";
+    input {
+      leaf id {
+        type string;
+        mandatory true;
+        description
+          "Entity Identifier";
+      }
+      leaf time-period {
+        type pmtypedefs:pm-time-period;
+        default "15-min";
+      }
+      leaf index {
+        type pmtypedefs:pm-history;
+        default "current";
+      }
+    }
+    output {
+      leaf status {
+        type string;
+      }
+    }
+  }
+  notification threshold-crossover-notification {
+    description
+      "This notification is used to report a threshold cross-over event.";
+    uses notifications:common-event-parameters;
+    leaf pm-value {
+      type pmtypedefs:pm-data-type;
+      description
+        "Monitored performance value";
+      mandatory true;
+    }
+    leaf pm-threshold-level {
+      type pmtypedefs:pm-data-type;
+      description
+        "Performance monitor threshold level";
+      mandatory true;
+    }
+  }
+}

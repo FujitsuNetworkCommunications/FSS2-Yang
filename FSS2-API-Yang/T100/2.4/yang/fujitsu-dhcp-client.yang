@@ -1,0 +1,115 @@
+module fujitsu-dhcp-client {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:dhcp-client-ext";
+  prefix fujitsu-dhcp;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import dhcp-client {
+    prefix dhcp;
+  }
+  import ietf-interfaces {
+    prefix if;
+  }
+  import ietf-ip {
+    prefix ip;
+  }
+  import fujitsu-system {
+    prefix sys;
+  }
+  import ietf-yang-types {
+    prefix yang;
+    revision-date 2013-07-15;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+     Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module is used to add dhcp client status in base yang.
+     Copyright (c) 2016 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2018-01-22 {
+    description
+      "Changed filename, module name, and prefix";
+  }
+  revision 2018-01-08 {
+    description
+      "String pattern defined for dhcp client-intf name.";
+  }
+  revision 2017-07-07 {
+    description
+      "Yang optimization changes.";
+  }
+  revision 2016-04-05;
+
+  augment "/dhcp:clientv4" {
+    container dhcpClientStatus {
+      list client-if {
+        key "ifName";
+        config false;
+        leaf ifName {
+          description
+            "Interface name which has DHCP Address";
+          type string;
+        }
+        leaf clientIpAddr {
+          description
+            "Specify the IP address obtained from DHCP server on the interface";
+          type inet:ipv4-address;
+        }
+        leaf-list dnsServerIpAddr {
+          description
+            "Specify the DNS server IP address obtained from DHCP server on the interface";
+          type inet:ipv4-address;
+        }
+        leaf leaseTime {
+          type yang:timeticks;
+          mandatory true;
+          description
+            "Lease time for DHCPv4 address";
+        }
+      }
+    }
+  }
+  augment "/dhcp:clientv4" {
+    list client-if {
+      key "ifName";
+      description
+        "A client may have several
+         interfaces, it is more reasonable to
+         configure and manage parameters on
+         the interface-level. The list defines
+         specific client interfaces and their
+         data. Different interfaces are distinguished
+         by the key which is a configurable string
+         value.";
+      leaf ifName {
+        description
+          "Specify the interface name that dhcp client configured on";
+        type string {
+          pattern "ip-(1|200)/0/0/(LCN1|LCN2|LCN)";
+        }
+      }
+      leaf enable {
+        description
+          "Enable or disable dhcp client function";
+        type boolean;
+        default "true";
+        must "(((current() = 'false') and  (((count (/if:interfaces/if:interface[if:name=current()/../ifName]/ip:ipv4/ip:address) > 0) and (/if:interfaces/if:interface[if:name=current()/../ifName]/ip:ipv4/ip:enabled = 'true'))))or (current() = 'true'))" {
+          error-message "No Static IPV4 address assigned/Enabled for this interface";
+        }
+      }
+    }
+  }
+}
