@@ -1,0 +1,381 @@
+module fujitsu-performance-monitoring-typedefs {
+  namespace "urn:fujitsu:params:xml:ns:yang:perfmon-typedefs";
+  prefix pmtypedefs;
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains a collection of type definitions for
+     Performance Monitoring management.
+     
+     Copyright (c) 2017 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2018-01-11 {
+    description
+      "Added pm-pg-type.";
+  }
+  revision 2017-02-08 {
+    description
+      "Initial revision.";
+  }
+
+  identity performance-monitor-identity {
+    description
+      "Base identity for PM types. A unique identification of the PM
+         identifier, not including the resource. A string-based qualifier
+         can be used in addition to the identity in order to have different
+         PM types based on information not known at design-time. Standards
+         and vendors can define sub-identities to clearly identify specific
+         PM types.";
+  }
+
+  typedef pm-identity {
+    type identityref {
+      base performance-monitor-identity;
+    }
+    description
+      "PM name";
+  }
+
+  typedef pm-location {
+    type enumeration {
+      enum "nearEnd" {
+        value 0;
+        description
+          "Near-end location";
+      }
+      enum "farEnd" {
+        value 1;
+        description
+          "Far-end location";
+      }
+    }
+    description
+      "PM location";
+  }
+
+  typedef pm-direction {
+    type enumeration {
+      enum "transmit" {
+        value 0;
+        description
+          "Transmit direction";
+      }
+      enum "receive" {
+        value 1;
+        description
+          "Receive direction";
+      }
+      enum "na" {
+        value 2;
+        description
+          "Direction not applicable";
+      }
+    }
+    description
+      "PM direction";
+  }
+
+  typedef pm-type {
+    type enumeration {
+      enum "cumulative" {
+        value 0;
+        description
+          "Cumulative PM type";
+      }
+      enum "metered" {
+        value 1;
+        description
+          "Metered PM type";
+      }
+      enum "binned" {
+        value 2;
+        description
+          "Binned PM type";
+      }
+    }
+    description
+      "PM type";
+  }
+
+  typedef pm-data-type {
+    type union {
+      type uint64;
+      type int64;
+      type decimal64 {
+        fraction-digits 2;
+      }
+      type decimal64 {
+        fraction-digits 17;
+      }
+    }
+  }
+
+  typedef pm-time-period {
+    type enumeration {
+      enum "cumulative" {
+        value 0;
+        description
+          "cumulative";
+      }
+      enum "15-min" {
+        value 1;
+        description
+          "15 minutes period";
+      }
+      enum "1-day" {
+        value 2;
+        description
+          "1 day period";
+      }
+      enum "1-week" {
+        value 3;
+        description
+          "1 week period";
+      }
+      enum "1-month" {
+        value 4;
+        description
+          "1 month period";
+      }
+    }
+  }
+
+  typedef pm-validity {
+    type enumeration {
+      enum "false" {
+        value 0;
+        description
+          "PM is not valid";
+      }
+      enum "true" {
+        value 1;
+        description
+          "PM is valid";
+      }
+    }
+  }
+
+  typedef pm-index {
+    type uint32;
+    description
+      "Index for PM history";
+  }
+
+  typedef pm-history {
+    type enumeration {
+      enum "current" {
+        value 0;
+        description
+          "Current PM time-period";
+      }
+      enum "all" {
+        value 1;
+        description
+          "All PM time-periods including current";
+      }
+    }
+  }
+
+  typedef pm-pg-type {
+    type enumeration {
+      enum "sncp" {
+        value 0;
+        description
+          "SNCP PG type";
+      }
+    }
+    description
+      "PM protection group type";
+  }
+
+  grouping pm-id {
+    leaf pm-name {
+      type pm-identity;
+    }
+    leaf pm-location {
+      type pm-location;
+    }
+    leaf pm-direction {
+      type pm-direction;
+    }
+  }
+
+  grouping pm-data-type {
+    container data-type {
+      leaf type {
+        type string {
+          pattern "uint64|int64|decimal64";
+        }
+      }
+      leaf fraction-digits {
+        when "../type = 'decimal64'";
+        type uint8 {
+          range "2 | 17";
+        }
+      }
+    }
+  }
+
+  grouping pm-th-metered {
+    container pm-th-metered {
+      when "../pm-type = 'metered'";
+      leaf pm-th-type {
+        type enumeration {
+          enum "auto" {
+            description
+              "HW autoprovisioned";
+          }
+          enum "user" {
+            description
+              "User-provisioned";
+          }
+        }
+        default "auto";
+      }
+      leaf pm-th-low {
+        when "../pm-th-type = 'user'";
+        mandatory true;
+        type pm-data-type;
+      }
+      leaf pm-th-high {
+        when "../pm-th-type = 'user'";
+        mandatory true;
+        type pm-data-type;
+      }
+    }
+  }
+
+  grouping pm-th-binned {
+    container pm-th-binned {
+      when "../pm-type = 'binned'";
+      list pm-time-periods {
+        key "pm-time-period";
+        leaf pm-time-period {
+          type pm-time-period;
+        }
+        leaf pm-value {
+          mandatory true;
+          type pm-data-type;
+        }
+      }
+    }
+  }
+
+  grouping pm-threshold {
+    list pm-threshold {
+      description
+        "List of PMs thresholds for the parent entity.";
+      key "pm-name pm-location pm-direction";
+      uses pm-id;
+      leaf pm-type {
+        type pm-type;
+      }
+      uses pm-th-metered;
+      uses pm-th-binned;
+    }
+  }
+
+  grouping pm-oper-data-record {
+    uses pm-id;
+    leaf pm-type {
+      type pm-type;
+    }
+    list pm-time-period-index {
+      key "pm-time-period pm-index";
+      ordered-by user;
+      leaf pm-time-period {
+        type pm-time-period;
+      }
+      leaf pm-index {
+        type pm-index;
+      }
+      leaf pm-value {
+        type pm-data-type;
+        description
+          "PM value";
+      }
+      leaf pm-validity {
+        type pm-validity;
+      }
+      leaf pm-start-time {
+        type yang:date-and-time;
+      }
+    }
+  }
+
+  grouping pm-oper-data {
+    list pm-oper-data {
+      uses pm-oper-data-record;
+      key "pm-name pm-location pm-direction";
+      ordered-by user;
+      config false;
+    }
+  }
+
+  grouping pm-oper-range-record {
+    uses pm-id;
+    leaf pm-alarm-low {
+      type pm-data-type;
+      description
+        "PM Alarm Detect Low";
+    }
+    leaf pm-alarm-high {
+      type pm-data-type;
+      description
+        "PM Alarm Detect High";
+    }
+    leaf pm-capability-min {
+      type pm-data-type;
+      description
+        "PM Operating Range Low";
+    }
+    leaf pm-capability-max {
+      type pm-data-type;
+      description
+        "PM Operating Range High";
+    }
+    leaf pm-warning-low {
+      type pm-data-type;
+      description
+        "PM Threshold Low";
+    }
+    leaf pm-warning-high {
+      type pm-data-type;
+      description
+        "PM Threshold High";
+    }
+  }
+
+  grouping pm-oper-range {
+    list pm-oper-range {
+      uses pm-oper-range-record;
+      key "pm-name pm-location pm-direction";
+      ordered-by user;
+      config false;
+    }
+  }
+
+  grouping pm-info {
+    container pm {
+      description
+        "Performance Monitoring Info";
+      uses pm-threshold;
+      uses pm-oper-range;
+    }
+  }
+}

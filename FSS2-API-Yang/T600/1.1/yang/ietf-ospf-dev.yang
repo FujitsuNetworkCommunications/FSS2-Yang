@@ -1,0 +1,264 @@
+module ietf-ospf-dev {
+  namespace "urn:fujitsu:params:xml:ns:yang:ospf-dvn";
+  prefix ospf-dvn;
+
+  import tailf-common {
+    prefix tailf;
+  }
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import ietf-yang-types {
+    prefix yang;
+  }
+  import ietf-ospf {
+    prefix ospf;
+  }
+  import ietf-routing {
+    prefix rt;
+  }
+
+  organization
+    "Fujitsu Network Communications, Inc.";
+  contact
+    "Fujitsu Network Communications, Inc.
+     
+     Address: 2801 Telecom Parkway
+     Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This is deviation for ietf-ospf yang file used for OSPF module.
+     
+     Copyright (c) 2016 Fujitsu Network Communications, inc.
+     All rights reserved. ";
+
+  revision 2017-07-19 {
+    description
+      "Added default values for hello-interval and dead-interval";
+  }
+  revision 2015-11-04 {
+    description
+      "Initial revision.";
+  }
+
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:admin-distance/ospf:granularity/ospf:detail/ospf:inter-area" {
+    deviate replace {
+      type uint8 {
+        range "1..255" {
+          error-message "Configured value is out of range";
+        }
+      }
+    }
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:admin-distance/ospf:granularity/ospf:detail/ospf:intra-area" {
+    deviate replace {
+      type uint8 {
+        range "1..255" {
+          error-message "Configured value is out of range";
+        }
+      }
+    }
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:admin-distance/ospf:external" {
+    deviate replace {
+      type uint8 {
+        range "1..255" {
+          error-message "Configured value is out of range";
+        }
+      }
+    }
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:authentication/ospf:auth-type-selection/ospf:auth-trailer-key/ospf:key" {
+    deviate replace {
+      type string {
+        length "1..8" {
+          error-message "Configured string exceeds the maximum length";
+        }
+      }
+    }
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:hello-interval" {
+    deviate replace {
+      type uint16 {
+        range "1..65535" {
+          error-message "Configured value is out of range";
+        }
+      }
+    }
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:cost" {
+    deviate replace {
+      type uint16 {
+        range "1..65535" {
+          error-message "Configured value is out of range";
+        }
+      }
+    }
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:dead-interval" {
+    deviate replace {
+      type uint16 {
+        range "1..65535" {
+          error-message "Configured value is out of range";
+        }
+      }
+    }
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:retransmit-interval" {
+    deviate replace {
+      type uint16 {
+        range "3..65535" {
+          error-message "Configured value is out of range";
+        }
+      }
+    }
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:transmit-delay" {
+    deviate replace {
+      type uint16 {
+        range "1..65535" {
+          error-message "Configured value is out of range";
+        }
+      }
+    }
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:area-id" {
+    deviate replace {
+      type yang:dotted-quad;
+    }
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:graceful-restart/ospf:helper-enable" {
+    deviate add {
+      default "true";
+    }
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:admin-distance/ospf:granularity/ospf:coarse/ospf:internal" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:nsr" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:protocol-shutdown" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:maximum" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:mpls" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:topology" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:sham-link" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:demand-circuit" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:multi-area" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:lls" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:prefix-suppression" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:bfd" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:ttl-security" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:protocol-shutdown" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:authentication/ospf:auth-type-selection/ospf:auth-trailer-key/ospf:crypto-algorithm/ospf:algorithm/ospf:hmac-sha-1-12" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:authentication/ospf:auth-type-selection/ospf:auth-trailer-key/ospf:crypto-algorithm/ospf:algorithm/ospf:sha-1" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:authentication/ospf:auth-type-selection/ospf:auth-trailer-key/ospf:crypto-algorithm/ospf:algorithm/ospf:hmac-sha-1" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:authentication/ospf:auth-type-selection/ospf:auth-trailer-key/ospf:crypto-algorithm" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:authentication/ospf:auth-type-selection/ospf:auth-trailer-key/ospf:crypto-algorithm/ospf:algorithm/ospf:hmac-sha-256" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:authentication/ospf:auth-type-selection/ospf:auth-trailer-key/ospf:crypto-algorithm/ospf:algorithm/ospf:hmac-sha-384" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:authentication/ospf:auth-type-selection/ospf:auth-trailer-key/ospf:crypto-algorithm/ospf:algorithm/ospf:hmac-sha-512" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:topology" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing-state/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:topology" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing-state/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:static-neighbors" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing-state/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:multi-area" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing-state/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:ttl-security" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing-state/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:authentication" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing-state/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:link-scope-lsas" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing-state/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:protocol-shutdown" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing-state/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:area-scope-lsas/ospf:area-scope-lsa/ospf:raw-data" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing-state/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:as-scope-lsas/ospf:as-scope-lsa/ospf:raw-data" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:router-id" {
+    deviate add {
+      mandatory true;
+    }
+  }
+  deviation "/rt:routing-state/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:area-scope-lsas/ospf:area-scope-lsa/ospf:version/ospf:ospfv2/ospf:ospfv2/ospf:body/ospf:opaque" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing-state/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:as-scope-lsas/ospf:as-scope-lsa/ospf:version/ospf:ospfv2/ospf:ospfv2/ospf:body/ospf:opaque" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing-state/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:topology" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing-state/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:area-scope-lsas/ospf:area-scope-lsa/ospf:version/ospf:ospfv3" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing-state/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:as-scope-lsas/ospf:as-scope-lsa/ospf:version/ospf:ospfv3" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing-state/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:operation-mode" {
+    deviate not-supported;
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:hello-interval" {
+    deviate add {
+      default "10";
+    }
+  }
+  deviation "/rt:routing/rt:routing-instance/rt:routing-protocols/rt:routing-protocol/ospf:ospf/ospf:instance/ospf:area/ospf:interface/ospf:dead-interval" {
+    deviate add {
+      default "40";
+    }
+  }
+}

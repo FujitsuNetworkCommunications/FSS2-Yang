@@ -1,0 +1,179 @@
+module fujitsu-eqpt-operations {
+  namespace "urn:fujitsu:params:xml:ns:yang:fujitsu-eqpt-operations";
+  prefix fujitsu-eqpt-operations;
+
+  import fujitsu-equipment {
+    prefix eqpt;
+  }
+
+  organization
+    "Fujitsu Limited ";
+  contact
+    "Fujitsu Limited
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains definitions for System Management.
+     
+     Copyright (c) 2015 Fujitsu Limited
+     All rights reserved. ";
+
+  revision 2018-10-12 {
+    description
+      "Changed eqpt-id leafs from leafref to type string";
+  }
+  revision 2015-09-28 {
+    description
+      "Initial revision.";
+  }
+
+  grouping syscon-id {
+    leaf shelf-id {
+      type leafref {
+        path "/eqpt:eqpt/eqpt:shelf/eqpt:shelfId";
+      }
+      mandatory true;
+      description
+        "shelf ID";
+    }
+  }
+
+  grouping eqpt-id {
+    leaf shelf-id {
+      type string;
+      mandatory true;
+      description
+        "shelf ID";
+    }
+    leaf slot-id {
+      type string;
+      description
+        "slot ID";
+    }
+    leaf sub-slot-id {
+      type string;
+      description
+        "sub-slot number";
+    }
+    leaf port-id {
+      type string;
+      description
+        "port number";
+    }
+  }
+
+  typedef resetType {
+    type enumeration {
+      enum "HARD" {
+        value 0;
+        description
+          "Hard Reset";
+      }
+      enum "SOFT" {
+        value 1;
+        description
+          "SOFT Reset";
+      }
+      enum "ADOPTSHELF" {
+        value 2;
+        description
+          "Reset To Clear Miscable Alarm";
+      }
+    }
+  }
+
+  typedef cmd-status {
+    type string {
+      length "4..255";
+    }
+    description
+      "Response of command";
+  }
+
+  typedef led-state {
+    type enumeration {
+      enum "ON" {
+        value 0;
+        description
+          "LED ON";
+      }
+      enum "OFF" {
+        value 1;
+        description
+          "LED OFF";
+      }
+    }
+  }
+
+  rpc eqpt-reset {
+    description
+      "Perform Equipment HARD/SOFT reset.";
+    input {
+      uses eqpt-id;
+      leaf reset {
+        type resetType;
+        mandatory true;
+        description
+          "Reset Types";
+      }
+    }
+    output {
+      leaf status {
+        type cmd-status;
+      }
+    }
+  }
+  rpc led-control {
+    description
+      "LED control, The maintenance object will blink.";
+    input {
+      uses eqpt-id;
+      leaf enable {
+        type led-state;
+        mandatory true;
+        description
+          "Blinking ON/OFF";
+      }
+    }
+    output {
+      leaf status {
+        type cmd-status;
+      }
+    }
+  }
+  rpc lamptest {
+    description
+      "This command is used to perform LAMP Test on the NE";
+    input {
+      uses syscon-id;
+      leaf enable {
+        type led-state;
+        mandatory true;
+        description
+          "LAMP Test ON/OFF";
+      }
+    }
+    output {
+      leaf status {
+        type cmd-status;
+      }
+    }
+  }
+  rpc create-pm-log {
+    description
+      "Initiate creation of PM log file.";
+    input {
+      uses syscon-id;
+    }
+    output {
+      leaf status {
+        type cmd-status;
+      }
+    }
+  }
+}

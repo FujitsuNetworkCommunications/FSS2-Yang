@@ -1,0 +1,688 @@
+module fujitsu-notification-types {
+  namespace "urn:fujitsu:params:xml:ns:yang:notifications:notification-types";
+  prefix notification-types;
+
+  import fujitsu-notifications {
+    prefix notifications;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains supported alarm types.
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2018-10-29 {
+    description
+      "Added File sync events.";
+  }
+  revision 2018-10-16 {
+    description
+      "Added wavelengthContentionGroupNotification.";
+  }
+  revision 2018-05-31 {
+    description
+      "Added softwareActivationCanceled, databaseActivationSuccess,
+       databaseActivationCanceled, databaseCommitSuccess events";
+  }
+  revision 2018-04-05 {
+    description
+      "Added RSTP events";
+  }
+  revision 2018-03-13 {
+    description
+      "Added protection manual switch events";
+  }
+  revision 2018-01-10 {
+    description
+      "Added odu/tcm rx trace changes notification";
+  }
+  revision 2017-12-11 {
+    description
+      "Added Sync switch events
+       manualSwitch, autoSwitch";
+  }
+  revision 2017-10-04 {
+    description
+      "Added RASIS Util events
+       rasisUtilCreation, rasisUtilCreationComplete,
+       rasisUtilCreationFailure";
+  }
+  revision 2017-07-21 {
+    description
+      "Added OTN SNCP and SMR events
+       switchedToProtect, switchedBackToWorking,
+       smrActivationSuccess, smrActivationFail";
+  }
+  revision 2017-06-09 {
+    description
+      "Add events for sysZeroizationFailed, sysZeroizationCompleted,
+       dataEncZeroizationFailed, and dataEncZeroizationCompleted ";
+  }
+  revision 2017-05-04 {
+    description
+      "Add event for usbSafeToRemove ";
+  }
+  revision 2017-03-29 {
+    description
+      "Update event strings from Fail to Failure for 
+       bootloaderUpdateFailure softwareStageFailure
+       softwareCommitSuccessFailure ";
+  }
+  revision 2017-03-23 {
+    description
+      "Add bootloaderUpdateSuccess/Fail softwareStageSuccess/Fail
+       softwareActivationSuccess/Fail softwareCommitSuccess/Fail ";
+  }
+  revision 2016-09-28 {
+    description
+      "Add OTDR Notifications.";
+  }
+  revision 2015-07-26 {
+    description
+      "Initial revision.";
+  }
+
+  identity switchedToProtect {
+    base notifications:event-identity;
+    description
+      "Switched to Protect Interface";
+  }
+
+  identity switchedBackToWorking {
+    base notifications:event-identity;
+    description
+      "Switched back to Working Interface";
+  }
+
+  identity manualSwitchAwayFromWork {
+    base notifications:event-identity;
+    description
+      "Manual Switch Away From Work";
+  }
+
+  identity manualSwitchAwayFromProtect {
+    base notifications:event-identity;
+    description
+      "Manual Switch Away From Protect";
+  }
+
+  identity smrActivationSuccess {
+    base notifications:event-identity;
+    description
+      "Shared Mesh Restoration Path Activation Successful";
+  }
+
+  identity smrActivationFail {
+    base notifications:event-identity;
+    description
+      "Shared Mesh Restoration Path Activation Failed";
+  }
+
+  identity databaseActivation {
+    base notifications:event-identity;
+    description
+      "System Database Activation";
+  }
+
+  identity databaseActivationSuccess {
+    base notifications:event-identity;
+    description
+      "System Database Activation Success";
+  }
+
+  identity databaseActivationFailure {
+    base notifications:event-identity;
+    description
+      "System Database Activation Failure";
+  }
+
+  identity databaseActivationCanceled {
+    base notifications:event-identity;
+    description
+      "System Database Activation Canceled";
+  }
+
+  identity databaseActivationReversion {
+    base notifications:event-identity;
+    description
+      "System Database Activation Reversion";
+  }
+
+  identity databaseCommitSuccess {
+    base notifications:event-identity;
+    description
+      "System Database Commit Success";
+  }
+
+  identity rasisUtilCreation {
+    base notifications:event-identity;
+    description
+      "RASIS Info Creation";
+  }
+
+  identity rasisUtilCreationComplete {
+    base notifications:event-identity;
+    description
+      "RASIS Info Creation Complete";
+  }
+
+  identity rasisUtilCreationFailure {
+    base notifications:event-identity;
+    description
+      "RASIS Info Creation Failure";
+  }
+
+  identity firmwareActivation {
+    base notifications:event-identity;
+    description
+      "Firmware Activation";
+  }
+
+  identity firmwareActivationComplete {
+    base notifications:event-identity;
+    description
+      "Firmware Activation Complete";
+  }
+
+  identity firmwareActivationFailure {
+    base notifications:event-identity;
+    description
+      "Firmware Activation Failure";
+  }
+
+  identity softwareActivation {
+    base notifications:event-identity;
+    description
+      "Software Activation";
+  }
+
+  identity softwareActivationComplete {
+    base notifications:event-identity;
+    description
+      "Software Activation Complete";
+  }
+
+  identity softwareActivationFailure {
+    base notifications:event-identity;
+    description
+      "Software Activation Failure";
+  }
+
+  identity softwareActivationCanceled {
+    base notifications:event-identity;
+    description
+      "Software Activation Canceled";
+  }
+
+  identity softwareReversion {
+    base notifications:event-identity;
+    description
+      "System Software Reversion";
+  }
+
+  identity cancelValidationTimerInProgress {
+    base notifications:event-identity;
+    description
+      "Cancel Validation Timer In Progress";
+  }
+
+  identity cancelValidationTimerComplete {
+    base notifications:event-identity;
+    description
+      "Cancel Validation Timer Complete";
+  }
+
+  identity cancelValidationTimerFailed {
+    base notifications:event-identity;
+    description
+      "Cancel Validation Timer Failed";
+  }
+
+  identity uBootFailOver {
+    base notifications:event-identity;
+    description
+      "Failover due to UBoot error";
+  }
+
+  identity softwareFailOver {
+    base notifications:event-identity;
+    description
+      "Failover due to Software error";
+  }
+
+  identity bootloaderUpdateSuccess {
+    base notifications:event-identity;
+    description
+      "bootloader Update Success";
+  }
+
+  identity bootloaderUpdateFailure {
+    base notifications:event-identity;
+    description
+      "bootloader Update Failure";
+  }
+
+  identity softwareStageSuccess {
+    base notifications:event-identity;
+    description
+      "Software Staging Success";
+  }
+
+  identity softwareStageFailure {
+    base notifications:event-identity;
+    description
+      "Software Stage Failure";
+  }
+
+  identity softwareActivationSuccess {
+    base notifications:event-identity;
+    description
+      "Software Activation Success";
+  }
+
+  identity softwareCommitSuccess {
+    base notifications:event-identity;
+    description
+      "Software Commit Success";
+  }
+
+  identity softwareCommitFailure {
+    base notifications:event-identity;
+    description
+      "Software Commit Failure";
+  }
+
+  identity usbSafeToRemove {
+    base notifications:event-identity;
+    description
+      "USB Device Safe To Remove";
+  }
+
+  identity daylightSavingTimeAdjustment {
+    base notifications:event-identity;
+    description
+      "Daylight Saving Time Adjustment";
+  }
+
+  identity dateTimeModified {
+    base notifications:event-identity;
+    description
+      "Date Time Modified";
+  }
+
+  identity sysNtpSynchronized {
+    base notifications:event-identity;
+    description
+      "NTP: System Clock Synchronized";
+  }
+
+  identity sysNtpSwitchOver {
+    base notifications:event-identity;
+    description
+      "NTP Server Switch Over";
+  }
+
+  identity sysZeroizationFailed {
+    base notifications:event-identity;
+    description
+      "System zeroization failed";
+  }
+
+  identity sysZeroizationCompleted {
+    base notifications:event-identity;
+    description
+      "System zeroization completed";
+  }
+
+  identity dataEncZeroizationFailed {
+    base notifications:event-identity;
+    description
+      "Data-encryption zeroization failed";
+  }
+
+  identity dataEncZeroizationCompleted {
+    base notifications:event-identity;
+    description
+      "Data-encryption zeroization completed";
+  }
+
+  identity wavelengthContentionGroupChange {
+    base notifications:event-identity;
+    description
+      "Wavelength Contention Group Changed
+       wcg-groupid
+       wcg-ports";
+  }
+
+  identity lldpNbrInfoChanged {
+    base notifications:event-identity;
+    description
+      "LLDP: Neighbor Information Changed
+       remoteSysName
+       remoteSysMgmtAddressSubType
+       remoteSysMgmtAddress
+       remotePortIdSubType
+       remotePortId
+       remoteChassisIdSubType
+       remoteChassisId
+       All of the above attributes are sent in event";
+  }
+
+  identity spanningTreeNewRoot {
+    base notifications:event-identity;
+    description
+      "RSTP New Root";
+  }
+
+  identity spanningTreeTopologyChange {
+    base notifications:event-identity;
+    description
+      "RSTP Topology Changed";
+  }
+
+  identity systemRestartCold {
+    base notifications:event-identity;
+    description
+      "Cold System Restart";
+  }
+
+  identity systemRestartWarm {
+    base notifications:event-identity;
+    description
+      "Warm System Restart";
+  }
+
+  identity systemRestartDbInitialization {
+    base notifications:event-identity;
+    description
+      "System Restart - Db initialization";
+  }
+
+  identity systemRestartShfprov {
+    base notifications:event-identity;
+    description
+      "System Restart - SHFPROV";
+  }
+
+  identity copyFileInProgress {
+    base notifications:event-identity;
+    description
+      "Copy File In Progress nn.n% Complete";
+  }
+
+  identity copyFileComplete {
+    base notifications:event-identity;
+    description
+      "Copy File Complete 100% Complete";
+  }
+
+  identity copyFileFailure {
+    base notifications:event-identity;
+    description
+      "Copy File Failure";
+  }
+
+  identity copyFileFailureTransfer {
+    base notifications:event-identity;
+    description
+      "fileTransferFailure - transfer-failed";
+  }
+
+  identity copyFileFailureMd5check {
+    base notifications:event-identity;
+    description
+      "fileTransferFailure -md5check-failed";
+  }
+
+  identity copyFileFailureVerification {
+    base notifications:event-identity;
+    description
+      "fileTransferFailure -verification-failed";
+  }
+
+  identity fileSyncInProgress {
+    base notifications:event-identity;
+    description
+      "File Sync In Progress nn.n% Complete.";
+  }
+
+  identity fileSyncCompleted {
+    base notifications:event-identity;
+    description
+      "File Sync Complete 100% Complete.";
+  }
+
+  identity fileSyncFailure {
+    base notifications:event-identity;
+    description
+      "File Sync Failure.";
+  }
+
+  identity fileAlreadyInSync {
+    base notifications:event-identity;
+    description
+      "File Already In Sync.";
+  }
+
+  identity equipmentPlugin {
+    base notifications:event-identity;
+    description
+      "Equipment Plugged In";
+  }
+
+  identity equipmentPlugout {
+    base notifications:event-identity;
+    description
+      "Equipment Plugged Out";
+  }
+
+  identity entityOperStatusChangeToUp {
+    base notifications:event-identity;
+    description
+      "Operational Status Change to Up";
+  }
+
+  identity entityOperStatusChangeToDown {
+    base notifications:event-identity;
+    description
+      "Operational Status Change to Down ";
+  }
+
+  identity entityOperStatusChangeToTesting {
+    base notifications:event-identity;
+    description
+      "Operational Status Change to Testing";
+  }
+
+  identity entityOperStatusChangeToUnknown {
+    base notifications:event-identity;
+    description
+      "Operational Status Change to Unknown  ";
+  }
+
+  identity entityOperStatusChangeToDormant {
+    base notifications:event-identity;
+    description
+      "Operational Status Change to Dormant";
+  }
+
+  identity entityOperStatusChangeToNotPresent {
+    base notifications:event-identity;
+    description
+      "Operational Status Change to Not Present";
+  }
+
+  identity entityOperStatusChangeToLowerLayerDown {
+    base notifications:event-identity;
+    description
+      "Operational Status Change to Lower Layer Down ";
+  }
+
+  identity otuReceivedTraceChange {
+    base notifications:event-identity;
+    description
+      "OTU Received Trace Change";
+  }
+
+  identity oduReceivedTraceChange {
+    base notifications:event-identity;
+    description
+      "ODU Received Trace Change";
+  }
+
+  identity oduReceivedTraceChangeTcm1Up {
+    base notifications:event-identity;
+    description
+      "ODU Received Trace Change for Tcm1Up";
+  }
+
+  identity oduReceivedTraceChangeTcm2Up {
+    base notifications:event-identity;
+    description
+      "ODU Received Trace Change for Tcm2Up";
+  }
+
+  identity oduReceivedTraceChangeTcm3Up {
+    base notifications:event-identity;
+    description
+      "ODU Received Trace Change for Tcm3Up";
+  }
+
+  identity oduReceivedTraceChangeTcm4Up {
+    base notifications:event-identity;
+    description
+      "ODU Received Trace Change for Tcm4Up";
+  }
+
+  identity oduReceivedTraceChangeTcm5Up {
+    base notifications:event-identity;
+    description
+      "ODU Received Trace Change for Tcm5Up";
+  }
+
+  identity oduReceivedTraceChangeTcm6Up {
+    base notifications:event-identity;
+    description
+      "ODU Received Trace Change for Tcm6Up";
+  }
+
+  identity oduReceivedTraceChangeTcm1Down {
+    base notifications:event-identity;
+    description
+      "ODU Received Trace Change for Tcm1Down";
+  }
+
+  identity oduReceivedTraceChangeTcm2Down {
+    base notifications:event-identity;
+    description
+      "ODU Received Trace Change for Tcm2Down";
+  }
+
+  identity oduReceivedTraceChangeTcm3Down {
+    base notifications:event-identity;
+    description
+      "ODU Received Trace Change for Tcm3Down";
+  }
+
+  identity oduReceivedTraceChangeTcm4Down {
+    base notifications:event-identity;
+    description
+      "ODU Received Trace Change for Tcm4Down";
+  }
+
+  identity oduReceivedTraceChangeTcm5Down {
+    base notifications:event-identity;
+    description
+      "ODU Received Trace Change for Tcm5Down";
+  }
+
+  identity oduReceivedTraceChangeTcm6Down {
+    base notifications:event-identity;
+    description
+      "ODU Received Trace Change for Tcm6Down";
+  }
+
+  identity autoLogoffAssociationCancellation {
+    base notifications:event-identity;
+    description
+      "Auto Logoff Association Cancellation";
+  }
+
+  identity autoLogoffSessionTimeout {
+    base notifications:event-identity;
+    description
+      "Auto Logoff due to Session Timeout";
+  }
+
+  identity autoLogoffCableDisconnect {
+    base notifications:event-identity;
+    description
+      "Auto Logoff due to Cable Disconnect";
+  }
+
+  identity autoLogoffPasswordChanged {
+    base notifications:event-identity;
+    description
+      "Auto Logoff due to Password must be Changed";
+  }
+
+  identity ForcedLogoff {
+    base notifications:event-identity;
+    description
+      "Forced Logoff";
+  }
+
+  identity ipNotReachable {
+    base notifications:event-identity;
+    description
+      "IP Not Reachable";
+  }
+
+  identity ipReachable {
+    base notifications:event-identity;
+    description
+      "IP Reachable";
+  }
+
+  identity ipPingRequestTimedOut {
+    base notifications:event-identity;
+    description
+      "IP PING Request Timed Out";
+  }
+
+  identity otdrScanComplete {
+    base notifications:event-identity;
+    description
+      "OTDR Scan Complete";
+  }
+
+  identity otdrScanFailure {
+    base notifications:event-identity;
+    description
+      "OTDR Scan Failure";
+  }
+
+  identity manualSwitch {
+    base notifications:event-identity;
+    description
+      "Manual Switch";
+  }
+
+  identity autoSwitch {
+    base notifications:event-identity;
+    description
+      "Auto Switch";
+  }
+}

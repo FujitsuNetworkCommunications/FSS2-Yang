@@ -1,0 +1,246 @@
+module fujitsu-tacacs-plus-client {
+  namespace "urn:fujitsu:params:xml:ns:yang:typedef:tacacs-plus-client";
+  prefix tacacsplus;
+  yang-version 1.1;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import fujitsu-user-security {
+    prefix secu;
+  }
+  import fujitsu-user-security-typedefs {
+    prefix usersecu-type;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains definitions for the management of TACACS+
+     client provisioning.
+     Copyright (c) 2017 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2018-08-02 {
+    description
+      "Removed default value in tacacs accounting-order events leaf-list";
+  }
+  revision 2018-05-25 {
+    description
+      "Set yang-version as 1.1 and added default value in events leaf-list";
+  }
+  revision 2018-04-02 {
+    description
+      "Added tacacs accounting event support";
+  }
+  revision 2017-06-08 {
+    description
+      "Added port range for tacacs authentication and accounting";
+  }
+  revision 2017-05-06 {
+    description
+      "Removed the Authorization part as both authentication and authorization
+       done by same tacacsplus server.
+       Updated the max server support.
+       Moved the timeout outside the list auth and account.
+       Removed the server-attempts.
+       Added length restriction for authentication and accounting server name";
+  }
+  revision 2017-03-17 {
+    description
+      "Added support for Shared secrets, server-priority and reattempts";
+  }
+  revision 2017-03-14 {
+    description
+      "Initial revision.";
+  }
+
+  feature tacacs-plus {
+    description
+      "Indicates that the device can be configured as a TACACS+
+       client.";
+  }
+
+  identity tacacs-authentication-type {
+    description
+      "Base identity for TACACS+ authentication types.";
+  }
+
+  identity tacacs-plus-pap {
+    base tacacs-authentication-type;
+    description
+      "The device requests Password Authentication Protocol (PAP)
+       authentication from the TACACS+ server.";
+  }
+
+  augment "/secu:security" {
+    container tacacs {
+      if-feature "tacacs-plus";
+      description
+        "Configuration of the TACACS+ client.";
+      container authentication {
+        list server {
+          max-elements "5";
+          key "name";
+          description
+            "List of TACACS+ Authentication servers used by the device.";
+          leaf name {
+            type string {
+              length "1..64";
+            }
+            description
+              "An arbitrary name for the TACACS+ authentication server.";
+          }
+          choice transport {
+            mandatory true;
+            description
+              "The transport-protocol-specific parameters for this
+               server.";
+            case tcp {
+              container tcp {
+                description
+                  "Contains TCP-specific configuration parameters
+                   for TACACS+.";
+                leaf address {
+                  type inet:ip-address;
+                  mandatory true;
+                  description
+                    "The address of the TACACS+ authentication server.";
+                }
+                leaf port {
+                  type uint16 {
+                    range "1..65535";
+                  }
+                  default "49";
+                  description
+                    "The port number of the TACACS+ authentication server.";
+                }
+                leaf shared-secret {
+                  type string;
+                  mandatory true;
+                  description
+                    "The shared secret, which is known to both the
+                     TACACS+ authentication client and server.";
+                }
+              }
+            }
+          }
+          leaf authentication-type {
+            type identityref {
+              base tacacs-authentication-type;
+            }
+            default "tacacs-plus-pap";
+            description
+              "The authentication type requested from the TACACS+ server.";
+          }
+        }
+        leaf timeout {
+          type uint8 {
+            range "1..30";
+          }
+          units "seconds";
+          default "5";
+          description
+            "The number of seconds the device will wait for a
+             response from each TACACS+ authentication server before trying with a
+             different server.";
+        }
+        leaf-list server-priority {
+          ordered-by user;
+          description
+            "The order of servers in which authentication attempts are done.";
+          type leafref {
+            path "/secu:security/tacacsplus:tacacs/tacacsplus:authentication/tacacsplus:server/tacacsplus:name";
+          }
+        }
+      }
+      container accounting {
+        list server {
+          max-elements "5";
+          key "name";
+          description
+            "List of TACACS+ Accounting servers used by the device.";
+          leaf name {
+            type string {
+              length "1..64";
+            }
+            description
+              "An arbitrary name for the TACACS+ accounting server.";
+          }
+          choice transport {
+            mandatory true;
+            description
+              "The transport-protocol-specific parameters for this
+               server.";
+            case tcp {
+              container tcp {
+                description
+                  "Contains TCP-specific configuration parameters
+                   for TACACS+.";
+                leaf address {
+                  type inet:ip-address;
+                  mandatory true;
+                  description
+                    "The address of the TACACS+ accounting server.";
+                }
+                leaf port {
+                  type uint16 {
+                    range "1..65535";
+                  }
+                  default "49";
+                  description
+                    "The port number of the TACACS+ accounting server.";
+                }
+                leaf shared-secret {
+                  type string;
+                  mandatory true;
+                  description
+                    "The shared secret, which is known to both the
+                     TACACS+ accounting client and server.";
+                }
+              }
+            }
+          }
+        }
+        leaf timeout {
+          type uint8 {
+            range "1..30";
+          }
+          units "seconds";
+          default "5";
+          description
+            "The number of seconds the device will wait for a
+             response from each TACACS+ accounting server before trying with a
+             different server.";
+        }
+        leaf-list server-priority {
+          ordered-by user;
+          description
+            "The order of servers in which accounting messages are sent.";
+          type leafref {
+            path "/secu:security/tacacsplus:tacacs/tacacsplus:accounting/tacacsplus:server/tacacsplus:name";
+          }
+        }
+        leaf-list events {
+          description
+            "The type of event[s] in which accounting messages are sent.";
+          type usersecu-type:accounting-event-type;
+          max-elements "3";
+          must "/secu:security/tacacsplus:tacacs/tacacsplus:accounting/tacacsplus:events[1] = 'login'" {
+            error-app-tag "inconsistent value";
+            error-message "Accounting event - login is enabled by default and can't be disabled";
+          }
+        }
+      }
+    }
+  }
+}

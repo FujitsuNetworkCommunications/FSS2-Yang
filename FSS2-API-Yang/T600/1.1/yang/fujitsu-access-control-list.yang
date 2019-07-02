@@ -1,0 +1,175 @@
+module fujitsu-access-control-list {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:interfaces:fujitsu-access-control-list";
+  prefix fujitsu-acl;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+  import ietf-access-control-list {
+    prefix acl;
+  }
+  import ietf-yang-types {
+    prefix yang;
+  }
+  import iana-if-type {
+    prefix ianaift;
+  }
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import fujitsu-protocols {
+    prefix fprot;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains YANG definitions 
+     for fujitsu extension of Access Control Lists
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2018-06-26 {
+    description
+      "Range limitation for tcp/udp port numbers from 1-65535.";
+  }
+  revision 2018-06-07 {
+    description
+      "Changes to include port-range container grouping 
+       protocol and tcp-flags provisioning in matches criteria.";
+  }
+  revision 2015-11-09 {
+    description
+      "Initial revision.";
+  }
+
+  augment "/if:interfaces/if:interface" {
+    container acl {
+      when "current()/../if:type='ianaift:ip'";
+      description
+        "ACL related properties.";
+      leaf acl-name {
+        description
+          "Access Control List name.";
+        type leafref {
+          path "/acl:access-lists/acl:acl/acl:acl-name";
+        }
+      }
+    }
+  }
+
+  typedef operator {
+    type enumeration {
+      enum "lt" {
+        value 1;
+        description
+          "Less than.";
+      }
+      enum "gt" {
+        value 2;
+        description
+          "Greater than.";
+      }
+      enum "eq" {
+        value 3;
+        description
+          "Equal to.";
+      }
+    }
+    description
+      "The source and destination port range definitions
+       can be further qualified using an operator. An
+       operator is needed only if lower-port is specified
+       and upper-port is not specified. The operator
+       therefore further qualifies lower-port only.";
+  }
+
+  grouping port-range-or-operator {
+    description
+      "Grouping for port definitions in the form of a
+       choice statement.";
+    choice port-range-or-operator {
+      description
+        "Choice of specifying a port range or a single
+         port along with an operator.";
+      case range {
+        leaf lower-port {
+          type inet:port-number {
+            range "1..65535";
+          }
+          mandatory true;
+          description
+            "Lower boundary for a port.";
+        }
+        leaf upper-port {
+          type inet:port-number {
+            range "1..65535";
+          }
+          must ". >= ../lower-port" {
+            error-message
+              "The upper-port must be greater than or equal to
+               lower-port.";
+          }
+          mandatory true;
+          description
+            "Upper boundry for port.";
+        }
+      }
+      case operator {
+        leaf operator {
+          type operator;
+          default "eq";
+          description
+            "Operator to be applied on the port below.";
+        }
+        leaf port {
+          type inet:port-number {
+            range "1..65535";
+          }
+          mandatory true;
+          description
+            "Port number on which to match.";
+        }
+      }
+    }
+  }
+
+  augment "/acl:access-lists/acl:acl/acl:access-list-entries/acl:ace/acl:matches/acl:ace-type/acl:ace-ip" {
+    container source-port {
+      when "../acl:protocol = 6 or ../acl:protocol = 17";
+      uses port-range-or-operator;
+      description
+        "Source port definition.";
+    }
+    container destination-port {
+      when "../acl:protocol = 6 or ../acl:protocol = 17";
+      uses port-range-or-operator;
+      description
+        "Destination port definition.";
+    }
+    leaf-list flags {
+      when "../acl:protocol = 6";
+      type string;
+      description
+        "Control Bits(URG/ACK/PSH/RST/FIN/SYN)";
+    }
+  }
+  augment "/acl:access-lists" {
+    leaf-list auto-permitted-protocols {
+      type fprot:auto-permitted-protocol;
+      description
+        "Auto permit protocols.";
+    }
+  }
+}

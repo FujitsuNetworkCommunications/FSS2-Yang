@@ -1,0 +1,87 @@
+module ietf-alarms-dev {
+  namespace "urn:fujitsu:params:xml:ns:yang:ietf-alarms-deviation";
+  prefix alarmsdev;
+
+  import ietf-alarms {
+    prefix alarms;
+  }
+
+  revision 2017-02-01 {
+    description
+      "Deviate max-alarm-history and notify-status-changes to not-supported.";
+    reference "None.";
+  }
+
+  deviation "/alarms:alarms/alarms:control/alarms:shelved-alarms" {
+    deviate not-supported;
+  }
+  deviation "/alarms:alarms/alarms:summary/alarms:cleared" {
+    deviate not-supported;
+  }
+  deviation "/alarms:alarms/alarms:summary/alarms:cleared-not-closed" {
+    deviate not-supported;
+  }
+  deviation "/alarms:alarms/alarms:summary/alarms:cleared-closed" {
+    deviate not-supported;
+  }
+  deviation "/alarms:alarms/alarms:summary/alarms:not-cleared-closed" {
+    deviate not-supported;
+  }
+  deviation "/alarms:alarms/alarms:summary/alarms:not-cleared-not-closed" {
+    deviate not-supported;
+  }
+  deviation "/alarms:alarms/alarms:alarm-list/alarms:alarm/alarms:alt-resource" {
+    deviate not-supported;
+  }
+  deviation "/alarms:alarms/alarms:alarm-list/alarms:alarm/alarms:related-alarms" {
+    deviate not-supported;
+  }
+  deviation "/alarms:alarms/alarms:alarm-list/alarms:alarm/alarms:impacted-resources" {
+    deviate not-supported;
+  }
+  deviation "/alarms:alarms/alarms:alarm-list/alarms:alarm/alarms:root-cause-resources" {
+    deviate not-supported;
+  }
+  deviation "/alarms:alarms/alarms:alarm-list/alarms:alarm/alarms:is-cleared" {
+    deviate not-supported;
+  }
+  deviation "/alarms:alarms/alarms:alarm-list/alarms:alarm/alarms:status-change" {
+    deviate not-supported;
+  }
+  deviation "/alarms:alarms/alarms:alarm-list/alarms:alarm/alarms:last-operator-state" {
+    deviate not-supported;
+  }
+  deviation "/alarms:alarms/alarms:alarm-list/alarms:alarm/alarms:last-operator" {
+    deviate not-supported;
+  }
+  deviation "/alarms:alarms/alarms:alarm-list/alarms:alarm/alarms:last-operator-text" {
+    deviate not-supported;
+  }
+  deviation "/alarms:alarms/alarms:alarm-list/alarms:alarm/alarms:last-operator-action" {
+    deviate not-supported;
+  }
+  deviation "/alarms:alarms/alarms:alarm-list/alarms:alarm/alarms:operator-action" {
+    deviate not-supported;
+  }
+  deviation "/alarms:operator-action" {
+    deviate not-supported;
+  }
+  deviation "/alarms:compress" {
+    deviate not-supported;
+  }
+  deviation "/alarms:compress-alarms" {
+    deviate not-supported;
+  }
+  deviation "/alarms:set-operator-state" {
+    deviate not-supported;
+  }
+  deviation "/alarms:purge-alarms" {
+    deviate not-supported;
+  }
+  deviation "/alarms:alarms/alarms:control/alarms:max-alarm-history" {
+    deviate not-supported;
+  }
+  deviation "/alarms:alarms/alarms:control/alarms:notify-status-changes" {
+    deviate not-supported;
+  }
+}

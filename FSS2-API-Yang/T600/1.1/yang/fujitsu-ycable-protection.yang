@@ -1,0 +1,194 @@
+module fujitsu-ycable-protection {
+  namespace "urn:fujitsu:params:xml:ns:yang:ypg";
+  prefix ypg;
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains YANG definitions
+     for the ycable.
+     
+     Copyright (c) 2017 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2018-05-08 {
+    description
+      "Added description and mandatory for switch-command.";
+  }
+  revision 2018-01-29 {
+    description
+      "rpc-response-status status values are updated to 0/1/2 
+       for success/failed/in-progress respectively";
+  }
+  revision 2018-01-22 {
+    description
+      "removed mandatory true option for the pg-id";
+  }
+  revision 2017-11-19 {
+    description
+      "working-if, ypg-interface attributes modified";
+  }
+  revision 2017-11-17 {
+    description
+      "Initial revision.";
+  }
+
+  grouping ypg-attributes {
+    leaf name {
+      type string;
+      description
+        "The name of the protection group.";
+    }
+    leaf pg-id {
+      type uint32;
+      description
+        "An identifier for protection group, unique per port.";
+    }
+    leaf revertive {
+      type boolean;
+      default "false";
+      description
+        "Sets reversion behavior.";
+    }
+    leaf clear-switching-delay {
+      units "milliseconds";
+      type uint16 {
+        range "0 | 500 | 1000 | 2500";
+      }
+      default "0";
+      description
+        "Switch clear delay time in milliseconds.";
+    }
+    leaf remote-fault-trigger {
+      type boolean;
+      default "true";
+      description
+        "Trigger switch on detection of backward defect.";
+    }
+    container holdoff-timer {
+      leaf holdoff {
+        units "milliseconds";
+        type uint8 {
+          range "0 | 20 | 50 | 100";
+        }
+        default "0";
+        description
+          "Switch holdoff time in milliseconds.";
+      }
+      leaf holdoff-multiplier {
+        when "../holdoff = 100";
+        type uint8 {
+          range "1..10";
+        }
+        default "1";
+        description
+          "Switch holdoff time multiplier x100 milliseconds.";
+      }
+    }
+    leaf working-if {
+      type string;
+      mandatory true;
+      description
+        "Designated working interface.";
+    }
+    leaf-list ypg-interfaces {
+      type string;
+      min-elements 2;
+      description
+        "List of interfaces in the YPG.";
+    }
+    leaf active-if {
+      type string {
+        length "0..45";
+      }
+      config false;
+      description
+        "Active interface in the YPG.";
+    }
+  }
+
+  container ycable-protection {
+    description
+      "ycable protection";
+    list ypg-group {
+      description
+        "Port level protection group.";
+      key "name";
+      uses ypg-attributes;
+    }
+  }
+
+  grouping rpc-response-status {
+    leaf status {
+      type enumeration {
+        enum "Successful" {
+          value 0;
+        }
+        enum "Failed" {
+          value 1;
+        }
+        enum "In-progress" {
+          value 2;
+        }
+      }
+      mandatory true;
+      description
+        "Successful, Failed or In-progress.";
+    }
+    leaf status-message {
+      type string;
+      description
+        "Gives a more detailed status.";
+    }
+  }
+
+  rpc protection-switch {
+    input {
+      leaf protection-group {
+        type leafref {
+          path "/ycable-protection/ypg-group/name";
+        }
+        mandatory true;
+        description
+          "Target protection group name.";
+      }
+      leaf ypg-interface {
+        type string;
+        mandatory true;
+        description
+          "Target protection group working/protect interface name.";
+      }
+      leaf switch-command {
+        type enumeration {
+          enum "Do-Not-Switch" {
+            value 1;
+          }
+          enum "Force-Switch" {
+            value 2;
+          }
+          enum "Manual-Switch" {
+            value 3;
+          }
+          enum "Release" {
+            value 4;
+          }
+        }
+        mandatory true;
+        description
+          "Protection switch request type.";
+      }
+    }
+    output {
+      uses rpc-response-status;
+    }
+  }
+}

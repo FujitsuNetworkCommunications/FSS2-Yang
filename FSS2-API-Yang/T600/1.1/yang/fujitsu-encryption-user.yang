@@ -1,0 +1,76 @@
+module fujitsu-encryption-user {
+  namespace "urn:fujitsu:params:xml:ns:yang:enc-user";
+  prefix enc-user;
+
+  import fujitsu-user-security {
+    prefix secu;
+  }
+  import fujitsu-user-security-typedefs {
+    prefix usersecu-type;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains yang model for encryption user mgmt.
+     
+     Copyright (c) 2017 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2017-07-05 {
+    description
+      "Security Yang performance improvement";
+  }
+  revision 2017-02-07 {
+    description
+      "Initial revision.";
+  }
+
+  list encryption-user {
+    description
+      "Table of user accounts related to data encryption";
+    key "username";
+    leaf username {
+      type usersecu-type:username-type;
+    }
+    leaf password {
+      description
+        "clear text password.
+         crypt-password and password should not co-exist unless password is *";
+      type usersecu-type:password-type;
+    }
+    leaf crypt-password {
+      description
+        "encrypted password.
+          crypt-password and password should not co-exist unless password is *";
+      type string;
+    }
+    leaf group {
+      type usersecu-type:group-type;
+      description
+        "Group defines authorization levels that control command and data access privileges.
+         Entered group must be level-7, level-8.
+         level-7 Crypto User
+         level-8 Crypto Officer";
+      mandatory true;
+      must "current()='level-7' or current()='level-8'" {
+        error-message "level-7 and level-8 are the only supported levels for a encryption user";
+      }
+    }
+    leaf adminState {
+      description
+        "admin State of the user - allow/inhibit";
+      type usersecu-type:adminState-type;
+      default "allow";
+    }
+  }
+}

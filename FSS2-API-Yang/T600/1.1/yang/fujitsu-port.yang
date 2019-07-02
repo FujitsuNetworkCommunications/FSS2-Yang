@@ -1,0 +1,160 @@
+module fujitsu-port {
+  namespace "urn:fujitsu:params:xml:ns:yang:equipment:port";
+  prefix port;
+
+  import fujitsu-physical-inventory {
+    prefix physical-inventory;
+  }
+  import fujitsu-entity-states {
+    prefix entity-states;
+  }
+  import fujitsu-subport {
+    prefix subport;
+  }
+  import fujitsu-performance-monitoring-typedefs {
+    prefix pmtypedefs;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd. Address: 2801 Telecom Parkway Richardson, Texas
+     75082 Tel: +1-800-USE-FTAC (1-800-873-3822) Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains definitions for Pluggable equipment management.
+     Copyright (c) 2015 Fujitsu Ltd. All rights reserved. ";
+
+  revision 2018-10-05 {
+    description
+      "Added a new PI grouping fujitsu-port-pi specific to port with attributes 
+       is-tunable, transmitter-wavelength, laser-first-frequency, 
+       laser-last-frequency, laser-min-grid-space";
+  }
+  revision 2018-04-03 {
+    description
+      "OPS-2799 Added new leaf named connection-type under Port grouping
+       along with the if-feature colorless.";
+  }
+  revision 2018-04-03 {
+    description
+      "OPS-2800 Added new leaf named description under Port grouping 
+       which stores circuit-name/customer-name of the port.";
+  }
+  revision 2018-01-11 {
+    description
+      "if-feature protection group and leaf node pg-name is added.";
+  }
+  revision 2017-07-10 {
+    description
+      "Tailf dependencies added for yang-performance.";
+  }
+  revision 2017-02-21 {
+    description
+      "Provided default values for remoteSrcPeerPort-id
+       and remoteDestPeerPort-id.";
+  }
+  revision 2015-05-01 {
+    description
+      "Initial revision.";
+  }
+
+  typedef FixedOrPlugUnitClass {
+    type string;
+    description
+      "Classification of a fixed unit or pluggable unit. Examples for
+       fixed: FIBER, NBO Examples for pluggable: CFP, XFP, SFP+.";
+  }
+
+  feature protection-group {
+    description
+      "This feature means that the device supports the
+       protoction group membership (Y-Cable).";
+  }
+
+  feature fiber-connection-type {
+    description
+      "This feature enables the connection-type leaf that provides extra 
+       information to interfacing parties such as SDN controllers.";
+  }
+
+  grouping Port {
+    leaf portID {
+      type string;
+      description
+        "A unique port ID.";
+    }
+    leaf description {
+      type string {
+        length "min..1024";
+      }
+      description
+        "circuit-name/customer-name of the port.";
+    }
+    leaf connection-type {
+      if-feature "fiber-connection-type";
+      type string {
+        length "min..1024";
+      }
+      default "not-applicable";
+      description
+        "Attribute to provide extra information to interfacing parties such as SDN controllers.";
+    }
+    leaf pg-name {
+      if-feature "protection-group";
+      type string;
+      description
+        "Protection group name.";
+    }
+    leaf pluggableInterfaceType {
+      type string;
+      description
+        "Interface type of the pluggable/fixed unit.";
+    }
+    leaf num-lanes {
+      type string;
+      description
+        "Num of lanes for the port, auto create num-lanes of subports
+         when num-lanes > 1.";
+    }
+    uses entity-states:oper-status {
+      refine "oper-status" {
+        config false;
+      }
+    }
+    uses entity-states:admin-status {
+      refine "admin-status" {
+        mandatory false;
+        default "down";
+      }
+    }
+    container pi {
+      uses physical-inventory:PhysicalInventory;
+      uses physical-inventory:fujitsu-port-pi;
+      config false;
+    }
+    uses pmtypedefs:pm-info;
+    leaf remoteSrcPeerPort-id {
+      type string;
+      default "";
+      description
+        "The port ID of the remote source port to be associated with local
+         destination port. Shall be specified in the format of
+         <system name SID>/<shelf>/<slot>/<subslot>/<port>.";
+    }
+    leaf remoteDestPeerPort-id {
+      type string;
+      default "";
+      description
+        "The port ID of the remote destination port to be associated with
+         local source port. Shall be specified in the format of
+         <system name SID>/<shelf>/<slot>/<subslot>/<port>.";
+    }
+    list subport {
+      key "subPortID";
+      uses subport:subPort;
+      description
+        "List of subport identified by subPortID.";
+    }
+  }
+}

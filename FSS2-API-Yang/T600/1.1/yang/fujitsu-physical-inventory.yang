@@ -1,0 +1,116 @@
+module fujitsu-physical-inventory {
+  namespace "urn:fujitsu:params:xml:ns:yang:equipment:pi";
+  prefix physical-inventory;
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains definitions for the Physical Inventory.
+     
+     Copyright (c) 2015 Fujitsu Ltd
+     All rights reserved. ";
+
+  revision 2018-10-05 {
+    description
+      "Added a new PI grouping fujitsu-port-pi specific to port with attributes 
+       is-tunable, transmitter-wavelength, laser-first-frequency, 
+       laser-last-frequency, laser-min-grid-space";
+  }
+  revision 2015-04-10 {
+    description
+      "Initial revision.";
+  }
+
+  grouping PhysicalInventory {
+    leaf vendorName {
+      type string;
+      description
+        "A unique string describing the vendor name.";
+    }
+    leaf unitName {
+      type string;
+      description
+        "A unique string describing the type of unit.";
+    }
+    leaf vendorUnitCode {
+      type string;
+      description
+        "Vendor unit code.";
+    }
+    leaf IssueNumber {
+      type string;
+      description
+        "HW Issue # ";
+    }
+    leaf fcNumber {
+      type string;
+      description
+        "FC Number ";
+    }
+    leaf clei {
+      type string;
+      description
+        "Common Language Equipment Identification";
+    }
+    leaf dom {
+      type string;
+      description
+        "Date of manufacture. For example, YY.MM or YYMMDD";
+    }
+    leaf serialNumber {
+      type string;
+      description
+        "Unit serial number";
+    }
+    leaf usi {
+      type string;
+      description
+        "Unique Serial Identifier which includes the manufacturing location code";
+    }
+  }
+
+  grouping fujitsu-port-pi {
+    leaf is-tunable {
+      type boolean;
+      description
+        "Describes if the port supports tunable transmitter technology";
+    }
+    leaf transmitter-wavelength {
+      type decimal64 {
+        fraction-digits 5;
+      }
+      description
+        "Transmitter wavelength";
+    }
+    leaf laser-first-frequency {
+      type decimal64 {
+        fraction-digits 5;
+      }
+      description
+        "Laser first frequency in THz";
+    }
+    leaf laser-last-frequency {
+      type decimal64 {
+        fraction-digits 5;
+      }
+      description
+        "Laser last frequency in THz";
+    }
+    leaf laser-min-grid-space {
+      type decimal64 {
+        fraction-digits 5;
+      }
+      description
+        "Laser's minimum supporting grid spacing (GHz*10), i.e., in units of 0.1 GHz";
+    }
+  }
+}
