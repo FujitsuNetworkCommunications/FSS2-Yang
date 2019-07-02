@@ -1,0 +1,213 @@
+module fujitsu-ethernet-interfaces-dev.prod {
+    namespace "urn:fujitsu:params:xml:ns:yang:interface:eth-dev.prod";
+    prefix fujitsu-ethernet-interfaces-dev.prod;
+
+    import ietf-interfaces {
+        prefix if;
+    }
+
+    import fujitsu-ethernet-interfaces {
+        prefix eth;
+    }
+
+    import fujitsu-equipment {
+        prefix eqpt;
+    }
+    contact
+        "Fujitsu Ltd.
+
+        Address: 2801 Telecom Parkway
+                 Richardson, Texas 75082
+
+        Tel: +1-800-USE-FTAC (1-800-873-3822)
+        Email: ftac@fnc.fujitsu.com
+        Web: www.fujitsu.com/us/services/telecom";
+
+    description
+        "Deviation YANG definitions for T-Series ethernet interface.
+         Copyright (c) 2015 Fujitsu Ltd.
+         All rights reserved. ";
+
+    revision 2018-03-29 {
+        description
+        "default value added for tx-clock-source";
+    }
+
+    revision 2018-03-13 {
+        description
+        "PM supported for tera-dsp,
+         deviation added for testPattern, fec, rate, location,
+         transport-signal-failure, backward-transport-signal-failure,
+         direction, pm-type, pm-th-metered, pm-time-period, pm-value";
+    }
+
+    revision 2017-02-07 {
+        description
+        "PM not supported";
+    }
+    deviation "/if:interfaces/if:interface/eth:ethernet/eth:link-oam" {
+        deviate not-supported;
+        description "ETH does not support this Attribute";
+    }
+
+    // Support FEC for 100GE
+    deviation "/if:interfaces/if:interface/eth:ethernet/eth:fec" {
+       deviate replace {
+           type enumeration {
+               enum "off" {
+                   value "0";
+                   description "FEC value is off";
+               }
+               enum "rsfec" {
+                   value "1";
+                   description "FEC value is rsfec";
+               }
+           }
+       }
+       deviate add {
+           default "off";
+       }
+    }
+
+    // Support rates of 1GE, 10GE and 100G only
+    deviation "/if:interfaces/if:interface/eth:ethernet/eth:rate" {
+        deviate replace {
+            type uint32 {
+                range "10000000 | 100000000";
+            }
+            default "10000000";
+       }
+    }
+
+    // Only support loopback location of nearEnd
+    deviation "/if:interfaces/if:interface/eth:ethernet/eth:location" {
+        deviate replace {
+            type enumeration {
+                enum "nearEnd" {
+                    value "0";
+                    description "Loopback location at near-end";
+                }   
+            }   
+        }   
+    }  
+
+    // T-Series supports testPattern for GE
+    deviation "/if:interfaces/if:interface/eth:ethernet/eth:testPattern" {
+       deviate replace {
+           type enumeration {
+               enum "PRBS" {
+                   value "0";
+                   description "Unframed, inverted PN-31 pattern or PRBS31 pattern per IEEE 802.3 clause 50.3.8.2";
+               }
+               enum "PRBS31" {
+                   value "1";
+                   description "Scrambled PRBS31 test-pattern per IEEE 802.3ba";
+               }
+               enum "IDLE" {
+                   value "4";
+                   description "Scrambled IDLE test-pattern per IEEE 802.3ba";
+               }
+           }
+       }
+       deviate add {
+         default "IDLE";
+       }
+    }
+
+    // default transport-signal-failure value to be local-fault
+    deviation "/if:interfaces/if:interface/eth:ethernet/eth:transport/eth:transport-signal-failure" {
+        deviate replace {
+            type enumeration {
+                enum tsf-local-fault {
+                  value "0";
+                  description "Local Fault";
+                }
+                enum tsf-idle{
+                  value "1";
+                  description "Idle";
+                }
+            }
+        }
+	deviate add {
+	    default tsf-local-fault; 
+	}   
+    }
+
+    // default backward-transport-signal-failure value to be none
+    deviation "/if:interfaces/if:interface/eth:ethernet/eth:transport/eth:backward-transport-signal-failure" {
+        deviate replace {
+            type enumeration {
+                enum none {
+	            value "0";
+		    description "Nothing";
+		}
+		enum remote-fault  {
+		    value "1";
+		    description "Remote Fault";
+		}
+	    }
+        }
+	deviate add {
+	    default none; 
+	}   
+    }
+
+    // Support bi direction only
+    deviation "/if:interfaces/if:interface/eth:ethernet/eth:transport/eth:direction" {
+        deviate replace {
+            type enumeration {
+                enum bi-dir {
+                  value "2";
+                  description "bidirectional";
+               }   
+            }   
+       }   
+       deviate add {
+         default bi-dir; 
+       }   
+    } 
+
+    // default through
+    deviation "/if:interfaces/if:interface/eth:ethernet/eth:transport/eth:tx-clock-source" {
+       deviate add {
+         default through;
+       }
+    }
+
+   // pm threshold changes
+    deviation "/if:interfaces/if:interface/eth:ethernet/eth:pm/eth:pm-threshold/eth:pm-type" {
+        deviate replace {
+            type enumeration {
+               enum binned {
+                   value 2;
+             description "Binned PM type";
+            }
+          }
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/eth:ethernet/eth:pm/eth:pm-threshold/eth:pm-th-metered" {
+        deviate not-supported;
+    }
+
+    deviation "/if:interfaces/if:interface/eth:ethernet/eth:pm/eth:pm-threshold/eth:pm-th-binned/eth:pm-time-periods/eth:pm-time-period" {
+        deviate replace {
+            type enumeration {
+                enum 15-min {
+                    value 1;
+                    description "15 minutes period";
+                }
+                enum 1-day {
+                    value 2;
+                    description "1 day period";
+                }
+            }
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/eth:ethernet/eth:pm/eth:pm-threshold/eth:pm-th-binned/eth:pm-time-periods/eth:pm-value" {
+         deviate replace  {
+             type uint64;
+         }
+    }  
+}   

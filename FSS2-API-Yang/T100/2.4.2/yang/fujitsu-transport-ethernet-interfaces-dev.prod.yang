@@ -1,0 +1,291 @@
+module fujitsu-transport-ethernet-interfaces-dev.prod {
+    namespace "urn:fujitsu:params:xml:ns:yang:interface:transport-eth-deviation";
+    prefix fujitsu-transport-ethernet-dev.prod;
+
+    import tailf-common {
+        prefix tailf;
+    }
+
+    import ietf-interfaces {
+        prefix if;
+    }
+
+    import fujitsu-transport-ethernet-interfaces {
+        prefix transp-eth;
+    }
+
+    import fujitsu-ethernet-interfaces-common {
+        prefix eth-cmn;
+    }
+
+    import fujitsu-equipment {
+        prefix eqpt;
+    }
+
+    organization
+        "Fujitsu Ltd.";
+
+    contact
+        "Fujitsu Ltd.
+
+        Address: 2801 Telecom Parkway
+                 Richardson, Texas 75082
+
+        Tel: +1-800-USE-FTAC (1-800-873-3822)
+        Email: ftac@fnc.fujitsu.com
+        Web: www.fujitsu.com/us/services/telecom";
+
+    description
+        "Deviation YANG definitions for T-Series transport ethernet interface.
+         Copyright (c) 2015 Fujitsu Ltd.
+         All rights reserved. ";
+  
+    revision 2018-06-26 {
+       description
+       "Changed the transp-eth:fec enums to small letters";
+    }
+    revision 2017-05-29 {
+       description
+       "AINS,vstimer and ACTVST are supported";
+    }
+    revision 2017-05-22 {
+        description
+        " Removing actual-vstimer";
+    }
+    revision 2017-02-16 {
+        description
+        "pm-value does not supports decimal values for interfaces";
+    }
+
+    revision 2017-01-30 {
+        description
+        "Fixed prefix, added header info, removed tabs.";
+    }    
+    
+    revision 2016-11-03 {
+        description
+        "btsf allow only 'none' check removed ";
+    }
+
+    revision 2016-09-16 {
+        description
+        "for 10G tsf attribute to lf due to Digi limitation";
+    }
+
+    revision 2016-09-13 {
+        description
+        "Changes to limit the setting of tsf attribute to lf (local fault) only";
+    }
+
+    revision 2016-09-10 {
+        description
+        "Changed the default value of FEC to OFF from RSFEC";
+    }
+
+    // T-Series supports rate 10GE and 100G only
+    deviation "/if:interfaces/if:interface/transp-eth:transport-ethernet/transp-eth:rate" {
+        deviate replace {
+            type uint32 {
+                range "10000000 | 100000000";
+            }
+            default "10000000";
+       }
+    }
+     
+
+    // limit tsf to be set to lf only
+    deviation "/if:interfaces/if:interface/transp-eth:transport-ethernet/transp-eth:tsf" {
+       deviate replace {
+            type enumeration {
+                enum lf {
+                  value "0";
+                  description "Local Fault";
+               }
+               }
+            } 
+       deviate add {
+         default lf;
+       }
+    }
+
+
+
+    // set btsf default value to be none.
+    deviation "/if:interfaces/if:interface/transp-eth:transport-ethernet/transp-eth:btsf" {
+       deviate add {
+         default none;
+       }
+    }
+
+    // limit ltxoff to be set to none/tsfs/rlanflt/all only
+    deviation "/if:interfaces/if:interface/transp-eth:transport-ethernet/transp-eth:ltxoff" {
+        deviate replace {
+            type enumeration {
+                enum none {
+                    value "0";
+                    description "NONE";
+                }
+                enum rlanflt {
+                    value "1";
+                    description "RLANFLT";
+                }
+                enum tsfs {
+                  value "2";
+                  description "TSFS";
+               }
+               enum all {
+                  value "4";
+                  description "all";
+               }
+
+            }
+       }
+
+    }
+
+
+    // T-Series supports bi direction only
+    deviation "/if:interfaces/if:interface/transp-eth:transport-ethernet/transp-eth:direction" {
+        deviate replace {
+            type enumeration {
+                enum bi {
+                  value "2";
+                  description "bidirectional";
+               }
+            }
+       }
+       deviate add {
+         default bi;
+       }
+    }
+
+    // limit tx-clock-source to be set to value 'through' only
+    deviation "/if:interfaces/if:interface/transp-eth:transport-ethernet/transp-eth:tx-clock-source" {
+        deviate replace {
+            type enumeration {
+                enum through {
+                  value "0";
+                  description "Timing is passed through";
+               }
+            } 
+       }
+       deviate add {
+         default through;
+       }
+    }
+
+    // T-Series supports testPattern for GE
+    deviation "/if:interfaces/if:interface/transp-eth:transport-ethernet/transp-eth:testPattern" {
+       deviate replace {
+           type enumeration {
+               enum "PRBS31" {
+                   value "1";
+                   description "Scrambled PRBS31 test-pattern per IEEE 802.3ba";
+               }
+               enum "IDLE" {
+                   value "4";
+                   description "Scrambled IDLE test-pattern per IEEE 802.3ba";
+               }
+           }
+       }
+       deviate add {
+         default "IDLE";
+       }
+    }
+
+    // Only support loopback type of fac or term
+    deviation "/if:interfaces/if:interface/transp-eth:transport-ethernet/transp-eth:type" {
+        deviate replace {
+            type enumeration {
+                enum "fac" {
+                    value "0";
+                    description "pre-FEC Loopback in the facility direction";
+                }
+                enum "term" {
+                    value "1";
+                    description "Loopback in the terminal direction";
+                }
+            }
+        }
+    }
+
+    // Only support loopback location of nearEnd
+    deviation "/if:interfaces/if:interface/transp-eth:transport-ethernet/transp-eth:location" {
+        deviate replace {
+            type enumeration {
+                enum "nearEnd" {
+                    value "0";
+                    description "Loopback location at near-end";
+                }
+            }
+        }
+    }
+
+    // T-Series supports FEC for 100GE
+    deviation "/if:interfaces/if:interface/transp-eth:transport-ethernet/transp-eth:fec" {
+       deviate replace {
+           type enumeration {
+               enum "off" {
+                   value "0";
+                   description "FEC value is off";
+               }
+               enum "rsfec" {
+                   value "1";
+                   description "FEC value is rsfec";
+               }
+               enum "autofec" {
+                   value "2";
+                   description "FEC value is auto";
+               }
+           }
+       }
+       deviate add {
+           default "off";
+       }
+    }
+    // alm-transfer delay not supported on T-Series
+    deviation "/if:interfaces/if:interface/transp-eth:transport-ethernet/transp-eth:alm-transfer-delay" {
+        deviate not-supported;
+    }
+
+    deviation "/if:interfaces/if:interface/transp-eth:transport-ethernet/transp-eth:actual-vstimer" {
+        deviate not-supported;
+    }
+    
+    // pm threshold changes
+    deviation "/if:interfaces/if:interface/transp-eth:transport-ethernet/transp-eth:pm/transp-eth:pm-threshold/transp-eth:pm-type" {
+        deviate replace {
+            type enumeration {
+               enum binned {
+                   value 2;
+             description "Binned PM type";
+            }
+          }
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/transp-eth:transport-ethernet/transp-eth:pm/transp-eth:pm-threshold/transp-eth:pm-th-metered" {
+        deviate not-supported;
+    }
+
+    deviation "/if:interfaces/if:interface/transp-eth:transport-ethernet/transp-eth:pm/transp-eth:pm-threshold/transp-eth:pm-th-binned/transp-eth:pm-time-periods/transp-eth:pm-time-period" {
+        deviate replace {
+            type enumeration {
+                enum 15-min {
+                    value 1;
+                    description "15 minutes period";
+                }
+                enum 1-day {
+                    value 2;
+                    description "1 day period";
+                }
+            }
+        }
+    }
+
+    deviation "/if:interfaces/if:interface/transp-eth:transport-ethernet/transp-eth:pm/transp-eth:pm-threshold/transp-eth:pm-th-binned/transp-eth:pm-time-periods/transp-eth:pm-value" {
+         deviate replace  {
+             type uint64;
+         }
+    } 
+}

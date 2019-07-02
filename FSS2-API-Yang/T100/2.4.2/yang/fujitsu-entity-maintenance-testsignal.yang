@@ -1,0 +1,136 @@
+module fujitsu-entity-maintenance-testsignal {
+  namespace "urn:fujitsu:params:xml:ns:yang:entity-maintenance-testsignal";
+  prefix entity-maintenance-testsignal;
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains a entity maintenance testsignal action definitions as well as retrieval mechanism for test results.
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2015-09-10 {
+    description
+      "Initial revision.";
+  }
+  revision 2018-06-04 {
+    description
+      "adding clear-diagnostics feature.";
+  }
+  revision 2018-06-21 {
+    description
+      "removing clear-diagnostics feature.";
+  }
+
+  grouping maint-testsignal {
+    leaf testsignal {
+      type enumeration {
+        enum "disabled" {
+          value 0;
+          description
+            "testsignal not connected";
+        }
+        enum "enabled" {
+          value 1;
+          description
+            "testsignal connected";
+        }
+      }
+      default "disabled";
+      description
+        "testsignal connect and disconnect";
+    }
+    leaf testPattern {
+      when "../testsignal = 'enabled'";
+      type enumeration {
+        enum "PRBS" {
+          value 0;
+          description
+            "Unframed, inverted PN-31 pattern or PRBS31 pattern per IEEE 802.3 clause 50.3.8.2 (inverted PN-31at line rate)";
+        }
+        enum "PRBS31" {
+          value 1;
+          description
+            "PRBS31 with standard mapping per G.709";
+        }
+        enum "PRBS23" {
+          value 2;
+          description
+            "SONET/SDH Framed,inverted PN-23 pattern.";
+        }
+        enum "PRZEROS" {
+          value 3;
+          description
+            "pseudo-random with zeros data pattern per IEEE 802.3 clause 49.2.8";
+        }
+        enum "IDLE" {
+          value 4;
+          description
+            "Scrambled IDLE test-pattern per IEEE 802.3ba";
+        }
+      }
+      description
+        "Set test signal pattern";
+    }
+    leaf testsignal-type {
+      when "../testsignal = 'enabled'";
+      type enumeration {
+        enum "fac" {
+          value 0;
+          description
+            "test signal in the facility direction";
+        }
+        enum "term" {
+          value 1;
+          description
+            "test signal in the terminal direction";
+        }
+      }
+      default "fac";
+      description
+        "Set test signal type (or direction).";
+    }
+    leaf bitErrors {
+      when "../testsignal = 'enabled' and ../testsignal-type = 'fac'";
+      type uint32 {
+        range "0..4294967295";
+      }
+      config false;
+      description
+        "bit errors for test signal in facility direction.";
+    }
+    leaf bitErrorsTerminal {
+      when "../testsignal = 'enabled' and ../testsignal-type = 'term'";
+      type uint32 {
+        range "0..4294967295";
+      }
+      config false;
+      description
+        "bit errors for test signal in terminal direction.";
+    }
+    leaf syncSeconds {
+      when "../testsignal = 'enabled' and ../testsignal-type = 'fac'";
+      type string;
+      config false;
+      description
+        "number of seconds the received facility test signal is in sync.";
+    }
+    leaf syncSecondsTerminal {
+      when "../testsignal = 'enabled' and ../testsignal-type = 'term'";
+      type string;
+      config false;
+      description
+        "number of seconds the received terminal test signal is in sync.";
+    }
+  }
+}

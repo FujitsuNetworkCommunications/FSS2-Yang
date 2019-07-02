@@ -1,0 +1,227 @@
+module fujitsu-optical-channel-interfaces-dev.prod {
+    namespace "urn:fujitsu:params:xml:ns:yang:interface:och-deviation";
+    prefix och-deviation;
+
+    import ietf-interfaces {
+        prefix if;
+    }
+
+    import fujitsu-optical-channel-interfaces {
+        prefix och;
+    }
+    revision 2018-06-11 {
+        description
+        "Range removed for center-frequency";
+    }
+
+    revision 2018-01-29 {
+        description
+        "Range modified for center-frequency, center-frequency-rx";
+    }
+
+    revision 2017-11-01 {
+        description
+        "Added support for dc-dp-qpsk";
+    }
+    revision 2017-10-30 {
+      description
+        "Range for tx-target-power been modified";
+    }
+
+    revision 2017-10-26 {
+        description
+        "Added support for dc-dp-qam16";
+    }
+
+    revision 2017-05-02 {
+        description
+        "AINS attributes supported";
+    }
+     revision 2016-10-18 {
+       description
+         " removed channel-width support.";
+     }
+     revision 2016-09-27 {
+        description
+        "Added default value for Tx-power";
+    }
+    revision 2016-09-18 {
+        description
+        "Added default value for circuit-id";
+    }
+    revision 2016-09-01 {
+        description
+        "Modified the enums of ais-pt leaf as ais-pt-shutdown and ais-pt-none";
+    }
+
+
+    deviation "/if:interfaces/if:interface/och:och/och:channel-width" {
+        deviate not-supported;
+    }
+
+
+    deviation "/if:interfaces/if:interface/och:och/och:remote-tp-type" {
+        deviate not-supported;
+    }
+
+    deviation "/if:interfaces/if:interface/och:och/och:actual-vstimer" {
+        deviate not-supported;
+    }
+     // T3xx supports only `dp-qpsk` and `dp-qam16`
+    deviation "/if:interfaces/if:interface/och:och/och:modulation-format" {
+        deviate replace {
+            type enumeration {
+                enum dp-qpsk {
+                    value "3";
+                    description "dual-polarization quadrature phase-shift keying";
+                }
+
+                enum dp-qam16 {
+                    value "5";
+                    description "dual-polarization quadrature amplitude modulation 16";
+                }
+
+                enum dc-dp-qam16 {
+                    value "6";
+                    description "differential coding dual-polarization quadrature amplitude modulation 16";
+                }
+                
+                enum dc-dp-qpsk{
+                    value "10";
+                    description "differential coding dual-polarization quadrature phase-shift keying";
+                }
+          }
+       }
+   }
+
+   deviation "/if:interfaces/if:interface/och:och/och:center-frequency" {
+        deviate replace {
+            type decimal64 {
+                fraction-digits 5;
+             }
+            units THz;
+        }
+      deviate add {
+            default '0';
+        }
+   }
+
+   deviation "/if:interfaces/if:interface/och:och/och:center-frequency-rx" {
+        deviate replace {
+            type decimal64 {
+                fraction-digits 5;
+                range "0 | 186.54375 .. 196.10625";
+            }
+            units THz;
+        }
+
+           deviate add {
+            default '0';
+        }
+
+   }
+
+   deviation "/if:interfaces/if:interface/och:och/och:lambda" {
+        deviate replace {
+           config false;
+        }
+   }
+
+   deviation "/if:interfaces/if:interface/och:och/och:lambda-rx" {
+        deviate replace {
+          config false;
+        }
+   }
+
+  deviation "/if:interfaces/if:interface/och:och/och:slot-width" {
+      deviate replace {
+           type decimal64 {
+            fraction-digits 2;
+            }
+            config true;
+            units GHz;
+        }
+        deviate add {
+            default "50.0";
+        }
+    }
+
+   deviation "/if:interfaces/if:interface/och:och/och:admin-status" {
+        deviate replace {
+            type enumeration {
+             enum up {
+               value 1;
+               description
+                 "Ready to pass packets.";
+             }
+             enum down {
+               value 2;
+               description
+                 "Not ready to pass packets and not in some test mode.";
+             }
+           }
+       }
+   }
+
+
+   deviation "/if:interfaces/if:interface/och:och/och:ais-pt" {
+        deviate replace {
+            type enumeration {
+              enum ais-pt-shutdown {
+                value "1";
+                    description "shutdown transmit laser";
+              }
+              enum ais-pt-none {
+                value "2";
+                    description "pass thru";
+              }
+            }
+        }
+
+       deviate add {
+           default ais-pt-none;
+       }
+   }
+
+    deviation "/if:interfaces/if:interface/och:och/och:direction" {
+       deviate add {
+	   default bi;
+       }
+   }
+   deviation "/if:interfaces/if:interface/och:och/och:roadm-type" {
+       deviate add {
+	   default CD;
+       }
+   }
+   deviation "/if:interfaces/if:interface/och:och/och:Nyquist" {
+       deviate add {
+	   default OFF;
+       }
+   }
+   deviation "/if:interfaces/if:interface/och:och/och:confmode-type" {
+       deviate add {
+           default "100GONLY";
+       }
+   }
+
+  deviation "/if:interfaces/if:interface/och:och/och:tx-target-power" {
+    deviate replace {
+      type decimal64 {
+        fraction-digits 2;
+        range "-5.00..6.00";
+      }
+      units dBm;
+    }
+
+    deviate add {
+      default "0";
+    }
+  }
+
+   //setting default value of circuit-id
+   deviation "/if:interfaces/if:interface/och:och/och:circuit-id" {
+       deviate add {
+           default "";
+       }
+   }
+}

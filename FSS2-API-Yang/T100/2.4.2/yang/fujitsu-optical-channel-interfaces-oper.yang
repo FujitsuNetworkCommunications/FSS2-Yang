@@ -1,0 +1,64 @@
+module fujitsu-optical-channel-interfaces-oper {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:interface:ochoper";
+  prefix ochoper;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains YANG definitions 
+     for the operations Optical Channel Interface.
+     
+     Copyright (c) 2015 Fujitsu Ltd
+     All rights reserved. ";
+
+  revision 2017-05-25 {
+    description
+      "Initial revision.";
+  }
+
+  grouping interface-id {
+    leaf interface {
+      type leafref {
+        path "/if:interfaces/if:interface/if:name";
+      }
+      mandatory true;
+      description
+        "interface name";
+    }
+  }
+
+  typedef cmd-status {
+    type string {
+      length "4..255";
+    }
+    description
+      "Response of command";
+  }
+
+  rpc tuning {
+    description
+      "Perform tuning of CFP2";
+    input {
+      uses interface-id;
+    }
+    output {
+      leaf status {
+        type cmd-status;
+      }
+    }
+  }
+}

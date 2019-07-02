@@ -1,0 +1,83 @@
+module fujitsu-performance-monitoring-dev.prod {
+    namespace "urn:fujitsu:params:xml:ns:yang:perfmon-dev.prod";
+    prefix perfmon-dev.prod;
+
+    import tailf-common {
+        prefix tailf;
+    }
+
+    import fujitsu-performance-monitoring{
+        prefix perfmon;
+    }
+
+    revision 2018-01-29 {
+        description
+        "Added deviation for pm-protections";
+    }
+
+    revision 2016-12-14 {
+        description
+        "Added cumulative time-period support for init-pm command for C202";
+    }
+
+    revision 2016-11-07 {
+        description
+        "adding deviation for oc for init-pm command";
+    }
+
+    revision 2016-10-15 {
+        description
+        "non support deviation code of subport is removed";
+    }
+
+    deviation "/perfmon:pm-equipment/perfmon:shelf/perfmon:slot/perfmon:pm-oper-data" {
+        deviate not-supported;
+    }
+
+    deviation "/perfmon:pm-equipment/perfmon:shelf/perfmon:slot/perfmon:subslot/perfmon:pm-oper-data" {
+        deviate not-supported;
+    }
+
+    deviation "/perfmon:pm-protections" {
+        deviate not-supported;
+    }
+
+    deviation "/perfmon:init-pm/perfmon:input/perfmon:id" {
+      deviate replace {
+        type string {
+          pattern
+          "((shelf)-\S+)" + "|" + 
+          "((port|eth|otsi|otuc|oduc|odu|otu|oc)-\S+/\S+/\S+/\S+)" + "|" +
+          "((subport)-\S+/\S+/\S+/\S+/\S+)" + "|" +
+          "((odu)-\S+/\S+/\S+/\S+.\S+)" + "|" +
+          "((odu)-\S+/\S+/\S+/\S+.\S+.\S+)";
+        }
+    
+        mandatory true;
+      }
+    }
+
+    deviation "/perfmon:init-pm/perfmon:input/perfmon:time-period" {
+      /*
+      ** These enum values should always match with common typedef defined
+      ** in fujitus-performance-monitoring.yang file, pm-time-period
+      */
+      deviate replace {
+        type enumeration {
+          enum cumulative {
+              value 0;
+              description "cumulative";
+          }
+          enum 15-min {
+              value 1;
+              description "15 minutes period";
+          }
+          enum 1-day {
+              value 2;
+              description "1 day period";
+          }
+        }
+        default 15-min;
+      }
+    }
+}

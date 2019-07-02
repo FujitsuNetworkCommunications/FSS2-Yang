@@ -1,0 +1,56 @@
+module fujitsu-access-control-list {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:interfaces:fujitsu-access-control-list";
+  prefix fujitsu-acl;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+  import ietf-access-control-list {
+    prefix acl;
+  }
+  import ietf-yang-types {
+    prefix yang;
+  }
+  import iana-if-type {
+    prefix ianaift;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains YANG definitions 
+     for fujitsu extension of Access Control Lists
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2015-11-09 {
+    description
+      "Initial revision.";
+  }
+
+  augment "/if:interfaces/if:interface" {
+    container acl {
+      when "current()/../if:type='ianaift:ip'";
+      description
+        "ACL related properties.";
+      leaf acl-name {
+        description
+          "Access Control List name.";
+        type leafref {
+          path "/acl:access-lists/acl:acl/acl:acl-name";
+        }
+      }
+    }
+  }
+}

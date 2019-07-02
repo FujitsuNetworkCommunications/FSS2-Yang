@@ -1,0 +1,259 @@
+module fujitsu-transport-ethernet-interfaces {
+  yang-version 1.1;
+  namespace "urn:fujitsu:params:xml:ns:yang:interface:transport-eth";
+  prefix transport-eth;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+  import fujitsu-ethernet-interfaces-common {
+    prefix eth-common;
+  }
+  import fujitsu-ains-keywords {
+    prefix ains;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains YANG definitions 
+     for Transport Ethernet Interfaces. 
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2018-06-21 {
+    description
+      "adding clear-diagnostics feature.";
+  }
+  revision 2017-08-18 {
+    description
+      "Added csf to ltxoff enum values";
+  }
+  revision 2017-05-23 {
+    description
+      "Corrected typo for tx-cloxk-source";
+  }
+  revision 2017-05-19 {
+    description
+      " Added actual-vstimer for backward compatibility";
+  }
+  revision 2017-05-12 {
+    description
+      " Added AINS for transport-eth container";
+  }
+  revision 2017-02-01 {
+    description
+      "Adding link_monitoring leasf for Tseries Products";
+  }
+  revision 2015-08-31 {
+    description
+      "Initial revision.";
+  }
+
+  feature clear-diagnostics {
+    description
+      "This feature is used to clear the diagnostics and maintenance counter.";
+  }
+
+  grouping transport-eth-attributes {
+    leaf act-laser {
+      type enumeration {
+        enum "none" {
+          value 0;
+          description
+            "when laser status is non known. E.g. in situation when hardware cannot be accessed to know the laser status.";
+        }
+        enum "normal" {
+          value 1;
+          description
+            "laser is on";
+        }
+        enum "shutdown" {
+          value 2;
+          description
+            "laser is off";
+        }
+      }
+      description
+        "actual transmit laser status";
+    }
+    leaf link_monitoring {
+      type enumeration {
+        enum "monitor_all" {
+          value 0;
+        }
+        enum "pcs-only" {
+          value 1;
+        }
+      }
+      default "pcs-only";
+      description
+        "Link Monitoring Mode";
+    }
+    leaf tsf {
+      type enumeration {
+        enum "lf" {
+          value 0;
+          description
+            "Local Fault";
+        }
+        enum "idle" {
+          value 1;
+          description
+            "Idle";
+        }
+      }
+      description
+        "Codeword to send during Transport Signal Failure";
+    }
+    leaf btsf {
+      type enumeration {
+        enum "none" {
+          value 0;
+          description
+            "Nothing";
+        }
+        enum "rf" {
+          value 1;
+          description
+            "Remote Fault";
+        }
+      }
+      description
+        "Codeword to send during Backward Transport Signal Failure";
+    }
+    leaf ltxoff {
+      type enumeration {
+        enum "none" {
+          value 0;
+        }
+        enum "rlanflt" {
+          value 1;
+        }
+        enum "tsfs" {
+          value 2;
+        }
+        enum "btsfs" {
+          value 3;
+        }
+        enum "all" {
+          value 4;
+        }
+        enum "csf" {
+          value 5;
+        }
+      }
+      default "none";
+      description
+        "LTXOFF Choices";
+    }
+    leaf direction {
+      type enumeration {
+        enum "uni-rx" {
+          value 0;
+          description
+            "unidirectional receive only";
+        }
+        enum "uni-tx" {
+          value 1;
+          description
+            "unidirectional transmit only";
+        }
+        enum "bi" {
+          value 2;
+          description
+            "bidirectional";
+        }
+      }
+      description
+        "direction Choices";
+    }
+    leaf tx-clock-source {
+      type enumeration {
+        enum "through" {
+          value 0;
+          description
+            "Timing is passed through";
+        }
+        enum "internal" {
+          value 1;
+          description
+            "Timing is from internal clock";
+        }
+      }
+      description
+        "Transmit Clock - Specifies source of transit timing";
+    }
+    leaf alm-transfer-delay {
+      type uint16;
+      units "ms";
+      description
+        "Alarm transfer delay time in msec
+         Delays the shutdown (due to ltxoff provisioning) of the laser.
+         Has no effect when ltxoff is set to none.";
+    }
+    leaf actual-vstimer {
+      config false;
+      type string {
+        pattern "([0-4][0-8])-([0-5][0-9])";
+      }
+      description
+        "The amount of time a valid state timer has been running uninterrupted.
+         This timer is in the format <hh>-<mm>.";
+    }
+  }
+
+  augment "/if:interfaces/if:interface" {
+    container transport-ethernet {
+      when "(../if:type = 'ianaift:ethernetCsmacd' )";
+      presence "Enables Transport Ethernet Interface";
+      description
+        "Transport Ethernet Interface";
+      uses eth-common:common-eth-attributes;
+      uses transport-eth-attributes {
+        refine "act-laser" {
+          config false;
+        }
+      }
+      uses ains:ains-prov-keywords;
+      action clear-diagnostics {
+        description
+          "Perform maintenance and diagnostic counter clear.";
+        if-feature "clear-diagnostics";
+        input {
+          leaf counter {
+            description
+              "Maintenance and Diagnostic counter to be cleared.";
+            type enumeration {
+              enum "facility" {
+                value 0;
+                description
+                  "Clears all Facility counters.";
+              }
+              enum "terminal" {
+                value 1;
+                description
+                  "Clears all Terminal counters.";
+              }
+            }
+          }
+        }
+        output {
+          leaf status {
+            type string;
+          }
+        }
+      }
+    }
+  }
+}

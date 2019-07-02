@@ -1,0 +1,71 @@
+module fujitsu-security-certificates {
+  namespace "urn:fujitsu:params:xml:ns:yang:security-certificates";
+  prefix secuCert;
+
+  import fujitsu-user-security {
+    prefix secu;
+  }
+
+  augment "/secu:security" {
+    list certificates {
+      description
+        "A list of certificates for this system";
+      key "certificate-id";
+      max-elements "10";
+      leaf certificate-id {
+        type string {
+          length "3..250";
+          pattern "(([a-zA-Z]([a-zA-Z0-9_.-]*)([a-zA-Z0-9])))" {
+            error-message
+              "The certificate-id must start with alphabet,
+               end with alphabet or digit.Interior characters are only
+               alphabets, digits, minus, underscore and dot";
+          }
+        }
+        description
+          "<certificate-id> starts with alphabet,
+           ends with alphabet or digit.Interior characters are only
+           alphabets, digits, minus, underscore and dot";
+      }
+      leaf file-path {
+        type string;
+        mandatory true;
+        description
+          "The complete path to the .pem formatted certificate";
+      }
+      leaf information {
+        type string;
+        config false;
+        description
+          "information about the <cert-id>";
+      }
+    }
+    container system-generated-certificate {
+      leaf information {
+        type string;
+        config false;
+        description
+          "information about the system-generated-certificate";
+      }
+    }
+  }
+  rpc reinstall-certificate {
+    description
+      "Re install the certificate if certificate files are missing.";
+    input {
+      leaf certificate-id {
+        type leafref {
+          path "/secu:security/secuCert:certificates/secuCert:certificate-id";
+        }
+        mandatory true;
+        description
+          "ID of the certificate from security table";
+      }
+    }
+    output {
+      leaf status {
+        type string;
+      }
+    }
+  }
+}

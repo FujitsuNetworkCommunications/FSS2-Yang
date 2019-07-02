@@ -1,0 +1,151 @@
+module fujitsu-file-transfer {
+  namespace "urn:fujitsu:params:xml:ns:yang:ftp";
+  prefix ftxr;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains definitions for File Transfer operations.
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2017-06-26 {
+    description
+      "Added a new command for encryption log transfer";
+  }
+  revision 2016-02-15 {
+    description
+      "Initial revision.";
+  }
+
+  feature data-encryption {
+    description
+      "Indicates support for data plane encryption feature.";
+  }
+
+  rpc abort-file-transfer {
+    description
+      "Discontinue File transfer";
+    input {
+      leaf filename {
+        type string;
+        description
+          "Specify file(s) to be aborted (* is allowed as wild-card).";
+      }
+    }
+    output {
+      leaf status {
+        type enumeration {
+          enum "abort-failed";
+          enum "abort-success";
+        }
+        description
+          "Status of abort file transfer operation";
+      }
+    }
+  }
+  rpc transfer {
+    description
+      "File transfer using FTP/SFTP";
+    input {
+      choice trans-method {
+        mandatory true;
+        leaf sftp {
+          description
+            "Transfer mode is SFTP.";
+          type empty;
+        }
+        leaf ftp {
+          description
+            "Transfer mode is FTP.";
+          type empty;
+        }
+      }
+      leaf action {
+        mandatory true;
+        description
+          "Type of action - download/upload.";
+        type enumeration {
+          enum "upload" {
+            description
+              "Specify the upload action. The server sends
+               the file identified by the local-file-path
+               to the remote-file-path.";
+          }
+          enum "download" {
+            description
+              "Specify the download action. The server retrieves
+               the file identified by the remote-file-path
+               to the local-file-path.";
+          }
+        }
+      }
+      leaf local-file-path {
+        type string;
+        mandatory true;
+        description
+          "Local file path.
+           Ex: /var/shared/example.txt";
+      }
+      leaf remote-file-path {
+        type inet:uri;
+        description
+          "Remote file path. 
+           A URI for the remote file path. This can be a URI of
+           type FTP/SFTP, depending on the protocol
+           which is being used for the transfer. 
+           
+           Format:[ftp|sftp:]//user[:password]@host[:port]/path. 
+           Ex: 
+           IPv4: ftp://test:verify@167.254.211.116:21/home/user/sample
+           IPv6: sftp://test:verify@[2001:db8:0:1::10]:22/home/user/sample";
+      }
+    }
+    output {
+      leaf status {
+        type string;
+        description
+          "Status of the file transfer operation";
+      }
+    }
+  }
+  rpc transfer-encryption-log {
+    if-feature "data-encryption";
+    description
+      "sftp encryption log file to a remote destination";
+    input {
+      leaf destination {
+        type inet:uri;
+        description
+          "Remote file path. 
+           A URI for the remote file path. 
+           
+           Format:[sftp:]//user[:password]@host[:port]/path. 
+           Ex: 
+           IPv4: //test:verify@167.254.211.116:22/home/user/sample
+           IPv6: sftp://test:verify@[2001:db8:0:1::10]:22/home/user/sample";
+      }
+    }
+    output {
+      leaf status {
+        type string;
+        description
+          "Gives the status of the transfer operation";
+      }
+    }
+  }
+}

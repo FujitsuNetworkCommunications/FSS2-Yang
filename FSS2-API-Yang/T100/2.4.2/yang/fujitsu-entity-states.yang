@@ -1,0 +1,136 @@
+module fujitsu-entity-states {
+  namespace "urn:fujitsu:params:xml:ns:yang:entity-states";
+  prefix entity-states;
+
+  import fujitsu-notifications {
+    prefix notifications;
+  }
+  import fujitsu-notification-types {
+    prefix notification-types;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains a entity state definitions.
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2017-03-02 {
+    description
+      "Description is updated in leaf to show options when ?";
+  }
+  revision 2015-04-10 {
+    description
+      "Initial revision.";
+  }
+
+  typedef oper-status {
+    type enumeration {
+      enum "up" {
+        value 1;
+        description
+          "Ready to pass packets.";
+      }
+      enum "down" {
+        value 2;
+        description
+          "The interface does not pass any packets.";
+      }
+      enum "testing" {
+        value 3;
+        description
+          "In some test mode.  No operational packets can
+           be passed.";
+      }
+      enum "unknown" {
+        value 4;
+        description
+          "Status cannot be determined for some reason.";
+      }
+      enum "dormant" {
+        value 5;
+        description
+          "Waiting for some external event.";
+      }
+      enum "not-present" {
+        value 6;
+        description
+          "Some component (typically hardware) is missing.";
+      }
+      enum "lower-layer-down" {
+        value 7;
+        description
+          "Down due to state of lower-layer interface(s).";
+      }
+    }
+    reference "RFC 2863: The Interfaces Group MIB - ifOperStatus";
+  }
+
+  typedef admin-status {
+    type enumeration {
+      enum "up" {
+        value 1;
+        description
+          "Ready to pass packets.";
+      }
+      enum "down" {
+        value 2;
+        description
+          "Not ready to pass packets and not in some test mode.";
+      }
+      enum "testing" {
+        value 3;
+        description
+          "In some test mode.";
+      }
+    }
+    reference "RFC 2863: The Interfaces Group MIB - ifAdminStatus";
+  }
+
+  grouping oper-status {
+    leaf oper-status {
+      type oper-status;
+      description
+        "The current operational state of the interface.
+          
+         This leaf has the same semantics as ifOperStatus.";
+    }
+  }
+
+  grouping admin-status {
+    leaf admin-status {
+      type admin-status;
+      description
+        "The desired state of the interface.
+         
+         This leaf has the same read semantics as ifAdminStatus.";
+    }
+  }
+
+  augment "/notifications:event-notification" {
+    container oper-status {
+      when
+        "/notifications:event-notification/notifications:event-type-id =
+         'notification-types:entityOperStatusChange'";
+      description
+        "Entity Operational Status";
+      leaf current-oper-status {
+        type entity-states:oper-status;
+      }
+      leaf previous-oper-status {
+        type entity-states:oper-status;
+      }
+    }
+  }
+}

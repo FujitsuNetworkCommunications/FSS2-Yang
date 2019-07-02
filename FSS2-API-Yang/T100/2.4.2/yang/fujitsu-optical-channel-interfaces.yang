@@ -1,0 +1,419 @@
+module fujitsu-optical-channel-interfaces {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:interface:och";
+  prefix och;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+  import iana-if-type {
+    prefix ianaift;
+  }
+  import fujitsu-entity-states {
+    prefix entity-states;
+  }
+  import fujitsu-ains-keywords {
+    prefix ains;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains YANG definitions 
+     for the Optical Channel Interfaces of
+     an Optical White Box (OWB).
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2018-04-11 {
+    description
+      " Remove range from center-freqency and center-freqency-rx
+        as well as lambda and lambda-rx";
+  }
+  revision 2017-10-24 {
+    description
+      " Added differential coding support for qpsk";
+  }
+  revision 2017-05-26 {
+    description
+      " Flex grid support";
+  }
+  revision 2017-05-02 {
+    description
+      " Added AINS for och container";
+  }
+  revision 2016-10-20 {
+    description
+      " changed tx-target-power unit to dBm from dB";
+  }
+  revision 2016-10-19 {
+    description
+      "Added presence statement for OCH container";
+  }
+  revision 2016-09-01 {
+    description
+      "Modified the enums of ais-pt leaf";
+  }
+  revision 2016-06-06 {
+    description
+      "Added rate, tx-target-power, roadm-type, confmode-type, Nyquist, och-notification";
+  }
+  revision 2015-04-10 {
+    description
+      "Initial revision.";
+  }
+
+  identity rate-identity {
+    description
+      "A unique rate identification";
+  }
+
+  identity R200G {
+    base rate-identity;
+    description
+      "Identity for 200G Rate";
+  }
+
+  identity R100G {
+    base rate-identity;
+    description
+      "Identity for 100G Rate";
+  }
+
+  identity R10.7G {
+    base rate-identity;
+    description
+      "Identity for 10.7G Rate";
+  }
+
+  identity R11.1G {
+    base rate-identity;
+    description
+      "Identity for 11.1G Rate";
+  }
+
+  grouping och-attributes {
+    description
+      "Optical Channel attributes";
+    uses entity-states:oper-status;
+    uses entity-states:admin-status {
+      refine "admin-status" {
+        mandatory false;
+        default "down";
+      }
+    }
+    leaf rate {
+      type identityref {
+        base rate-identity;
+      }
+      description
+        "rate";
+    }
+    leaf slot-width {
+      type decimal64 {
+        fraction-digits 2;
+      }
+      units "GHz";
+      description
+        "Channel slot width in GHz";
+    }
+    leaf center-frequency {
+      type decimal64 {
+        fraction-digits 5;
+      }
+      units "THz";
+      description
+        "Frequency of the transmit optical channel ";
+    }
+    leaf lambda {
+      type decimal64 {
+        fraction-digits 2;
+      }
+      units "nm";
+      description
+        "lambda corresponding to transmit frequency ";
+    }
+    leaf center-frequency-rx {
+      type decimal64 {
+        fraction-digits 5;
+      }
+      units "THz";
+      description
+        "Frequency of the receive optical channel ";
+    }
+    leaf lambda-rx {
+      type decimal64 {
+        fraction-digits 2;
+      }
+      units "nm";
+      description
+        "Lambda corresponding to receive frequency ";
+    }
+    leaf circuit-id {
+      type string {
+        length "0..45";
+      }
+      description
+        "circuit identifier/user label";
+    }
+    leaf direction {
+      type enumeration {
+        enum "uni-rx" {
+          value 0;
+          description
+            "unidirectional receive only";
+        }
+        enum "uni-tx" {
+          value 1;
+          description
+            "unidirectional transmit only";
+        }
+        enum "bi" {
+          value 2;
+          description
+            "bidirectional";
+        }
+      }
+      description
+        "direction of interface";
+    }
+    leaf modulation-format {
+      type enumeration {
+        enum "bpsk" {
+          value 0;
+          description
+            "binary phase-shift keying";
+        }
+        enum "dc-dp-bpsk" {
+          value 1;
+          description
+            "differential coding dual-polarization binary phase-shift keying";
+        }
+        enum "qpsk" {
+          value 2;
+          description
+            "quadrature phase-shift keying";
+        }
+        enum "dp-qpsk" {
+          value 3;
+          description
+            "dual-polarization quadrature phase-shift keying";
+        }
+        enum "qam16" {
+          value 4;
+          description
+            "quadrature amplitude modulation 16";
+        }
+        enum "dp-qam16" {
+          value 5;
+          description
+            "dual-polarization quadrature amplitude modulation 16";
+        }
+        enum "dc-dp-qam16" {
+          value 6;
+          description
+            "differential coding dual-polarization quadrature amplitude modulation 16";
+        }
+        enum "qam8" {
+          value 7;
+          description
+            "quadrature amplitude modulation 8";
+        }
+        enum "dp-qam8" {
+          value 8;
+          description
+            "dual-polarization quadrature amplitude modulation 8";
+        }
+        enum "dc-dp-qam8" {
+          value 9;
+          description
+            "differential coding dual-polarization quadrature amplitude modulation 8";
+        }
+        enum "dc-dp-qpsk" {
+          value 10;
+          description
+            "differential coding dual-polarization quadrature phase-shift keying";
+        }
+      }
+      description
+        "modulation format";
+    }
+    leaf ais-pt {
+      type enumeration {
+        enum "ais-pt-ais" {
+          value 0;
+          description
+            "use AIS-ODU for escalation";
+        }
+        enum "ais-pt-shutdown" {
+          value 1;
+          description
+            "shutdown transmit laser";
+        }
+        enum "ais-pt-none" {
+          value 2;
+          description
+            "pass thru";
+        }
+      }
+      description
+        "alarm escalation setting";
+    }
+    leaf act-laser {
+      type enumeration {
+        enum "none" {
+          value 0;
+          description
+            "when laser status is non known. E.g. in situation when hardware cannot be accessed to know the laser status.";
+        }
+        enum "normal" {
+          value 1;
+          description
+            "laser is on";
+        }
+        enum "shutdown" {
+          value 2;
+          description
+            "laser is off";
+        }
+      }
+      description
+        "actual transmit laser status";
+    }
+    leaf remote-tp-type {
+      type enumeration {
+        enum "fujitsu-tp" {
+          value 0;
+          description
+            "Fujitsu tp";
+        }
+        enum "non-fujitsu-tp" {
+          value 1;
+          description
+            "Non-Fujitsu tp";
+        }
+      }
+      default "fujitsu-tp";
+      description
+        "Remote TP Type 
+         Default    : fujitsu-tp ";
+    }
+    leaf roadm-type {
+      type enumeration {
+        enum "CD" {
+          value 0;
+          description
+            "CD degree is applicable.";
+        }
+        enum "AWG" {
+          value 1;
+          description
+            "AWG/DIRECT degree is applicable.";
+        }
+      }
+      description
+        "setting of ROADM type.";
+    }
+    leaf confmode-type {
+      type enumeration {
+        enum "100GONLY" {
+          value 0;
+          description
+            "100GONLY if the ROADM systems degree, to which this PIU is connected, carries only 100G wavelengths.";
+        }
+        enum "10GMIX" {
+          value 1;
+          description
+            "10GMIX if the ROADM systems degree, to which this PIU is connected, carries 10G wavelengths along with 100G wavelengths.";
+        }
+      }
+      description
+        "CNFMODE is a setting to get the best optical reach";
+    }
+    leaf Nyquist {
+      type enumeration {
+        enum "ON" {
+          value 0;
+        }
+        enum "OFF" {
+          value 1;
+        }
+      }
+      description
+        "Current status of Nyquist filter mode.";
+    }
+    leaf tx-target-power {
+      type decimal64 {
+        fraction-digits 2;
+        range "-5.00..0.00";
+      }
+      units "dBm";
+      description
+        "transmit output power setting.";
+    }
+    leaf channel-width {
+      type int16;
+      units "GHz";
+      description
+        "Channel width in GHz";
+    }
+  }
+
+  augment "/if:interfaces/if:interface" {
+    container och {
+      when "../if:type = 'ianaift:opticalChannel'";
+      presence "Optical Channel (OCh):Models the optical channel interfaces for an Optical White Box. ";
+      description
+        "Optical Channel (OCh):
+         Models the optical channel interfaces for an Optical White Box.";
+      uses ains:ains-prov-keywords;
+      leaf actual-vstimer {
+        config false;
+        type string {
+          pattern "([0-4][0-8])-([0-5][0-9])";
+        }
+        description
+          "The amount of time a valid state timer has been running uninterrupted.
+           This timer is in the format <hh>-<mm>.";
+      }
+      uses och-attributes {
+        refine "oper-status" {
+          config false;
+        }
+        refine "act-laser" {
+          config false;
+        }
+      }
+    }
+  }
+  notification och-notif {
+    leaf name {
+      type leafref {
+        path "/if:interfaces/if:interface/if:name";
+      }
+    }
+    container och {
+      uses ains:ains-prov-keywords;
+      leaf actual-vstimer {
+        config false;
+        type string {
+          pattern "([0-4][0-8])-([0-5][0-9])";
+        }
+        description
+          "The amount of time a valid state timer has been running uninterrupted.
+           This timer is in the format <hh>-<mm>.";
+      }
+      uses och-attributes;
+    }
+  }
+}

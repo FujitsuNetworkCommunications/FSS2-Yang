@@ -1,0 +1,196 @@
+module fujitsu-otn-otucn-interfaces {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:interface:otucn";
+  prefix otucn;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+  import fujitsu-state-timer {
+    prefix st;
+  }
+  import fujitsu-entity-states {
+    prefix entity-states;
+  }
+  import fujitsu-entity-maintenance-loopback {
+    prefix fujitsu-loopback;
+  }
+  import fujitsu-if-type {
+    prefix fjift;
+  }
+  import fujitsu-gcc {
+    prefix fujitsuGcc;
+  }
+  import fujitsu-otn {
+    prefix otn;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains YANG definitions 
+     for the OTU Interfaces.
+     
+     Copyright (c) 2015 Fujitsu Network Communications, inc.
+     All rights reserved. ";
+
+  revision 2015-05-12 {
+    description
+      "Initial revision.";
+  }
+
+  identity otucn-rate-identity {
+    description
+      "A unique rate identification of the OTUCn.";
+  }
+
+  identity OTUC4 {
+    base otucn-rate-identity;
+    description
+      "Identity for an OTUC4";
+  }
+
+  identity OTUC3 {
+    base otucn-rate-identity;
+    description
+      "Identity for an OTUC3";
+  }
+
+  identity OTUC2 {
+    base otucn-rate-identity;
+    description
+      "Identity for an OTUC2";
+  }
+
+  identity OTUC1 {
+    base otucn-rate-identity;
+    description
+      "Identity for an OTUC1";
+  }
+
+  grouping block-base-ber-threshold {
+    leaf degthr {
+      type int16 {
+        range "-9..2";
+      }
+      default "0";
+      description
+        "DEGTHR:Degraded defect one-second Errored Block Count threshold
+         DEGTHR specifies the exponent part X of 10^X [%].";
+    }
+    leaf degm {
+      type int8 {
+        range "2..10";
+      }
+      default "10";
+      description
+        "DEGM:Degraded defect consecutive one-second monitoring intervals";
+    }
+  }
+
+  grouping otucn-attributes {
+    description
+      "OTUCn attributes (Optical Transport Unit)";
+    leaf rate {
+      type identityref {
+        base otucn-rate-identity;
+      }
+      description
+        "rate identity of the OTUCn. 'identityref' is used
+         to allow to extend for future higher rates";
+    }
+    uses entity-states:oper-status;
+    uses entity-states:admin-status {
+      refine "admin-status" {
+        mandatory false;
+        default "down";
+      }
+    }
+    uses otn:tti-choice;
+    uses block-base-ber-threshold;
+    leaf circuit-id {
+      type string {
+        length "0..45";
+      }
+      description
+        "circuit identifier/user label";
+    }
+    leaf direction {
+      type enumeration {
+        enum "uni-rx" {
+          value 0;
+          description
+            "unidirectional receive only";
+        }
+        enum "uni-tx" {
+          value 1;
+          description
+            "unidirectional transmit only";
+        }
+        enum "bi" {
+          value 2;
+          description
+            "bidirectional";
+        }
+      }
+    }
+    leaf auto-rx {
+      type boolean;
+      description
+        "enable/disable generation of transient condition when
+         the value of the TTI changes.";
+    }
+    leaf auto-tx {
+      type boolean;
+      description
+        "enable/disable automatic population of outgoing TTI";
+    }
+  }
+
+  augment "/if:interfaces/if:interface" {
+    container otucn {
+      when "../if:type = 'fjift:fujitsuOtuc'";
+      presence "Attribute Nodes for Optical Transport Unit (OTUCn)";
+      description
+        "Optical Transport Unit (OTUCn):
+         Models the optical channel interfaces for an Optical White Box.";
+      uses st:state-timer {
+        refine "actual-vstimer" {
+          config false;
+        }
+      }
+      uses otucn-attributes {
+        refine "oper-status" {
+          config false;
+        }
+      }
+      list list-gcc {
+        key "gccType";
+        description
+          " List of GCC0s";
+        uses fujitsuGcc:gcc-group;
+      }
+      uses fujitsu-loopback:maint-loopback;
+    }
+  }
+  notification otucn-notif {
+    leaf name {
+      type leafref {
+        path "/if:interfaces/if:interface/if:name";
+      }
+    }
+    container otucn {
+      uses st:state-timer;
+      uses otucn-attributes;
+    }
+  }
+}

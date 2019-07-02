@@ -1,0 +1,115 @@
+module ietf-interfaces-dev.prod {
+    namespace "urn:fujitsu:params:xml:ns:yang:ietf-interfaces-dev.prod";
+    prefix if-dev.prod;
+
+    import tailf-common {
+        prefix tailf;
+    }
+
+    import fujitsu-equipment {
+        prefix eqpt;
+    }
+
+    import ietf-interfaces {
+        prefix if;
+    }
+
+    organization
+       "Fujitsu Ltd.";
+
+    contact
+       "Fujitsu Ltd.
+
+        Address: 2801 Telecom Parkway
+                 Richardson, Texas 75082
+
+        Tel: +1-800-USE-FTAC (1-800-873-3822)
+        Email: ftac@fnc.fujitsu.com
+        Web: www.fujitsu.com/us/services/telecom";
+
+    description
+       "This module contains the fujitsu system releated deviations,
+
+        Copyright (c) 2017 Fujitsu Ltd.
+        All rights reserved. ";
+
+    revision 2018-04-23 {
+        description
+          "Adding logical channel upto 6 for odu4 in T600";
+    }
+    revision 2017-02-15 {
+        description
+          "Removed circular dependency due to importing the supporting equipment module";
+    }
+
+    revision 2016-11-02 {
+        description
+          "Added support for eth interfaces on C202";
+    }
+
+    revision 2016-10-07 {
+        description
+          "interface name pattern updated";
+    }
+
+    revision 2016-10-04 {
+        description
+          "check added for interface creation on client port";
+    }
+
+    revision 2016-09-28 {
+        description
+          "Changes to create oc interface";
+    }
+
+    revision 2016-09-15 {
+        description
+        " Enabled E1RX and E1TX in T300 ";
+    }
+
+    revision 2016-09-08 {
+        description
+          "Changes to create interfaces on E3 to E10";
+    }
+
+    revision 2016-09-02 {
+        description
+          "eth AID format check added for subport";
+    }
+
+    deviation "/if:interfaces/if:interface/if:name" {
+        // T-Series interface name pattern examples:
+        // ip-1/1/0/E1:0, ip-1/0/0/LMP, ip-1/0/0/NEM, ppp-1/2/0/E1:0
+        // otsi-1/1/0/E1, eth-1/0/0/C1, odu-1/1/0/E1.4, odu-1/1/0/E1.1.1 to  odu-1/1/0/E1.1.10
+        // och-1/0/0/C1 to och-1/0/0/C20, och-1/1/0/E1 to och-1/1/0/E5, otu-[0-48]/1/0/E1.1
+        // oc-1/0/0/C1, eth-200/0/0/P13 to eth-200/0/0/P48
+        deviate replace {
+            type string {
+                length "11..19";
+                pattern
+                    '(otsig|otsi|otuc|oduc|odu|eth|ip|ppp|och|otu|oc){1}-([1-9]|[1-3][0-9]|[4][0]|200){1}/[0-5]/[0]/(E([1-2]|[1-2][A-Z][X])(\.[1-6]|:0|\.[1-2]:0|\.[1-2]\.([1-9]|[1][0]){1})?|E([1-9]|[1][0]){1}|(C([1-9]|[1][0-9]|[2][0]):0){1}|C([1-9]|[1][0-9]|[2][0-5])/[1-4]{1}|C([1-9]|[1][0-9]|[2][0]){1}|LCN|LCN[1-2]|LMP|NEM|P([1][3-9]|[2-3][0-9]|[4][0-8]){1}){1}';
+            }
+        }
+
+        deviate add {
+            //T400
+            must  "(not(starts-with(current(), 'eth'))) or " +
+                "(not (/eqpt:eqpt/eqpt:shelf[eqpt:shelfId = substring-before(substring-after(current(), '-'), '/')]" +
+                "/eqpt:slot[eqpt:slotID = substring-before(substring-after(current(), '/'), '/')]" +
+                "/eqpt:subslot[eqpt:subslotID = substring-before(substring-after(substring-after(current(), '/'), '/'), '/')]" +
+                "/eqpt:port[eqpt:portID = substring-before(substring-after(substring-after(substring-after(concat(current(), '/'), '/'), '/'), '/'), '/')])) or "+
+                "(/eqpt:eqpt/eqpt:shelf[eqpt:shelfId = substring-before(substring-after(current(), '-'), '/')]" +
+                "/eqpt:slot[eqpt:slotID = substring-before(substring-after(current(), '/'), '/')]" +
+                "/eqpt:subslot[eqpt:subslotID = substring-before(substring-after(substring-after(current(), '/'), '/'), '/')]" +
+                "/eqpt:port[eqpt:portID = substring-before(substring-after(substring-after(substring-after(concat(current(), '/'), '/'), '/'), '/'), '/')]/eqpt:pluggableInterfaceType != 'QSFP+') or "+
+                "(/eqpt:eqpt/eqpt:shelf[eqpt:shelfId = substring-before(substring-after(current(), '-'), '/')]" +
+                "/eqpt:slot[eqpt:slotID = substring-before(substring-after(current(), '/'), '/')]" +
+                "/eqpt:subslot[eqpt:subslotID = substring-before(substring-after(substring-after(current(), '/'), '/'), '/')]" +
+                "/eqpt:port[eqpt:portID = substring-before(substring-after(substring-after(substring-after(concat(current(), '/'), '/'), '/'), '/'), '/')]/eqpt:pluggableInterfaceType = 'QSFP+')" +
+                " and (re-match(current(),'eth-1/0/0/C([1-9]|[1][0-9]|[2][0-5])/[1-4]'))" {
+                    error-message "Interface creation on client port <C1-C25> is not allowed.";
+                    tailf:dependency '.';
+                }
+        }
+    }
+}

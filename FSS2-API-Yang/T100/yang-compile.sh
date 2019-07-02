@@ -14,7 +14,7 @@ set -xe
 product="T100"
 product_dir="FSS2-API-Yang/T100"
 # append product version to versions
-versions="2.4"
+versions="2.4 2.4.2"
 
 yang_compile() {
     yang_dir=$1

@@ -1,0 +1,50 @@
+module fujitsu-system-zeroization {
+  namespace "urn:fujitsu:params:xml:ns:yang:fujitsu-system-zeroization";
+  prefix fujitsu-system-zeroization;
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains yang model for system zeroization.
+     
+     Copyright (c) 2017 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2017-05-08 {
+    description
+      "Initial revision.";
+  }
+
+  rpc zeroize-system {
+    description
+      "RPC to perform zeroization of the entire system";
+    output {
+      leaf status {
+        type enumeration {
+          enum "Successful" {
+            value 1;
+          }
+          enum "Failed" {
+            value 2;
+          }
+        }
+        description
+          "Indicates the rpc succeeded/failed";
+      }
+      leaf status-message {
+        type string;
+        description
+          "Gives a more detailed reason for success/failure";
+      }
+    }
+  }
+}

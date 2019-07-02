@@ -1,0 +1,642 @@
+module fujitsu-ethernet-interfaces {
+  yang-version 1;
+  namespace "urn:fujitsu:params:xml:ns:yang:interface:eth";
+  prefix eth;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+  import fujitsu-ethernet-interfaces-common {
+    prefix eth-common;
+  }
+  import fujitsu-ains-keywords {
+    prefix ains;
+  }
+
+  organization
+    "Fujitsu Ltd.";
+  contact
+    "Fujitsu Ltd.
+     
+     Address: 2801 Telecom Parkway
+              Richardson, Texas 75082
+     
+     Tel: +1-800-USE-FTAC (1-800-873-3822)
+     Email: ftac@fnc.fujitsu.com
+     Web: www.fujitsu.com/us/services/telecom";
+  description
+    "This module contains YANG definitions 
+     for Ethernet Interfaces. 
+     
+     Copyright (c) 2015 Fujitsu Ltd.
+     All rights reserved. ";
+
+  revision 2018-03-19 {
+    description
+      "OPS-2299 - if_feature implementation for transport-eth attributes";
+  }
+  revision 2017-12-22 {
+    description
+      "OPS-2478 - Changed the unit of committed-info-rate from 100kbps to 1kbps and support new values";
+  }
+  revision 2017-11-14 {
+    description
+      "OPS-2357 - Created transport container under ethernet container and moved all the transport attributes here";
+  }
+  revision 2017-06-12 {
+    description
+      "OPS-1756 - Yang Performance Improvement, updating the tailf:dependency appropriately for must/when/validate.. ";
+  }
+  revision 2015-08-31 {
+    description
+      "Initial revision.";
+  }
+
+  feature transport-eth {
+    description
+      "This feature enables the transport ethernet interface provisioning.";
+  }
+
+  grouping link-remote-attributes {
+    description
+      " Manually provisioned link remote information for link topology";
+    container link-remote-info {
+      leaf remoteSysName {
+        type string {
+          length "7..20";
+        }
+        description
+          "Remote NE's system name";
+      }
+      leaf remoteIfName {
+        type string;
+        description
+          "Remote Eth interface name to which this Eth interface is connected";
+      }
+    }
+  }
+
+  grouping ds-eth-attributes {
+    container dcn-data {
+      config false;
+      leaf oper-speed {
+        type string;
+        description
+          "speed (UNKNOWN/AUTO/10/100/1000/10000) corresponding to the interface";
+      }
+      leaf oper-duplex {
+        type string;
+        description
+          "duplex (HALF/FULL) corresponding to the interface";
+      }
+    }
+    container ethernet-oper-data {
+      config false;
+      leaf eth-oper-speed {
+        type string;
+        description
+          "speed (UNKNOWN/AUTO/10/100/1000/10000) corresponding to the interface";
+      }
+      leaf eth-oper-duplex {
+        type string;
+        description
+          "duplex (HALF/FULL) corresponding to the interface";
+      }
+    }
+    leaf speed {
+      type string;
+      description
+        "Set speed of the interface, unit mbps. 
+         This is for ETH facility. 
+         Editable when not part of a LAG.  ";
+    }
+    leaf duplex {
+      type enumeration {
+        enum "half" {
+          value 0;
+          description
+            "half duplex";
+        }
+        enum "full" {
+          value 1;
+          description
+            "full duplex";
+        }
+      }
+      default "full";
+      description
+        "Set duplex selections.";
+    }
+    leaf mtu {
+      type uint32 {
+        range "1518..9000";
+      }
+      default "1522";
+      description
+        "Set Maximum Frame Size.";
+    }
+    leaf auto-negotiation {
+      type enumeration {
+        enum "enabled" {
+          value 1;
+          description
+            "Auto Negotiation enabled";
+        }
+        enum "disabled" {
+          value 0;
+          description
+            "Auto Negotiation disabled";
+        }
+      }
+      default "enabled";
+      description
+        "Set Auto Negotiation: Enabled/Disabled.";
+    }
+    leaf circuit-id {
+      type string {
+        length "0..45";
+      }
+      description
+        "Circuit identifier which can be used in
+          alarm correlation and/or connection management ";
+    }
+    leaf wavelength {
+      type uint32;
+      units "nm";
+      config false;
+      default "1511";
+      description
+        "OSC wavelength in nm";
+    }
+    container link-oam {
+      leaf loam {
+        type enumeration {
+          enum "peer" {
+            value 0;
+            description
+              "LOAM enabled. Peer with remote.";
+          }
+          enum "discard" {
+            value 1;
+            description
+              "LOAM frames will be discarded.";
+          }
+          enum "transp" {
+            value 2;
+            description
+              "LOAM frames will be transparient and flow
+               through wiht out being discarded or
+               handled.";
+          }
+        }
+        default "peer";
+        description
+          "PEER, DISCARD and Trasnport. DISCARD value is
+           for received OAMPDUs only. TRANSP value is
+           allowed only for a port that is in EPL
+           mode (i.e. at UNI interface with PORTMODE=PORT)
+           and if the port is not in a LAG. If LOAM= PEER
+           only then is the L-OAM entity present and all
+           related attributes; such as LOAMMODE, LOAMLPBK,
+           and LOAMRSTATE.";
+      }
+      leaf loam-mode {
+        when "../loam = 'peer'";
+        type enumeration {
+          enum "active" {
+            value 0;
+            description
+              "Active member in LOAM.";
+          }
+          enum "passive" {
+            value 1;
+            description
+              "Passive member in LOAM.";
+          }
+        }
+        default "active";
+        description
+          "Set LOAM mode. Note if both local and peer 
+           sides are in Passive mode, LOAM will not be
+           operational (not complete discovery).";
+      }
+      leaf loam-loopback {
+        when "../loam = 'peer'";
+        type enumeration {
+          enum "enabled" {
+            value 1;
+            description
+              "loopback is enabled.";
+          }
+          enum "disabled" {
+            value 0;
+            description
+              "Loopback is disabled.";
+          }
+        }
+        default "disabled";
+        description
+          "set loam-Loopback to enabled/disabled.
+           Enabled means will accept remote loopback request, 
+           Disabled means will not accept loopback requests.";
+      }
+      leaf error-free-window-threshold {
+        when "../loam = 'peer'";
+        type uint8 {
+          range "0..30";
+        }
+        default "1";
+        description
+          "Set Local Errored Frame threshold in the 
+           window.";
+      }
+      leaf error-free-window {
+        when "../loam = 'peer'";
+        type uint8 {
+          range "1..60";
+        }
+        default "10";
+        description
+          "Set Local Errored Frame window.";
+      }
+      leaf error-frame-summary-threshold {
+        when "../loam = 'peer'";
+        type uint16 {
+          range "0..500";
+        }
+        default "1";
+        description
+          "Set Local Errored Frame Seconds threshold in
+           the window.";
+      }
+      leaf error-frame-summary-window {
+        when "../loam = 'peer'";
+        type uint16 {
+          range "10..900";
+        }
+        default "60";
+        description
+          "Set Local Errored Frame Seconds summary 
+           window.";
+      }
+      description
+        "Set Link OAM related attributes.";
+    }
+  }
+
+  grouping transport-eth-attributes {
+    leaf act-laser {
+      type enumeration {
+        enum "none" {
+          value 0;
+          description
+            "when laser status is non known. E.g. in situation when hardware cannot be accessed to know the laser status.";
+        }
+        enum "normal" {
+          value 1;
+          description
+            "laser is on";
+        }
+        enum "shutdown" {
+          value 2;
+          description
+            "laser is off";
+        }
+      }
+      description
+        "actual transmit laser status";
+    }
+    leaf link-monitoring {
+      type enumeration {
+        enum "monitor_all" {
+          value 0;
+        }
+        enum "pcs-only" {
+          value 1;
+        }
+      }
+      default "pcs-only";
+      description
+        "Link Monitoring Mode";
+    }
+    leaf transport-signal-failure {
+      type enumeration {
+        enum "tsf-local-fault" {
+          value 0;
+          description
+            "Local Fault";
+        }
+        enum "tsf-idle" {
+          value 1;
+          description
+            "Idle";
+        }
+      }
+      description
+        "Codeword to send during Transport Signal Failure";
+    }
+    leaf backward-transport-signal-failure {
+      type enumeration {
+        enum "none" {
+          value 0;
+          description
+            "Nothing";
+        }
+        enum "remote-fault" {
+          value 1;
+          description
+            "Remote Fault";
+        }
+      }
+      description
+        "Codeword to send during Backward Transport Signal Failure";
+    }
+    leaf ltx-off {
+      type enumeration {
+        enum "none" {
+          value 0;
+        }
+        enum "rlanflt" {
+          value 1;
+        }
+        enum "tsfs" {
+          value 2;
+        }
+        enum "btsfs" {
+          value 3;
+        }
+        enum "csf" {
+          value 4;
+        }
+        enum "all" {
+          value 5;
+        }
+      }
+      default "none";
+      description
+        "LTXOFF Choices";
+    }
+    leaf direction {
+      type enumeration {
+        enum "uni-dir-rx" {
+          value 0;
+          description
+            "unidirectional receive only";
+        }
+        enum "uni-dir-tx" {
+          value 1;
+          description
+            "unidirectional transmit only";
+        }
+        enum "bi-dir" {
+          value 2;
+          description
+            "bidirectional";
+        }
+      }
+      description
+        "direction Choices";
+    }
+    leaf tx-clock-source {
+      type enumeration {
+        enum "through" {
+          value 0;
+          description
+            "Timing is passed through";
+        }
+        enum "internal" {
+          value 1;
+          description
+            "Timing is from internal clock";
+        }
+      }
+      description
+        "Transmit Clock - Specifies source of transit timing";
+    }
+    leaf alm-transfer-delay {
+      type uint16;
+      units "ms";
+      description
+        "Alarm transfer delay time in msec
+         Delays the shutdown (due to ltxoff provisioning) of the laser.
+         Has no effect when ltxoff is set to none.";
+    }
+    leaf actual-vstimer {
+      config false;
+      type string {
+        pattern "([0-4][0-8])-([0-5][0-9])";
+      }
+      description
+        "The amount of time a valid state timer has been running uninterrupted.
+         This timer is in the format <hh>-<mm>.";
+    }
+    leaf client-signal-failure {
+      type enumeration {
+        enum "csf-local-fault" {
+          value 0;
+          description
+            "Local Fault";
+        }
+        enum "csf-idle" {
+          value 1;
+          description
+            "Idle";
+        }
+        enum "csf-err" {
+          value 2;
+          description
+            "10B_ERR or /v/ codeword";
+        }
+      }
+      description
+        "Codewords to send when receiving Client Signal Failure indication from far-end or 
+         during Transport Singal Failure.";
+    }
+    leaf encapsulation {
+      type enumeration {
+        enum "none" {
+          value 0;
+          description
+            "No encapsulation. Bit transparent mapping";
+        }
+        enum "gfp-frame-mapped" {
+          value 1;
+          description
+            "Encapsulation using frame-mapped GFP (GFP-F)";
+        }
+        enum "gfp-transparent" {
+          value 2;
+          description
+            "Encapsulation using transparent GFP (GFP-T)";
+        }
+      }
+      description
+        "Type of encapsulation to use";
+    }
+    leaf local-fault-remote-fault {
+      type enumeration {
+        enum "lfrf-transport" {
+          value 0;
+          description
+            "Transport LF and RF by mapping ordered sets at the client interface to GFP data frames";
+        }
+        enum "lfrf-client-signal-fail" {
+          value 1;
+          description
+            "Indicate Client Signal Fail toward network when LF ordered sets are received at client interface.";
+        }
+        enum "lfrf-client-mgm-frames" {
+          value 2;
+          description
+            "Transport LF and RF by mapping ordered sets at the client interface to GFP Client Management Frames";
+        }
+        enum "lfrf-terminate" {
+          value 3;
+          description
+            "Terminate LF/RF signaling locally. Send RF back to client in response to received LF";
+        }
+        enum "lfrf-drop" {
+          value 4;
+          description
+            "Drop LF/RF Ordered Sets";
+        }
+      }
+      description
+        "Controls handling of Local Fault and Remote Fault ordered sets at the client interface";
+    }
+    leaf lan-signal-fail-indication {
+      type enumeration {
+        enum "lsfi-local-fault" {
+          value 0;
+          description
+            "Transmit Client Management Frames or LF ordered sets";
+        }
+        enum "lsfi-client-signal-fail" {
+          value 1;
+          description
+            "Transmit Client Signal Fail frames (LOS- 01h, LOSYNC- 02h)";
+        }
+        enum "lsfi-idle" {
+          value 2;
+          description
+            "Transmit GFP Idle frames";
+        }
+      }
+      description
+        "LAN Signal Fail forward indication";
+    }
+    leaf gfp-fcs {
+      type boolean;
+      default "false";
+      description
+        "Specifies whether a GFP payload Frame Check Sum hould be appended to the GFP frames";
+    }
+    leaf gfp-upi {
+      type string {
+        length "2";
+        pattern "[0-9a-fA-F]*";
+      }
+      default "01";
+      description
+        "User Payload Identifier for GFP client frames";
+    }
+    leaf los-upi {
+      type string {
+        length "2";
+        pattern "[0-9a-fA-F]*";
+      }
+      default "01";
+      description
+        "GFP CMF User Payload Identifier for loss of client signal ";
+    }
+    leaf losync-upi {
+      type string {
+        length "2";
+        pattern "[0-9a-fA-F]*";
+      }
+      default "02";
+      description
+        "GFP CMF User Payload Identifier for loss of character synchronization";
+    }
+    leaf dci-upi {
+      type string {
+        length "2";
+        pattern "[0-9a-fA-F]*";
+      }
+      default "03";
+      description
+        "GFP CMF User Payload Identifier for client defect clear indication";
+    }
+    leaf fdi-upi {
+      type string {
+        length "2";
+        pattern "[0-9a-fA-F]*";
+      }
+      default "04";
+      description
+        "GFP CMF User Payload Identifier for client forward defect indication ";
+    }
+    leaf rdi-upi {
+      type string {
+        length "2";
+        pattern "[0-9a-fA-F]*";
+      }
+      default "05";
+      description
+        "GFP CMF User Payload Identifier for client reverse defect indication ";
+    }
+    leaf mac-fcs {
+      type enumeration {
+        enum "mac-fcs-transport" {
+          value 0;
+          description
+            "forward frames with FCS errors";
+        }
+        enum "mac-fcs-drop" {
+          value 1;
+          description
+            "Drop frames with FCS errors";
+        }
+      }
+      description
+        "Controls handling of MAC FCS error";
+    }
+    container policy-profile {
+      presence "Indicates the policy-profiling of eth interface";
+      leaf committed-info-rate {
+        type uint32 {
+          range "1000000..5000000";
+        }
+        description
+          "Committed Information Rate, unit in 1Kbs";
+      }
+      leaf committed-burst-size {
+        type uint16 {
+          range "16..1024";
+        }
+        description
+          "Committed Burst Size, unit in 1KB (K Byte)";
+      }
+    }
+  }
+
+  augment "/if:interfaces/if:interface" {
+    container ethernet {
+      presence "Enables Ethernet Interface";
+      description
+        "Ethernet Interface";
+      uses eth-common:common-eth-attributes;
+      uses ds-eth-attributes;
+      uses link-remote-attributes;
+      container transport {
+        if-feature "transport-eth";
+        uses transport-eth-attributes {
+          refine "act-laser" {
+            config false;
+          }
+        }
+        uses ains:ains-prov-keywords;
+      }
+    }
+  }
+}
