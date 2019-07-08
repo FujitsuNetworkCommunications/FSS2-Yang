@@ -1,14 +1,21 @@
 #!/bin/bash
 #
-# Main validation script to invoke all the product specific scritps
-#
+# Main validation script to invoke all the product specific scripts
 #
 set -xe
+
+cwd=`pwd`
+
+export VENDOR_DIR="vendor/fujitsu"
+if [ -d $VENDOR_DIR ]; then
+    cd $VENDOR_DIR
+fi
+
 declare -a yang_validatation_scripts=(
-    "./FSS2-API-Yang/T100/yang-compile.sh"
-    "./FSS2-API-Yang/T400/yang-compile.sh"
-    "./FSS2-API-Yang/T600/yang-compile.sh"
-    "./FSS2-API-Yang/T600-OC/yang-compile.sh"
+"./FSS2-API-Yang/T100/yang-compile.sh"
+"./FSS2-API-Yang/T400/yang-compile.sh"
+"./FSS2-API-Yang/T600/yang-compile.sh"
+"./FSS2-API-Yang/T600-OC/yang-compile.sh"
 )
 
 declare -a process_ids
@@ -24,3 +31,5 @@ for (( i=0; i<${process_ids_len}; i++ )); do
     wait ${process_id[$i]} || exit 1
     printf "\n~~~\n${yang_validatation_scripts[$i]} is done.\n~~~\n"
 done
+
+cd $cwd

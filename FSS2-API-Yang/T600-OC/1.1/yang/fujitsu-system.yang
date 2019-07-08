@@ -24,9 +24,6 @@ module fujitsu-system {
   import fujitsu-user-security {
     prefix secu;
   }
-  import confd_dyncfg {
-    prefix dyncfg;
-  }
   import tailf-xsd-types {
     prefix xs;
   }
