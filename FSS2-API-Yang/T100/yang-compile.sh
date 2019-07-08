@@ -36,7 +36,6 @@ yang_compile() {
         else
             pyang --lax-quote-checks --lax-xpath-checks $fname 2>&1
         fi
-        echo "$err_flag"
         if [ "$?" != "0" ]; then
             echo "Error in $fname"
             return_val=1
