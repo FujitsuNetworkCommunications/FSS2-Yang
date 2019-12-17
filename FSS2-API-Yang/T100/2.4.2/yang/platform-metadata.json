@@ -1,0 +1,22 @@
+{
+    "platforms": {
+        "platform": [
+            {
+                "vendor": "fujitsu",
+                "name": "T100",
+                "product-ids": [
+                    "2.4.2"
+                ],
+                "os-type": "FSS2 Linux",
+                "software-flavor": "Linux",
+                "software-version": "2.4.2",
+                "module-list-file": {
+                    "owner": "fujitsu",
+                    "path": "vendor/fujitsu/FSS2-API-Yang/T100/2.4.2/yang/T100-2.4.2-capabilities.xml",
+                    "type": "capabilities",
+                    "repository": "yang.git"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "platforms": {
+        "platform": [
+            {
+                "vendor": "fujitsu",
+                "name": "T600",
+                "product-ids": [
+                    "1.2"
+                ],
+                "os-type": "FSS2 Linux",
+                "software-flavor": "Linux",
+                "software-version": "1.2",
+                "module-list-file": {
+                    "owner": "fujitsu",
+                    "path": "vendor/fujitsu/FSS2-API-Yang/T600/1.2/yang/T600-1.2-capabilities.xml",
+                    "type": "capabilities",
+                    "repository": "yang.git"
+                }
+            }
+        ]
+    }
+}
