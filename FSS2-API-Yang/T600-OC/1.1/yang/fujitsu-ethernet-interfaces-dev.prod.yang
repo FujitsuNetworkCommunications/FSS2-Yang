@@ -93,6 +93,7 @@ module fujitsu-ethernet-interfaces-dev.prod {
       type uint32 {
         range "1000000 | 10000000 | 100000000";
       }
+      default "1000000";
     }
   }
   deviation "/if:interfaces/if:interface/eth:ethernet/eth:location" {
