@@ -11,7 +11,7 @@
                 "software-flavor": "Linux",
                 "software-version": "1.2",
                 "module-list-file": {
-                    "owner": "fujitsu",
+                    "owner": "YangModels",
                     "path": "vendor/fujitsu/FSS2-API-Yang/T600-OC/1.2/yang/T600-OC-1.2-capabilities.xml",
                     "type": "capabilities",
                     "repository": "yang.git"
