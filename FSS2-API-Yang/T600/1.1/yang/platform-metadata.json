@@ -11,10 +11,10 @@
                 "software-flavor": "Linux",
                 "software-version": "1.1.2",
                 "module-list-file": {
-                    "owner": "fujitsu",
-                    "path": "vendor/fujitsu/FSS2-API-Yang/T600/1.1/yang/T600-1.1-capabilities.xml",
+                    "owner": "FujitsuNetworkCommunications",
+                    "path": "FSS2-API-Yang/T600/1.1/yang/T600-1.1-capabilities.xml",
                     "type": "capabilities",
-                    "repository": "yang.git"
+                    "repository": "FSS2-Yang.git"
                 }
             }
         ]
